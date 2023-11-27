@@ -6,3 +6,4 @@ out
 stackRegistry.json
 dist
 .env
+.vscode/launch.json
