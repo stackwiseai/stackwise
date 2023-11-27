@@ -60,10 +60,10 @@ git clone https://github.com/stackwiseai/stackwise.git
 ```
 2. cd stackwise
 3. npm install
-4. add the following environment variables in a .env file:
-PINECONE_API_KEY=PINECONE_API_KEY
-PINECONE_ENVIRONMENT=PINECONE_ENVIRONMENT
-OPENAI_API_KEY=OPENAI_API_KEY
+4. copy the launch.json.example into launch.json and fill these environment variables:
+- PINECONE_API_KEY
+- PINECONE_ENVIRONMENT=PINECONE_ENVIRONMENT
+- OPENAI_API_KEY=OPENAI_API_KEY
 5. Click Run and Debug -> Click on the play button "Run Extension"
 6. Open your typescript project. In your typescript project, type:
 ```typescript
