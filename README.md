@@ -1,8 +1,10 @@
 # Stackwise: Plug and play functions within your workflow.
 
-[![Discord Follow](https://dcbadge.vercel.app/api/server/KfUxa8h3s6?style=flat)](https://discord.gg/KfUxa8h3s6) [![GitHub Repo stars](https://img.shields.io/github/stars/stackwiseai/stackwise?style=social)](https://github.com/stackwiseai/stackwise/stargazers) [![Twitter Follow](https://img.shields.io/twitter/follow/stackwiseai?style=social)](https://twitter.com/stackwiseai) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Discord Follow](https://dcbadge.vercel.app/api/server/KfUxa8h3s6?style=flat)](https://discord.gg/KfUxa8h3s6)
+[![Twitter Follow](https://img.shields.io/twitter/follow/stackwiseai?style=social)](https://twitter.com/stackwiseai)
+[![GitHub Repo stars](https://img.shields.io/github/stars/stackwiseai/stackwise?style=social)](https://github.com/stackwiseai/stackwise/stargazers)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Stackwise allows you to focus more on what you want to be building, instead of the minutae that come with it. Simply precise what the block of code should do, and Stackwise will create the functionality you desire.
 
 # demo here
 
@@ -12,8 +14,8 @@ Stackwise introduces a straightforward command structure, where you specify a 'b
 
 ```typescript
 stack("brief describing a specific action", {
-    in: /* single input or object {} with multiple inputs */,
-    out: // same as above, but output
+    input: /* single input or object {} with multiple inputs */,
+    outExample: // same as above, but output
 })
 ```
 
@@ -44,6 +46,10 @@ Stackwise currently integrates with three APIs:
 Contributions to improve these or add new integrations are welcome. If you're interested in expanding Stackwise's capabilities, feel free to submit a pull request or contact us (join the Discord or contact@stackwise.ai) for collaboration.
 
 ### Getting Started
+Prerequisites:
+- Typescript project
+- openai api key
+- pinecone api key
 
 To start using Stackwise, follow these steps:
 
@@ -52,11 +58,31 @@ To start using Stackwise, follow these steps:
 ```bash
 git clone https://github.com/stackwiseai/stackwise.git
 ```
-
-2. Open a separate repository where you intend to use Stackwise.
-3. Set up the extension developer host with Stackwise.
-4. Implement the stack(...) command in your project.
-5. Save your file to see the function replaced with a generated implementation and import statement.
+2. cd stackwise
+3. npm install
+4. add the following environment variables in a .env file:
+PINECONE_API_KEY=PINECONE_API_KEY
+PINECONE_ENVIRONMENT=PINECONE_ENVIRONMENT
+OPENAI_API_KEY=OPENAI_API_KEY
+5. Click Run and Debug -> Click on the play button "Run Extension"
+6. Open your typescript project. In your typescript project, type:
+```typescript
+const prompt = "What's the capital of the United States ?"
+result = await stack(
+    "Ask a question to GPT-4",
+    {
+        input: prompt
+        output: "Washington D.C"
+    }
+)
+```
+7. Save your file. The function should collapse into something like this.
+const prompt = "What's the capital of the United States ?"
+```typescript
+const result = await askGPT4(prompt)
+```
+8. You can cmd + click (ctrl + click on windows) on the function to see the code of the function.
+9. If you don't like the code, edit it.
 
 ### Roadmap
 
