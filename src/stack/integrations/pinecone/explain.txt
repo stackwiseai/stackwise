@@ -1,0 +1,1 @@
+Pinecone is used as a tool to store vector embeddings and retrieve the most similar embeddings. This translates to finding the most similar x thing from a large collection of things. For example, you can use Pinecone to find the most similar code from a large collection of code. You can use Pinecone to build recommendation systems, semantic search, and more. 

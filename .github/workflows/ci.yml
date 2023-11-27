@@ -1,0 +1,29 @@
+name: TypeScript Build
+
+on:
+  push:
+    branches: [main, "ci-test*"]
+  pull_request_target:
+    branches: [main, "ci-test*"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14" # You can specify your Node.js version here
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run TypeScript Compiler
+        run: tsc
+
+      - name: Run TypeScript Compiler
+        run: jest
