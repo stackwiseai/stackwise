@@ -1,6 +1,6 @@
-import transformJSON from './jsonify';
+import jsonifyString from './jsonify';
 
-test('identifies and extracts placeholders from JSON-like string', () => {
+test('dictionary object', () => {
   // Sample JSON-like string with placeholders
 
   const inputString = `stack (
@@ -18,14 +18,12 @@ test('identifies and extracts placeholders from JSON-like string', () => {
       }
     })`;
 
-  const result = transformJSON(inputString);
+  const result = jsonifyString(inputString);
 
   const expectedOutput = {
     input:
       '{"dictionary":{"Use the chatCompletion endpoint from openai to return a response":"callOpenAI","Find a good name for this method.":"pickMethodName"},"textCode":isolatedFunction}',
-    outExample: {
-      methodName: 'callOpenAI',
-    },
+    inputValues: `{"Use the chatCompletion endpoint from openai to return a response":"callOpenAI","Find a good name for this method.":"pickMethodName"}, isolatedFunction`
   };
 
   // Check if the result matches the expected output
@@ -40,11 +38,11 @@ test('extract', () => {
     outExample: { test: "ok" }
   })`;
 
-  const result = transformJSON(inputString);
+  const result = jsonifyString(inputString);
 
   const expectedOutput = {
     input: `{"test":"ok"}`,
-    outExample: { test: 'ok' },
+    inputValues: `"ok"`
   };
 
   // Check if the result matches the expected output
@@ -59,11 +57,30 @@ test('single quotes', () => {
     outExample: { test: 'ok' }
   })`;
 
-  const result = transformJSON(inputString);
+  const result = jsonifyString(inputString);
 
   const expectedOutput = {
     input: `{"test":"ok"}`,
-    outExample: { test: 'ok' },
+    inputValues: `"ok"`
+  };
+
+  // Check if the result matches the expected output
+  expect(result).toEqual(expectedOutput);
+});
+
+test('single quotes', () => {
+  // Sample JSON-like string with placeholders
+
+  const inputString = `stack('multiply two numbers', {
+      input: { x, y },
+      outExample: { check: 0 },
+    })`;
+
+  const result = jsonifyString(inputString);
+
+  const expectedOutput = {
+    input: `{"x":x,"y":y}`,
+    inputValues: `x, y`,
   };
 
   // Check if the result matches the expected output

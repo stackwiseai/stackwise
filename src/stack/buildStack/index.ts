@@ -19,6 +19,7 @@ interface OutputType {
   inputString: string;
   briefSkeleton: string;
   functionAndOutputSkeleton: string;
+  inputValues: string;
 }
 
 interface InputType {
@@ -36,11 +37,11 @@ export default async function buildStack({
   console.log('brief after extraction');
   console.log(brief);
   
-  const { input: inputString, outExample } = jsonify(stackSnippet);
+  const { input: inputString,  inputValues} = jsonify(stackSnippet);
   console.log('input after JSONIFY');
   console.log(inputString);
-  console.log('output after JSONIFY');
-  console.log(outExample);
+  // console.log('output after JSONIFY');
+  // console.log(outExample);
   // Create a signature from the extracted parameters
   const signature = generateSignature(
     brief,
@@ -114,5 +115,6 @@ export default async function buildStack({
     inputString,
     briefSkeleton,
     functionAndOutputSkeleton,
+    inputValues
   };
 }

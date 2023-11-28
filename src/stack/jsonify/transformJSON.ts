@@ -1,4 +1,4 @@
-export default function transformJSON({ input, outExample }) {
+export default function transformJSON(input) {
   // Stringify the input object
   let inputString = JSON.stringify(input);
 
@@ -10,5 +10,5 @@ export default function transformJSON({ input, outExample }) {
   });
 
   // Return the new object with the modified input string and original outExample
-  return { input: inputString, outExample };
+  return { input: inputString };
 }

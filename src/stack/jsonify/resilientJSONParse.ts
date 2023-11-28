@@ -9,7 +9,7 @@ export function resilientJSONParse(input) {
     /([,{]\s*)(\w+)\s*:/g,
     '$1"$2":'
   );
-
+  console.log('attempting to parse:', properlyQuoted);
   try {
     return JSON5.parse(properlyQuoted);
   } catch (error) {
