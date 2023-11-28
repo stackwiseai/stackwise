@@ -1,6 +1,4 @@
 import * as vscode from 'vscode';
-import * as path from 'path';
-import * as fs from 'fs';
 // import chokidar from 'chokidar';
 import stackRegistry from './stack/registry';
 import findStackPositions from './findStackPositions';
@@ -13,12 +11,6 @@ require('dotenv').config();
 
 // You must first call storage.init or storage.initSync
 // Set the storage file to be a hidden file, e.g., '.llmCache.json'
-
-const directoryPath = path.join(
-  vscode.workspace.rootPath,
-  // TODO: pull from config file
-  'stacks'
-);
 
 export function activate(context: vscode.ExtensionContext) {
   let disposable = vscode.workspace.onDidSaveTextDocument(async (document) => {
@@ -77,35 +69,6 @@ export function activate(context: vscode.ExtensionContext) {
     }
   });
   context.subscriptions.push(disposable);
-}
-
-export function createStackFile(
-  skeleton: string,
-  methodName: string,
-  integration: string
-) {
-  let stackPath = directoryPath;
-  if (integration && integration !== 'generic') {
-    stackPath = path.join(directoryPath, integration);
-  }
-  // Create directory if it doesn't exist
-  if (!fs.existsSync(stackPath)) {
-    fs.mkdirSync(stackPath, { recursive: true });
-  }
-
-  const baseFilePath = path.join(stackPath, `${methodName}`);
-
-  // Check for existing file and append a number if necessary
-  let fileIndex = 1;
-  let filePath = baseFilePath + '.ts';
-  while (fs.existsSync(filePath)) {
-    filePath = `${baseFilePath}_${fileIndex}.ts`;
-    fileIndex++;
-  }
-
-  // Write the skeleton to the file
-  fs.writeFileSync(filePath, skeleton);
-  console.log(`File created at ${filePath}`);
 }
 
 // function trackStackFileRenames(context: vscode.ExtensionContext) {

@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import buildStack from '../stack/buildStack';
-import { createStackFile } from '../extension';
+import createStackFile from '../stack/createStackFile';
 import replaceStackSnippetWithInjectFunction from '../collapseStack';
 import addImportStatement from '../addImportStatement';
 import extractInputString from '../stack/jsonify/extractInputString';
