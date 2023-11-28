@@ -5,6 +5,8 @@
 [![GitHub Repo stars](https://img.shields.io/github/stars/stackwiseai/stackwise?style=social)](https://github.com/stackwiseai/stackwise/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+Stackwise allows you to focus more on what you want to be building, instead of the minutae that come with it. Simply precise what the block of code should do, and Stackwise will create the functionality you desire.
+
 
 # demo here
 
