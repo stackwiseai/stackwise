@@ -8,9 +8,7 @@ stack('multiply two numbers', {
 
 import multiplyNumbers from '../../stacks/multiplyNumbers';
 
-multiplyNumbers(
-  2, 5
-  );
+await multiplyNumbers(2, 5);
 
 
 
