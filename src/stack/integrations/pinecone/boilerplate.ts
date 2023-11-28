@@ -8,6 +8,7 @@ const pinecone = new Pinecone({
 export default async function pineconeQueryBoilerplate(
   toEmbed: string
 ): Promise<RecordMetadata> {
+  // this function embeds the input string, finds the 3 nearest vectors in the index, and returns the metadata for the first one
   const index = pinecone.index('general');
 
   const requestBody = {

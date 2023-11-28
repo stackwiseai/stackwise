@@ -5,6 +5,7 @@ const openai = new OpenAI({
 });
 
 export async function openAIQueryBoilerplate(prompt: string): Promise<string> {
+  // this function generates some text given a prompt and return the exact text
   try {
     const response = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo', // VARIABLE, 'gpt-4' is a stronger model
