@@ -7,9 +7,7 @@ stack('this is an example', {
 
 import generateBooleanOutput from '../../stacks/generateBooleanOutput';
 
-generateBooleanOutput(
-  'this is an example'
-  );
+await generateBooleanOutput('this is an example');
 
 
 

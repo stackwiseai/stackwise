@@ -6,9 +6,7 @@ stack('this is an example', {
 
 import exampleFunction from '../../stacks/exampleFunction';
 
-exampleFunction(
-  'ok'
-  );
+await exampleFunction('ok');
 
 
 

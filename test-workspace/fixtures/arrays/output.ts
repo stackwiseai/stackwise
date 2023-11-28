@@ -7,9 +7,7 @@ stack(
 
 import validateInputArray from '../../stacks/validateInputArray';
 
-validateInputArray(
-  'this is an example', 'this is an example'
-  );
+await validateInputArray('this is an example', 'this is an example');
 
 
 /**
