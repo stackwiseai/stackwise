@@ -5,9 +5,9 @@ stack(
   }
 );
 
-import processStringArray from '../../stacks/processStringArray';
+import validateInputArray from '../../stacks/validateInputArray';
 
-processStringArray(
+validateInputArray(
   'this is an example', 'this is an example'
   );
 
@@ -15,9 +15,16 @@ processStringArray(
 /**
  * Brief: brief
  */
-export default async function processStringArray(input: string[]): Promise<null> {
-    input.forEach((str) => {
-        console.log(str);
-    });
+export default async function validateInputArray(input: string[]): Promise<null> {
+    if (!Array.isArray(input)) {
+        throw new Error('Input must be an array');
+    }
+
+    for (let i = 0; i < input.length; i++) {
+        if (typeof input[i] !== 'string') {
+            throw new Error(`Element at index ${i} is not a string`);
+        }
+    }
+
     return null;
 }

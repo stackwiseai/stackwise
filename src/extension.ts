@@ -11,8 +11,6 @@ import ensureDirectoryExistence from './manageStackFolder';
 import convertTypescriptToJson from './convertTypescriptToJson';
 require('dotenv').config();
 
-const storage = require('node-persist');
-
 // You must first call storage.init or storage.initSync
 // Set the storage file to be a hidden file, e.g., '.llmCache.json'
 

@@ -28,9 +28,10 @@ export default async function getMethodNameWithCache(
   // The cache key is a concatenation of `wholeSkeleton` and the name of the method
   const cacheKey =
     wholeSkeleton + (await getMethodName({ wholeSkeleton, brief }));
-
+  console.log(`cacheKey: ${cacheKey}`);
   // Try to read the cache first
   let methodName = await storage.getItem(cacheKey);
+  console.log(`methodName: ${methodName}`);
 
   // If it's not in the cache, call the actual function
   if (!methodName) {

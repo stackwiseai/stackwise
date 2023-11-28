@@ -3,9 +3,9 @@ stack('this is an example', {
   outExample: true,
 });
 
-import generateBooleanResponse from '../../stacks/generateBooleanResponse';
+import generateBooleanOutput from '../../stacks/generateBooleanOutput';
 
-generateBooleanResponse(
+generateBooleanOutput(
   ''
   );
 
@@ -13,12 +13,12 @@ generateBooleanResponse(
 /**
  * Brief: this is an example
  */
-export default async function generateBooleanResponse(input: string): Promise<string> {
-    let response = '';
-    if (input.toLowerCase() === 'true' || input.toLowerCase() === 'false') {
-        response = 'boolean';
+export default async function generateBooleanOutput(input: string): Promise<string> {
+    let output = '';
+    if (input) {
+        output = 'true';
     } else {
-        response = 'not boolean';
+        output = 'false';
     }
-    return response;
+    return output;
 }

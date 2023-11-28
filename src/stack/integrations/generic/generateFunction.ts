@@ -2,10 +2,9 @@ import OpenAI from 'openai';
 import { BoilerplateMetadata, Message } from '../lib/types';
 import { processBoilerplate, readFunctionToString } from '../lib/utils';
 import { combineSkeleton } from '../../createSkeleton';
+import { openai } from '../openai/construct';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+
 
 export default async function generateFunction(
   briefSkeleton: string,
