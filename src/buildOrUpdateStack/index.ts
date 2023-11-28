@@ -111,9 +111,7 @@ export default async function buildOrUpdateStack(
   }
 
   const inputStringToArgument = extractInputString(stackSnippet);
-  const injectedFunction = `${methodName}(
-  ${inputStringToArgument}
-  )`;
+  const injectedFunction = `await ${methodName}(${inputStringToArgument})`;
 
   console.log(`stackSnippet in buildOrUpdateStack:`, stackSnippet);
   // console.log(`document in buildOrUpdateStack:`, document);
