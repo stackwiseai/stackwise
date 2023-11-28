@@ -29,7 +29,9 @@ export default function addImportStatement(
   // Insert the import statement at the top of the document
   const edit = new vscode.WorkspaceEdit();
   edit.insert(document.uri, new vscode.Position(0, 0), importStatement);
-  vscode.workspace.applyEdit(edit);
+  vscode.workspace.applyEdit(edit).then(() => {
+    saveDocument(document);
+  });
 }
 
 function calculateRelativePath(
@@ -65,4 +67,17 @@ function calculateRelativePath(
   }
 
   return relativePath;
+}
+
+function saveDocument(document: vscode.TextDocument) {
+  if (document.isDirty) {
+    document.save().then(
+      () => {
+        vscode.window.showInformationMessage('Stack created successfully 🎉');
+      },
+      (err) => {
+        vscode.window.showErrorMessage(`Error saving document: ${err}`);
+      }
+    );
+  }
 }
