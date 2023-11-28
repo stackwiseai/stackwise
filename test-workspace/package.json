@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "robotjs": "^0.6.0"
+    "robotjs": "^0.6.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.3.2"
   }
 }
