@@ -1,7 +1,7 @@
 stack(
     'brief',
     {
-      'in': ['this is an example', 'this is an example']
+      'in': ['this \'\'\'is an example', 'this is an example', '{"test": "json to confuse the parser"}'],
     }
   );
   
