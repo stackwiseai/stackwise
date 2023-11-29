@@ -5,7 +5,7 @@ stack('this is an example', {
 
 import generateBooleanResponse from '../../stacks/generateBooleanResponse';
 
-await generateBooleanResponse('');
+await generateBooleanResponse("''");
 
 
 /**

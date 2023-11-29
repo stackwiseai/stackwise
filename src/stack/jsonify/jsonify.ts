@@ -23,11 +23,15 @@ export default function jsonifyString(inputString) {
 
   const inputOnly = extractInputFromObject(jsonLikeString);
   const inputOnlyWithoutWeirdObject = handleWeirdObject(inputOnly);
-  const modifiedString = replaceJSONPlaceholders(inputOnlyWithoutWeirdObject);
+  let modifiedString = replaceJSONPlaceholders(inputOnlyWithoutWeirdObject);
 
   // Step 3: Convert to JSON
   let json;
   try {
+    // if modified string doesn't start with " or {, add { to the beginning
+    if (modifiedString[0] !== '"' && modifiedString[0] !== '{' && modifiedString[0] !== "'") {
+      modifiedString = `"${modifiedString}"`;
+    }
     json = resilientJSONParse(modifiedString);
   } catch (error) {
     return null;
