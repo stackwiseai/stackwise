@@ -3,6 +3,7 @@ import { BoilerplateMetadata, Message } from '../lib/types';
 import { processBoilerplate, readFunctionToString } from '../lib/utils';
 import { combineSkeleton } from '../../createSkeleton';
 import { openai } from '../openai/construct';
+import { getCaviat } from '../../getCaviat';
 
 export default async function generateFunction(
   briefSkeleton: string,
@@ -44,6 +45,7 @@ ${startingBoilerplate}`,
 ${startingBoilerplate}`,
     });
   }
+  const caveats = getCaviat(brief);
 
   try {
     const response = await openai.chat.completions.create({
@@ -58,7 +60,11 @@ Ensure that you keep the return type, function name, and parameters the same. Yo
         },
         {
           role: 'user',
-          content: `Here is the user brief: ${brief}. 
+          content: ``,
+        },
+        {
+          role: 'user',
+          content: `${caveats}Here is the user brief: ${brief}. 
 Respond with just what would go in the function file and nothing else. No explanation or words, just the contents of the file. Make sure that the code is runnable if I were to execute it directly.`,
         },
       ],
