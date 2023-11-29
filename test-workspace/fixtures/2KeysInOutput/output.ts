@@ -12,7 +12,7 @@ await exampleFunction('this is a brief');
 /**
  * Brief: this is an example
  */
-export default async function exampleFunction(): Promise<null> {
-    console.log("This is an example.");
+export default async function exampleFunction(in: string): Promise<null> {
+    console.log(`Input string is: ${in}`);
     return null;
 }

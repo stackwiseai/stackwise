@@ -1,19 +1,23 @@
 stack(
-  'brief',
-  {
-    'in': ['this is an example', 'this is an example']
-  }
-);
+    'brief',
+    {
+      'in': ['this is an example', 'this is an example']
+    }
+  );
+  
+  // TODO: allow the usage of in a string, but for now incentiviwe people to use in: ['this is an example', 'this is an example']
+import processInputArray from '../../stacks/processInputArray';
 
-import getNullValue from '../../stacks/getNullValue';
-
-await getNullValue('this is an example', 'this is an example');
-
+await processInputArray('this is an example', 'this is an example');
+  
+  // TODO: allow the usage of in a string, but for now incentiviwe people to use in: ['this is an example', 'this is an example']
 
 /**
  * Brief: brief
  */
-export default async function getNullValue(): Promise<null> {
-    const result = await Promise.resolve(null);
-    return result;
+export default async function processInputArray(in: string[]): Promise<null> {
+    in.forEach((item) => {
+        console.log(item);
+    });
+    return null;
 }

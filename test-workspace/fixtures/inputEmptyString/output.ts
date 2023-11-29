@@ -3,15 +3,16 @@ stack('this is an example', {
   out: true,
 });
 
-import exampleAsyncFunction from '../../stacks/exampleAsyncFunction';
+import convertStringToBoolean from '../../stacks/convertStringToBoolean';
 
-await exampleAsyncFunction('');
+await convertStringToBoolean('');
 
 
 /**
  * Brief: this is an example
  */
-export default async function exampleAsyncFunction(): Promise<string> {
-    let result: string = "This is an example";
-    return result;
+export default async function convertStringToBoolean(in: string): Promise<boolean> {
+    if (in.toLowerCase() === 'true') return true;
+    if (in.toLowerCase() === 'false') return false;
+    throw new Error('Input must be a string of "true" or "false".');
 }

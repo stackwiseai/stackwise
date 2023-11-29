@@ -35,7 +35,7 @@ export default async function findStackPositions(
         }
 
         // Find the position of 'in:'
-        let inputPosition = findNextKeyword('input', i, stackIndex);
+        let inputPosition = findNextKeyword('in', i, stackIndex);
         if (inputPosition) {
           positionObject['inputPosition'] = inputPosition;
           console.log('inputPosition added:', positionObject.inputPosition);
