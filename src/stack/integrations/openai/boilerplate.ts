@@ -1,4 +1,8 @@
-import { openai } from './construct';
+import OpenAI from 'openai';
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY as string,
+});
 
 export async function openAIQueryBoilerplate(prompt: string): Promise<string> {
   // this function generates some text given a prompt and return the exact text
