@@ -1,11 +1,9 @@
 import * as vscode from 'vscode';
-// import chokidar from 'chokidar';
-import stackRegistry from './stack/registry';
 import findStackPositions from './findStackPositions';
 import getHoverInformation from './hover';
 import getStackSnippet from './getStackSnippet';
+import trackStackFileRenames from './trackStackFileRenames';
 import buildOrUpdateStack from './buildOrUpdateStack';
-import ensureDirectoryExistence from './manageStackFolder';
 import convertTypescriptToJson from './convertTypescriptToJson';
 require('dotenv').config();
 
@@ -13,6 +11,7 @@ require('dotenv').config();
 // Set the storage file to be a hidden file, e.g., '.llmCache.json'
 
 export function activate(context: vscode.ExtensionContext) {
+  trackStackFileRenames(context);
   let disposable = vscode.workspace.onDidSaveTextDocument(async (document) => {
     if (
       document.languageId !== 'typescript' &&
@@ -70,47 +69,5 @@ export function activate(context: vscode.ExtensionContext) {
   });
   context.subscriptions.push(disposable);
 }
-
-// function trackStackFileRenames(context: vscode.ExtensionContext) {
-//   const addedFiles = new Map();
-
-//   // Initialize Chokidar watcher. This tracks file renames and deletions.
-//   const watcher = chokidar.watch(directoryPath, {
-//     ignored: /^\./,
-//     persistent: true,
-//   });
-
-//   watcher.on('all', (event, filePath) => {
-//     const fileName = path.basename(filePath);
-
-//     if (event === 'add') {
-//       // Temporarily record added file with a timestamp
-//       addedFiles.set(fileName, Date.now());
-//     } else if (event === 'unlink') {
-//       // Check if there's a recently added file that matches
-//       for (let [newFile, time] of addedFiles) {
-//         if (Date.now() - time < 200) {
-//           // 0.5 seconds threshold
-//           // stackRegistry.loadRegistry();
-//           // if (stackRegistry.nameExists(newFile)) {
-//           //   stackRegistry.update(newFile, newFile);
-//           // }
-
-//           console.log(`File renamed from ${fileName} to ${newFile}`);
-//           addedFiles.delete(newFile);
-
-//           return;
-//         }
-//       }
-//       console.log(`File deleted: ${filePath}`);
-//     }
-//   });
-
-//   context.subscriptions.push({
-//     dispose: () => {
-//       watcher.close();
-//     },
-//   });
-// }
 
 export function deactivate() {}

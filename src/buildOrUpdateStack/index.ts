@@ -30,7 +30,7 @@ export default async function buildOrUpdateStack(
     inputString,
     briefSkeleton,
     functionAndOutputSkeleton,
-    inputValues
+    inputValues,
   } = await buildStack({
     inputJSON: inputJSON,
     outputJSON: outputJSON,

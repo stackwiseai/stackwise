@@ -32,6 +32,10 @@ const extensionConfig = {
   module: {
     rules: [
       {
+        test: /\.node$/,
+        use: 'node-loader',
+      },
+      {
         test: /\.ts$/,
         exclude: /node_modules/,
         use: [
@@ -50,6 +54,5 @@ const extensionConfig = {
     level: 'log', // enables logging required for problem matchers
   },
 };
-
 
 module.exports = [extensionConfig];
