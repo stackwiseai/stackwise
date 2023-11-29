@@ -7,10 +7,6 @@ const pinecone = new Pinecone({
   environment: process.env.PINECONE_ENVIRONMENT as string,
 });
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY as string,
-});
-
 export default async function constructPinecone(
   briefSkeleton: string,
   functionAndOutputSkeleton: string,

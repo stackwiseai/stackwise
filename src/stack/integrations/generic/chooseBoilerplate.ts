@@ -1,18 +1,14 @@
 import path from 'path';
-import OpenAI from 'openai';
 import { Pinecone } from '@pinecone-database/pinecone';
 import { getEmbedding } from '../../../../stacks/openai/getEmbedding';
 import { readExplainFiles } from '../lib/utils';
 import { BoilerplateMetadata } from '../lib/types';
 import { combineSkeleton } from '../../createSkeleton';
+import { openai } from '../openai/construct';
 
 const pinecone = new Pinecone({
   apiKey: process.env.PINECONE_API_KEY as string,
   environment: process.env.PINECONE_ENVIRONMENT as string,
-});
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
 });
 
 interface OutputType {

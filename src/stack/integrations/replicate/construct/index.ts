@@ -1,11 +1,7 @@
-import OpenAI from 'openai';
 import { Pinecone } from '@pinecone-database/pinecone';
 import { BoilerplateMetadata } from '../../lib/types';
 import { boilerplateExpert, furtherEngineering, userAsk } from './prompts';
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_APY_KEY,
-});
+import { openai } from '../../openai/construct';
 
 const pinecone = new Pinecone({
   apiKey: process.env.PINECONE_API_KEY as string,
