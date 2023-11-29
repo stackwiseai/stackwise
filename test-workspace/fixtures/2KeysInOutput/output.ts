@@ -1,6 +1,6 @@
 stack('this is an example', {
-    input: 'this is a brief',
-    outExample: {
+    in: 'this is a brief',
+    out: {
       'ok': true,
       'test': 'other'
     },

@@ -1,17 +1,17 @@
-import * as vscode from "vscode";
-import PositionObject from "../positionObject";
-import getHoverInformation from "../hover";
+import * as vscode from 'vscode';
+import PositionObject from '../positionObject';
+import getHoverInformation from '../hover';
 
 export default async function findStackPositions(
   document
 ): Promise<PositionObject[]> {
   const documentContent = document.getText();
-  const lines = documentContent.split("\n");
+  const lines = documentContent.split('\n');
 
   let positions = []; // Array to store positions
 
   for (let i = 0; i < lines.length; i++) {
-    let stackIndex = lines[i].indexOf("stack(");
+    let stackIndex = lines[i].indexOf('stack(');
     while (stackIndex >= 0) {
       const position = new vscode.Position(i, stackIndex);
       const typeInfo = await getHoverInformation(position);
@@ -20,7 +20,7 @@ export default async function findStackPositions(
           stackPosition: position,
         };
 
-        console.log("stackPosition added:", positionObject.stackPosition);
+        console.log('stackPosition added:', positionObject.stackPosition);
 
         // Function to find the next occurrence of a keyword after a given index
         function findNextKeyword(keyword, startIndex, currentLine) {
@@ -34,36 +34,36 @@ export default async function findStackPositions(
           return null;
         }
 
-        // Find the position of 'input:'
-        let inputPosition = findNextKeyword("input", i, stackIndex);
+        // Find the position of 'in:'
+        let inputPosition = findNextKeyword('in', i, stackIndex);
         if (inputPosition) {
-          positionObject["inputPosition"] = inputPosition;
-          console.log("inputPosition added:", positionObject.inputPosition);
+          positionObject['inputPosition'] = inputPosition;
+          console.log('inputPosition added:', positionObject.inputPosition);
         }
 
-        // Find the position of 'outExample:'
-        let outExamplePosition = findNextKeyword(
-          "outExample:",
+        // Find the position of 'out:'
+        let outPosition = findNextKeyword(
+          'out:',
           i,
           stackIndex
         );
-        if (outExamplePosition) {
-          positionObject["outExamplePosition"] = outExamplePosition;
+        if (outPosition) {
+          positionObject['outPosition'] = outPosition;
           console.log(
-            "outExamplePosition added:",
-            positionObject.outExamplePosition
+            'outPosition added:',
+            positionObject.outPosition
           );
         }
 
         positions.push(positionObject);
-        console.log("Position object added:", positionObject);
+        console.log('Position object added:', positionObject);
       }
 
       // Find next occurrence of 'stack(' in the same line
-      stackIndex = lines[i].indexOf("stack(", stackIndex + 1);
+      stackIndex = lines[i].indexOf('stack(', stackIndex + 1);
     }
   }
 
-  console.log("Final positions array:", positions);
+  console.log('Final positions array:', positions);
   return positions; // Return array of positions
 }

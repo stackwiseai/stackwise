@@ -1,13 +1,13 @@
 stack('this is an example', {
-  input: 'this is an example',
-  outExample: true,
+  in: 'this is an example',
+  out: true,
 });
 
 
 
-import generateBooleanOutput from '../../stacks/generateBooleanOutput';
+import generateBooleanResponse from '../../stacks/generateBooleanResponse';
 
-await generateBooleanOutput('this is an example');
+await generateBooleanResponse('this is an example');
 
 
 

@@ -16,8 +16,8 @@ Stackwise introduces a straightforward command structure, where you specify a 'b
 
 ```typescript
 stack("brief describing a specific action", {
-    input: /* single input or object {} with multiple inputs */,
-    outExample: // same as above, but output
+    in: /* single input or object {} with multiple inputs */,
+    out: // same as above, but output
 })
 ```
 
@@ -73,7 +73,7 @@ const prompt = "What's the capital of the United States ?"
 result = await stack(
     "Ask a question to GPT-4",
     {
-        input: prompt
+        in: prompt
         output: "Washington D.C"
     }
 )

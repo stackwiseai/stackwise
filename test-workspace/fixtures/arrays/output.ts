@@ -1,28 +1,23 @@
 stack(
-  'brief',
-  {
-    'input': ['this is an example', 'this is an example']
-  }
-);
+    'brief',
+    {
+      'in': ['this is an example', 'this is an example']
+    }
+  );
+  
+  // TODO: allow the usage of in a string, but for now incentiviwe people to use in: ['this is an example', 'this is an example']
+import processInputArray from '../../stacks/processInputArray';
 
-import validateInputArray from '../../stacks/validateInputArray';
-
-await validateInputArray('this is an example', 'this is an example');
-
+await processInputArray('this is an example', 'this is an example');
+  
+  // TODO: allow the usage of in a string, but for now incentiviwe people to use in: ['this is an example', 'this is an example']
 
 /**
  * Brief: brief
  */
-export default async function validateInputArray(input: string[]): Promise<null> {
-    if (!Array.isArray(input)) {
-        throw new Error('Input must be an array');
-    }
-
-    for (let i = 0; i < input.length; i++) {
-        if (typeof input[i] !== 'string') {
-            throw new Error(`Element at index ${i} is not a string`);
-        }
-    }
-
+export default async function processInputArray(in: string[]): Promise<null> {
+    in.forEach((item) => {
+        console.log(item);
+    });
     return null;
 }

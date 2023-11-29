@@ -5,8 +5,8 @@ test('identifies and extracts placeholders from JSON-like string', () => {
   // Sample JSON-like string with placeholders
 
   const inputString = `{
-    input: { x, y },
-    outExample: { check: 0 }
+    in: { x, y },
+    out: { check: 0 }
   }`;
 
   const result = extractInputFromObject(inputString);
@@ -22,8 +22,8 @@ test('identifies and extracts placeholders from JSON-like string', () => {
   // Sample JSON-like string with placeholders
 
   const inputString = `{
-    input: { x, y, "z": z },
-    outExample: { check: 0 }
+    in: { x, y, "z": z },
+    out: { check: 0 }
   }`;
 
   const result = extractInputFromObject(inputString);
@@ -38,8 +38,8 @@ test('identifies and extracts placeholders from JSON-like string', () => {
 test('identifies and extracts placeholders from JSON-like string', () => {
   // Sample JSON-like string with placeholders
 
-  const inputString = `{"input": { x, "y": y},
-  "outExample": {"check": 0}
+  const inputString = `{"in": { x, "y": y},
+  "out": {"check": 0}
 }`;
 
   const result = extractInputFromObject(inputString);
@@ -55,14 +55,14 @@ test('identifies and extracts placeholders from JSON-like string', () => {
   // Sample JSON-like string with placeholders
 
   const inputString = `{
-    "input": {
+    "in": {
       "dictionary": {
         "Use the chatCompletion endpoint from openai to return a response": "callOpenAI",
         "Find a good name for this method.": "pickMethodName"
       },
       "textCode": isolatedFunction
     },
-    "outExample": {
+    "out": {
       "methodName": "callOpenAI"
     }
 }`;
@@ -87,8 +87,8 @@ test('identifies and extracts placeholders from JSON-like string', () => {
   // Sample JSON-like string with placeholders
 
   const inputString = `{
-    input: "this is a brief",
-    outExample: {"ok": true,"test": "other"
+    in: "this is a brief",
+    out: {"ok": true,"test": "other"
     }
   }`;
 
@@ -104,7 +104,7 @@ test('identifies and extracts placeholders from JSON-like string', () => {
 test('identifies and extracts placeholders from JSON-like string', () => {
   // Sample JSON-like string with placeholders
 
-  const inputString = `{"input": ['this is an example', 'this is an example']
+  const inputString = `{"in": ['this is an example', 'this is an example']
 }
 
 `;

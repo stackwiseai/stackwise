@@ -8,7 +8,7 @@ describe('transformJSON', () => {
     const result = transformJSON(inputString);
 
     const expectedOutput = {
-      input: `{"test":ok}`,
+      in: `{"test":ok}`,
     };
 
     // Check if the result matches the expected output
