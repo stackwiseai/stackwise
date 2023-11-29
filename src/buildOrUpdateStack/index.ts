@@ -3,7 +3,6 @@ import buildStack from '../stack/buildStack';
 import createStackFile from '../stack/createStackFile';
 import replaceStackSnippetWithInjectFunction from '../collapseStack';
 import addImportStatement from '../addImportStatement';
-import extractInputString from '../stack/jsonify/extractInputString';
 import chooseBoilerplate from '../stack/integrations/generic/chooseBoilerplate';
 import generateFunction from '../stack/integrations/generic/generateFunction';
 import createBoilerplateEmbedding from '../stack/createEmbedding';
@@ -31,7 +30,7 @@ export default async function buildOrUpdateStack(
     inputString,
     briefSkeleton,
     functionAndOutputSkeleton,
-    inputValues
+    inputValues,
   } = await buildStack({
     inputJSON: inputJSON,
     outputJSON: outputJSON,

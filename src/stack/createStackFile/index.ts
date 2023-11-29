@@ -1,12 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-
-const directoryPath = path.join(
-  vscode.workspace.rootPath,
-  // TODO: pull from config file
-  'stacks'
-);
+import { directoryPath } from '../../constants';
 
 export default function createStackFile(
   skeleton: string,

@@ -51,4 +51,19 @@ export default class stackRegistry {
       console.error('Error writing to registry file:', error);
     }
   }
+
+  static update(oldName, newName) {
+    console.log(`updating ${oldName} to ${newName} in registry`);
+    const registry = this.loadRegistry();
+    const functionId = registry[oldName];
+    delete registry[oldName];
+    registry[newName] = functionId;
+    this.saveRegistry(registry);
+  }
+
+  static remove(methodName) {
+    const registry = this.loadRegistry();
+    delete registry[methodName];
+    this.saveRegistry(registry);
+  }
 }
