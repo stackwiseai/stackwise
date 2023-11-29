@@ -1,6 +1,6 @@
 stack(
   'brief',
   {
-    'input': ['this is an example', 'this is an example']
+    'in': ['this is an example', 'this is an example']
   }
 );

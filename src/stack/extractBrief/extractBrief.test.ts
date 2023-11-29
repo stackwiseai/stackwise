@@ -5,14 +5,14 @@ describe('extractParameters', () => {
     const input = `stack(
       "Create a method that takes a dictionary and some textCode in. It returns a methodName. The methodName should be picked based on the first key in the value that is present in the textCode. If that's the case, the value should be returned",
       {
-          input: {
+          in: {
               "dictionary": {
                   "Use the chatCompletion endpoint from openai to return a response": "callOpenAI",
                   "Find a good name for this method.": "pickMethodName",
               },
               textCode: isolatedFunction
           },
-          outExample:{
+          out:{
               "methodName": "callOpenAI"
           }
       },
@@ -26,8 +26,8 @@ describe('extractParameters', () => {
   });
   test('extracts parameters correctly from single quotes', () => {
     const input = `stack('test that\'s right', {
-      input: { test: 'ok' },
-      outExample: { test: 'ok' }
+      in: { test: 'ok' },
+      out: { test: 'ok' }
     })`;
     // Update the expected output to be an array of an array
     const expectedOutput = "test that's right";
@@ -36,7 +36,7 @@ describe('extractParameters', () => {
   });
   test('extracts parameters correctly from backticks', () => {
     const input =
-      "stack(`checking here's backticks`, {\n      input: { test: 'ok' },\n      outExample: { test: 'ok' }\n    })";
+      "stack(`checking here's backticks`, {\n      in: { test: 'ok' },\n      out: { test: 'ok' }\n    })";
     // Update the expected output to be an array of an array
     const expectedOutput = `checking here's backticks`;
     const result = extractBrief(input);

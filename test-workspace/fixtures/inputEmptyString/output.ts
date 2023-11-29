@@ -1,22 +1,17 @@
 stack('this is an example', {
-  input: '',
-  outExample: true,
+  in: '',
+  out: true,
 });
 
-import generateBooleanOutput from '../../stacks/generateBooleanOutput';
+import exampleAsyncFunction from '../../stacks/exampleAsyncFunction';
 
-await generateBooleanOutput('');
+await exampleAsyncFunction('');
 
 
 /**
  * Brief: this is an example
  */
-export default async function generateBooleanOutput(input: string): Promise<string> {
-    let output = '';
-    if (input) {
-        output = 'true';
-    } else {
-        output = 'false';
-    }
-    return output;
+export default async function exampleAsyncFunction(): Promise<string> {
+    let result: string = "This is an example";
+    return result;
 }

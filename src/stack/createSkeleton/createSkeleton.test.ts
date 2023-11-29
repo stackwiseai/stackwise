@@ -215,7 +215,7 @@ export default async function placeholderStackwiseFunction(prompt: string): Prom
     const params = { prompt: 'Describe the colors in the image.' };
 
     // Modified output object to have two keys
-    const output = { outExample: 0 };
+    const output = { out: 0 };
 
     const signature = 'placeholderStackwiseFunction';
     const flatInput = 'prompt: string';

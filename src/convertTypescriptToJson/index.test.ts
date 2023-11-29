@@ -1,7 +1,7 @@
 import convertTypescriptToJson from '.';
 
 test('flattenInputJson correctly', () => {
-  const jsonInput = `(property) input: {
+  const jsonInput = `(property) in: {
     test: {
         example: boolean;
     };
@@ -19,13 +19,13 @@ test('flattenInputJson correctly', () => {
 test('flattenInputJson correctly', () => {
   const jsonInput = `
 \`\`\`typescript
-(property) 'input': string[]
+(property) 'in': string[]
 \`\`\`
 
 
 `;
   const expectedOutput = {
-    input: 'string[]'
+    in: 'string[]'
   };
 
   const result = convertTypescriptToJson(jsonInput);
@@ -34,12 +34,12 @@ test('flattenInputJson correctly', () => {
 
 test('flattenInputJson correctly', () => {
   const jsonInput = `
-\`\`\`(property) input: string
+\`\`\`(property) in: string
 \`\`\`
   
 `;
   const expectedOutput = {
-    input: 'string'
+    in: 'string'
   };
 
   const result = convertTypescriptToJson(jsonInput);

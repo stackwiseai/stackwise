@@ -37,11 +37,11 @@ export default async function buildStack({
   console.log('brief after extraction');
   console.log(brief);
   
-  const { input: inputString,  inputValues} = jsonify(stackSnippet);
+  const { in: inputString,  inputValues} = jsonify(stackSnippet);
   console.log('input after JSONIFY');
   console.log(inputString);
   // console.log('output after JSONIFY');
-  // console.log(outExample);
+  // console.log(out);
   // Create a signature from the extracted parameters
   const signature = generateSignature(
     brief,

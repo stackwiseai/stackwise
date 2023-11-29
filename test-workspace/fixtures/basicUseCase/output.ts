@@ -1,6 +1,6 @@
 stack('this is an example', {
-  input: { test: 'ok' },
-  outExample: { test: 'ok' },
+  in: { test: 'ok' },
+  out: { test: 'ok' },
 });
 
 

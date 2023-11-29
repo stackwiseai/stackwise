@@ -9,6 +9,6 @@ export default function transformJSON(input) {
     return match.slice(1, -5);
   });
 
-  // Return the new object with the modified input string and original outExample
-  return { input: inputString };
+  // Return the new object with the modified input string and original out
+  return { in: inputString };
 }

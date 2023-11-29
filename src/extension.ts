@@ -43,7 +43,7 @@ export function activate(context: vscode.ExtensionContext) {
         console.log(inputJSON);
 
         const outputInfo = await getHoverInformation(
-          stackPosition.outExamplePosition
+          stackPosition.outPosition
         );
 
         console.log(`inputInfo`);

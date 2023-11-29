@@ -6,14 +6,14 @@ test('dictionary object', () => {
   const inputString = `stack (
     "ok this is an example",
     {
-      "input": {
+      "in": {
         "dictionary": {
           "Use the chatCompletion endpoint from openai to return a response": "callOpenAI",
           "Find a good name for this method.": "pickMethodName"
         },
         "textCode": isolatedFunction
       },
-      "outExample": {
+      "out": {
         "methodName": "callOpenAI"
       }
     })`;
@@ -21,7 +21,7 @@ test('dictionary object', () => {
   const result = jsonifyString(inputString);
 
   const expectedOutput = {
-    input:
+    in:
       '{"dictionary":{"Use the chatCompletion endpoint from openai to return a response":"callOpenAI","Find a good name for this method.":"pickMethodName"},"textCode":isolatedFunction}',
     inputValues: `{"Use the chatCompletion endpoint from openai to return a response":"callOpenAI","Find a good name for this method.":"pickMethodName"}, isolatedFunction`
   };
@@ -34,14 +34,14 @@ test('extract', () => {
   // Sample JSON-like string with placeholders
 
   const inputString = `stack("test", {
-    input: { test: "ok" },
-    outExample: { test: "ok" }
+    in: { test: "ok" },
+    out: { test: "ok" }
   })`;
 
   const result = jsonifyString(inputString);
 
   const expectedOutput = {
-    input: `{"test":"ok"}`,
+    in: `{"test":"ok"}`,
     inputValues: `"ok"`
   };
 
@@ -53,14 +53,14 @@ test('single quotes', () => {
   // Sample JSON-like string with placeholders
 
   const inputString = `stack('test', {
-    input: { test: 'ok' },
-    outExample: { test: 'ok' }
+    in: { test: 'ok' },
+    out: { test: 'ok' }
   })`;
 
   const result = jsonifyString(inputString);
 
   const expectedOutput = {
-    input: `{"test":"ok"}`,
+    in: `{"test":"ok"}`,
     inputValues: `"ok"`
   };
 
@@ -72,14 +72,14 @@ test('single quotes', () => {
   // Sample JSON-like string with placeholders
 
   const inputString = `stack('multiply two numbers', {
-      input: { x, y },
-      outExample: { check: 0 },
+      in: { x, y },
+      out: { check: 0 },
     })`;
 
   const result = jsonifyString(inputString);
 
   const expectedOutput = {
-    input: `{"x":x,"y":y}`,
+    in: `{"x":x,"y":y}`,
     inputValues: `x, y`,
   };
 

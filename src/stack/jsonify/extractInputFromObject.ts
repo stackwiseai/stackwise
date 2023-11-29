@@ -1,7 +1,7 @@
 export default function extractInputFromObject(inputString: string): string {
-  let start_index = inputString.indexOf('"input":') + 8;
-  if (start_index === 7) { 
-      start_index = inputString.indexOf('input:') + 6;
+  let start_index = inputString.indexOf('"in":') + 5;
+  if (start_index === 4) { 
+      start_index = inputString.indexOf('in:') + 3;
   }
 
   while (inputString[start_index] === ' ') {
