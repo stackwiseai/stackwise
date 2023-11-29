@@ -1,7 +1,7 @@
 import path from 'path';
 import OpenAI from 'openai';
 import { Pinecone } from '@pinecone-database/pinecone';
-import { getEmbedding } from '../../../../stacks/openai/getEmbedding';
+import { getEmbedding } from '../../../stacks/openai/getEmbedding';
 import { readExplainFiles } from '../lib/utils';
 import { BoilerplateMetadata } from '../lib/types';
 import { combineSkeleton } from '../../createSkeleton';
