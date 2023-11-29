@@ -37,7 +37,7 @@ const extensionConfig = {
       },
       {
         test: /\.ts$/,
-        exclude: /node_modules/,
+        exclude: [/node_modules/, /test-workspace/], // Excludes the stacks directory
         use: [
           {
             loader: 'ts-loader',

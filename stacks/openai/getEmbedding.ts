@@ -1,6 +1,6 @@
 /*
-Use OpenAI to get the embedding of the string I pass in
-*/
+ ** Use OpenAI to get the embedding of the string I pass in
+ */
 export async function getEmbedding(toEmbed: string): Promise<number[]> {
   try {
     const requestBody = {
