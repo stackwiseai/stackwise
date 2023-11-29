@@ -5,9 +5,9 @@ stack('this is an example', {
 
 
 
-import convertStringToBoolean from '../../stacks/convertStringToBoolean';
+import generateBooleanResponse from '../../stacks/generateBooleanResponse';
 
-await convertStringToBoolean('this is an example');
+await generateBooleanResponse('this is an example');
 
 
 
@@ -15,8 +15,12 @@ await convertStringToBoolean('this is an example');
 /**
  * Brief: this is an example
  */
-export default async function convertStringToBoolean(in: string): Promise<boolean> {
-    if (in.toLowerCase() === 'true') return true;
-    if (in.toLowerCase() === 'false') return false;
-    throw new Error('Input must be a string of "true" or "false".');
+export default async function generateBooleanOutput(input: string): Promise<string> {
+    let output = '';
+    if (input) {
+        output = 'true';
+    } else {
+        output = 'false';
+    }
+    return output;
 }
