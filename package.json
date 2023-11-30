@@ -1,7 +1,7 @@
 {
   "name": "stackwise",
   "displayName": "stackwise",
-  "description": "become a 10x engineer",
+  "description": "Explain what you want a function to do, and AI builds it",
   "version": "0.0.3",
   "publisher": "stackwise",
   "engines": {
