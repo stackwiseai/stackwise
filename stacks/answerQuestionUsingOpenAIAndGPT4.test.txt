@@ -1,0 +1,5 @@
+test('answerQuestionUsingOpenAIAndGPT4 correctly', async () => {
+  const question = 'what is the meaning of life?';
+  const response = await stack('answer my  question using OpenAI and gpt-4', {in: question, out: '42'})
+  console.log(response);
+});
