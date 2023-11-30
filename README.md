@@ -5,8 +5,7 @@
 [![GitHub Repo stars](https://img.shields.io/github/stars/stackwiseai/stackwise?style=social)](https://github.com/stackwiseai/stackwise/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Stackwise is a VSCode extension that increases development productivity without switching focus. Based on a description of functionality, it generates and imports the code that you need.
-
+Stackwise is a VS Code extension that automatically writes and imports nodejs functions so that you can write code without context switching.
 
 # demo here
 
