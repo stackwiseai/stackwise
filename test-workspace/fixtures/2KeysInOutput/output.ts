@@ -6,8 +6,8 @@ stack('this is an example', {
     },
   });
 import exampleFunction from '../../stacks/exampleFunction';
-
 await exampleFunction('this is a brief');
+  
 
 /**
  * Brief: this is an example

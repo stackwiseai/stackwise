@@ -7,3 +7,5 @@ stackRegistry.json
 dist
 .env
 .vscode/launch.json
+test-workspace/.env
+stacks/.env

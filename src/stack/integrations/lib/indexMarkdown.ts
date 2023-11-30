@@ -1,6 +1,6 @@
 import { Pinecone, PineconeRecord } from '@pinecone-database/pinecone';
 
-import { getEmbedding } from '../../../../stacks/openai/getEmbedding';
+import { getEmbedding } from '../../../stacks/openai/getEmbedding';
 import { models } from '../replicate/documentation/shortenedModels';
 
 const pinecone = new Pinecone({

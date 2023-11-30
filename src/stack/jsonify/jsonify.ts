@@ -30,7 +30,8 @@ export default function jsonifyString(inputString) {
   try {
     // if modified string doesn't start with " or {, add { to the beginning
     if (modifiedString[0] !== '"' && modifiedString[0] !== '{' && modifiedString[0] !== "'") {
-      modifiedString = `"${modifiedString}"`;
+      return {in: modifiedString, inputValues: modifiedString};
+
     }
     json = resilientJSONParse(modifiedString);
   } catch (error) {
