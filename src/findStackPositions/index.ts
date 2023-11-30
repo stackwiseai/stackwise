@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import PositionObject from '../positionObject';
-import getHoverInformation from '../hover';
+import getHoverInformation from '../getHoverInformation';
 
 export default async function findStackPositions(
   document
@@ -42,17 +42,10 @@ export default async function findStackPositions(
         }
 
         // Find the position of 'out:'
-        let outPosition = findNextKeyword(
-          'out:',
-          i,
-          stackIndex
-        );
+        let outPosition = findNextKeyword('out:', i, stackIndex);
         if (outPosition) {
           positionObject['outPosition'] = outPosition;
-          console.log(
-            'outPosition added:',
-            positionObject.outPosition
-          );
+          console.log('outPosition added:', positionObject.outPosition);
         }
 
         positions.push(positionObject);

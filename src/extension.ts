@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import findStackPositions from './findStackPositions';
-import getHoverInformation from './hover';
+import getHoverInformation from './getHoverInformation';
 import getStackSnippet from './getStackSnippet';
 import trackStackFileRenames from './trackStackFileRenames';
 import buildOrUpdateStack from './buildOrUpdateStack';
@@ -41,9 +41,7 @@ export function activate(context: vscode.ExtensionContext) {
         console.log(`inputJSON after calling convertTypescriptToJson`);
         console.log(inputJSON);
 
-        const outputInfo = await getHoverInformation(
-          stackPosition.outPosition
-        );
+        const outputInfo = await getHoverInformation(stackPosition.outPosition);
 
         console.log(`inputInfo`);
         console.log(outputInfo);

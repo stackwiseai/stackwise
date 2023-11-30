@@ -93,7 +93,6 @@
     "robotjs": "^0.6.0",
     "strip-comments": "^2.0.1",
     "ts-evaluator": "^1.2.0",
-    "ts-morph": "^20.0.0",
     "ts-node": "^10.9.1",
     "vscode-languageclient": "^9.0.1",
     "vscode-languageserver": "^9.0.1",
