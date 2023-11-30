@@ -1,4 +1,4 @@
-import answerQuestionUsingOpenAIStreaming from '../../stacks/answerQuestionUsingOpenAIStreaming';
+import getWhatString from '../../stacks/getWhatString';
 const question = 'what is the meaning of life?';
 
 async function main() {
@@ -8,4 +8,8 @@ async function main() {
 }
 
 main();
+
+
+
+await getWhatString('what is the meaning of life?');
 

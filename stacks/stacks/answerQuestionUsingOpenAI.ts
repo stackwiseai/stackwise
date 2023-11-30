@@ -1,4 +1,6 @@
 import OpenAI from 'openai';
+require('dotenv').config();
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
@@ -12,5 +14,5 @@ export default async function answerQuestionUsingOpenAI(input: string): Promise<
     model: 'gpt-3.5-turbo',
   });
   
-  return response.choices[0].message.content ?? '';
+  return response.choices[0].message.content;
 }
