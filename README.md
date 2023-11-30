@@ -1,11 +1,11 @@
-# Stackwise: Plug and play functions within your workflow.
+# Stackwise: Explain what you want a function to do, and AI builds it..
 
 [![Discord Follow](https://dcbadge.vercel.app/api/server/KfUxa8h3s6?style=flat)](https://discord.gg/KfUxa8h3s6)
 [![Twitter Follow](https://img.shields.io/twitter/follow/stackwiseai?style=social)](https://twitter.com/stackwiseai)
 [![GitHub Repo stars](https://img.shields.io/github/stars/stackwiseai/stackwise?style=social)](https://github.com/stackwiseai/stackwise/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Stackwise allows you to focus more on what you want to be building, instead of the minutae that come with it. Simply explain what the block of code should do, and Stackwise will create the functionality you desire.
+Stackwise is a VSCode extension that increases development productivity without switching focus. Based on a description of functionality, it generates and imports the code that you need.
 
 
 # demo here
