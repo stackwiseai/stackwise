@@ -5,15 +5,17 @@ import replaceStackSnippetWithInjectFunction from '../collapseStack';
 import addImportStatement from '../addImportStatement';
 import chooseBoilerplate from '../stack/integrations/generic/chooseBoilerplate';
 import generateFunction from '../stack/integrations/generic/generateFunction';
-import createBoilerplateEmbedding from '../stack/createEmbedding';
+import createBoilerplateEmbedding from '../stack/createEmbedding/boilerplateEmbedding';
 import { BoilerplateMetadata } from '../stack/integrations/lib/types';
-import { incrementEmbeddingCount } from '../stack/integrations/lib/incrementEmbeddingCount';
+import updateEmbedding from '../stack/updateEmbedding';
 import stackRegistry from '../stack/registry';
 import { combineSkeleton } from '../stack/createSkeleton';
+import createMethodName from '../stack/createMethodName';
 
 export default async function buildOrUpdateStack(
   stackSnippet,
   stackPosition,
+  stackIntegration: string | null,
   inputJSON,
   outputJSON,
   document: vscode.TextDocument
@@ -26,7 +28,6 @@ export default async function buildOrUpdateStack(
     brief,
     functionId,
     functionExists,
-    methodName,
     inputString,
     briefSkeleton,
     functionAndOutputSkeleton,
@@ -37,49 +38,54 @@ export default async function buildOrUpdateStack(
     stackSnippet: stackSnippet,
   });
 
-  let integrationType = 'generic';
+  const fullSkeleton = combineSkeleton(
+    briefSkeleton,
+    functionAndOutputSkeleton
+  );
 
-  console.log(`functionId in buildOrUpdateStack:`, functionId);
+  let integrationType: string = 'generic';
+  let userSpecifiedIntegration: boolean = false; // purely so exact match doesnt override it
+  if (stackIntegration) {
+    integrationType = stackIntegration;
+    userSpecifiedIntegration = true;
+  }
+
+  let methodName;
   if (!functionExists) {
     console.log(`function does not exist yet`);
-    const { nearestBoilerplate, integration, exactMatch } =
-      await chooseBoilerplate(
-        briefSkeleton,
-        functionAndOutputSkeleton,
-        functionId
-      );
+    // embedding is null if exactMatch is true
+    const { nearestBoilerplate, integration, exactMatch, embedding } =
+      await chooseBoilerplate(fullSkeleton, functionId, integrationType);
 
-    integrationType = integration;
-
-    console.log(
-      `nearestBoilerplate in buildOrUpdateStack:`,
-      nearestBoilerplate
-    );
-    console.log(`integration in buildOrUpdateStack:`, integration);
-    console.log(`exactMatch in buildOrUpdateStack:`, exactMatch);
+    if (!userSpecifiedIntegration) {
+      // purely so exact match doesnt override it
+      integrationType = integration;
+    }
 
     if (exactMatch) {
       console.log(`exactMatch of functionId ${functionId}`);
       // if it's an exact match it means that's it's a single BoilerplateMetadata (hash directly matched or >0.98 similarity)
       const boilerplate = nearestBoilerplate as BoilerplateMetadata;
-      // this replaces the previous function name with the new one
-      const existingFunction = boilerplate.functionString.replace(
-        new RegExp(methodName, 'g'),
-        boilerplate.methodName
-      );
-      createStackFile(existingFunction, methodName, integration);
-      // increment count of times it's been used
-      await incrementEmbeddingCount(boilerplate.functionId);
+      methodName = boilerplate.methodName;
+
+      createStackFile(boilerplate.functionString, methodName, integrationType);
+      // increment count of times it's been used and what it was retrieved by
+      await updateEmbedding(boilerplate, functionId);
     } else {
       console.log(`NO exact match for the functionId ${functionId}`);
+
+      let { updatedMethodName, updatedFunctionAndOutputSkeleton } =
+        await createMethodName(briefSkeleton, functionAndOutputSkeleton, brief);
+      methodName = updatedMethodName;
 
       // generate a function from the default values
       let generatedFunction = await generateFunction(
         briefSkeleton,
-        functionAndOutputSkeleton,
+        updatedFunctionAndOutputSkeleton,
         brief,
         nearestBoilerplate,
-        integration
+        integrationType,
+        embedding
       );
 
       generatedFunction = combineSkeleton(briefSkeleton, generatedFunction);
@@ -94,15 +100,14 @@ export default async function buildOrUpdateStack(
         brief,
         inputJSON,
         outputJSON,
-        integration,
+        integrationType,
         functionId,
         generatedFunction,
         methodName,
-        briefSkeleton,
-        functionAndOutputSkeleton
+        fullSkeleton
       );
 
-      createStackFile(generatedFunction, methodName, integration);
+      createStackFile(generatedFunction, methodName, integrationType);
     }
 
     stackRegistry.register(methodName, functionId);

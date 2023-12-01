@@ -87,6 +87,7 @@ export function activate(context: vscode.ExtensionContext) {
         buildOrUpdateStack(
           stackSnippet,
           stackPosition.stackPosition,
+          stackPosition.integration,
           inputJSON,
           outputTypeJSON,
           document

@@ -19,17 +19,14 @@ interface OutputType {
   nearestBoilerplate: BoilerplateMetadata | BoilerplateMetadata[] | null;
   integration: string;
   exactMatch: boolean;
+  embedding?: number[];
 }
 
 export default async function chooseBoilerplate(
-  briefSkeleton: string,
-  functionAndOutputSkeleton: string,
-  functionId: string
+  fullSkeleton: string,
+  functionId: string,
+  integration: string
 ): Promise<OutputType> {
-  const fullSkeleton = combineSkeleton(
-    briefSkeleton,
-    functionAndOutputSkeleton
-  );
   // decide if there's an integration required
 
   const index = pinecone.index('general');
@@ -86,6 +83,7 @@ export default async function chooseBoilerplate(
       nearestBoilerplate: match,
       integration: match[0].integration,
       exactMatch: false,
+      embedding,
     };
   } else {
     console.log('No similar matches found, using OpenAI to choose integration');
@@ -94,39 +92,41 @@ export default async function chooseBoilerplate(
       path.join(__dirname, '..')
     );
 
-    let integration = 'generic';
-
-    try {
-      const response = await openai.chat.completions.create({
-        model: 'gpt-3.5-turbo',
-        messages: [
-          {
-            role: 'system',
-            content: `You are an expert and figuring out what the correct starting point for a user request is. This can either be a specific integration required based on desired functionality, or a generic template. Below you will be given a skeleton of a function along with the desired input and output types. You will also be given a brief description of what the function should do. Your job is to choose which integration you should use to satisfy the skeleton and brief description.
+    console.log('integrationStrings in chooseBoilerplate:', integration);
+    if (integration === 'generic') {
+      try {
+        const response = await openai.chat.completions.create({
+          model: 'gpt-3.5-turbo',
+          messages: [
+            {
+              role: 'system',
+              content: `You are an expert and figuring out what the correct starting point for a user request is. This can either be a specific integration required based on desired functionality, or a generic template. Below you will be given a skeleton of a function along with the desired input and output types. You will also be given a brief description of what the function should do. Your job is to choose which integration you should use to satisfy the skeleton and brief description.
 The skeleton of the function is: ${fullSkeleton}
 Your choices for potential starting points are: ${integrationStrings}`,
-          },
-          {
-            role: 'system',
-            content: `Now, choose which one of the above integrations you would use to satisfy the skeleton and brief description. If you don't think that any of the functionalities are needed, just respond with 'generic'. 
+            },
+            {
+              role: 'system',
+              content: `Now, choose which one of the above integrations you would use to satisfy the skeleton and brief description. If you don't think that any of the functionalities are needed, just respond with 'generic'. 
 Only respond with either 'generic' or the names of one of the above integrations. Do not under any circumstances respond with anything else, JUST a single word representing which starting point is needed.`,
-          },
-        ],
-        temperature: 0,
-      });
+            },
+          ],
+          temperature: 0,
+        });
 
-      integration = response.choices[0].message.content;
-      console.log('Integration chosen:', integration);
-    } catch (error) {
-      console.log('Error querying OpenAI:', error);
+        integration = response.choices[0].message.content;
+        console.log('Integration chosen:', integration);
+      } catch (error) {
+        console.log('Error querying OpenAI:', error);
+      }
+
+      console.log('Chose integration:', integration);
     }
-
-    console.log('Chose integration:', integration);
 
     return {
       nearestBoilerplate: null,
       integration: integration,
       exactMatch: false,
+      embedding,
     };
   }
 }
