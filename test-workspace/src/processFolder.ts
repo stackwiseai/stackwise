@@ -35,7 +35,7 @@ export async function processFolder(folder: string): Promise<void> {
 
     await keyTapWithDelay('up', 'command', 1000);
     await keyTapWithDelay('enter', null, 200);
-    await keyTapWithDelay('s', 'command', 8000);
+    await keyTapWithDelay('s', 'command', 11000);
     await keyTapWithDelay('s', 'command', 200);
     console.log('Performed key taps with delays');
 

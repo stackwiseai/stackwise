@@ -15,6 +15,6 @@ const checking = await await multiplyNumbers(x, y);
 /**
  * Brief: multiply two numbers
  */
-export default async function multiplyNumbers(a: number, b: number): Promise<number> {
-    return Promise.resolve(a * b);
+export default async function multiplyNumbers(x: number, y: number): Promise<any> {
+    return x * y;
 }

@@ -17,6 +17,7 @@ await multiplyNumbers(2, 5);
 /**
  * Brief: multiply two numbers
  */
-export default async function multiplyNumbers(input: {a: number, b: number}): Promise<number> {
-    return input.a * input.b;
+export default async function multiplyNumbers(x: number, y: number): Promise<string> {
+    const result = x * y;
+    return result.toString();
 }
