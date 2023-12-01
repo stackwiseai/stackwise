@@ -1,0 +1,8 @@
+test("callOpenAi correctly", async () => {
+  const question = "what is a flowchart in computer programming?";
+  const response = stack("generate a code using gpt-4", {
+    in: question,
+    out: "A flowchart is a type of diagram that represents an algorithm, workflow or process. The flowchart shows the steps as boxes of various kinds, and their order by connecting the boxes with arrows. This diagrammatic representation illustrates a solution model to a given problem. Flowcharts are used in analyzing, designing, documenting or managing a process or program in various fields",
+  });
+  console.log(response);
+});
