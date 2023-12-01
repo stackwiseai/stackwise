@@ -1,4 +1,4 @@
-import answerQuestionUsingOpenAI from './callOpenAI';
+import answerQuestionUsingOpenAI from '.';
 
 test('callOpenAI correctly', async () => {
   const question = 'what is the meaning of life?';
