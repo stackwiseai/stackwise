@@ -9,7 +9,7 @@ const openai = new OpenAI({
  */
 export default async function defineWordUsingOpenAI(input: string): Promise<string> {
     const response = await openai.chat.completions.create({
-        messages: [{ role: 'system', content: 'I am a helpful assistant.'}, { role: 'user', content: `What is the definition of ${input}?` }],
+        messages: [{ role: 'system', content: 'I am a helpful assistant.'}, { role: 'user', content: input }],
         model: 'gpt-3.5-turbo',
         temperature: 0
     });
