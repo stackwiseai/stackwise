@@ -1,0 +1,22 @@
+test("Get one record on pocketbase by id", async () => {
+  const collectionName = "example";
+  const recordId = "sdhvoh20v7tps83";
+
+  const response = stack("Get one record on pocketbase by id", {
+    in: {
+      collectionName,
+      recordId,
+    },
+    out: {
+      id: "sdhvoh20v7tps83",
+      name: "Antonio",
+      order: 2,
+    },
+  });
+
+  expect(response).toEqual({
+    id: "sdhvoh20v7tps83",
+    name: "Antonio",
+    order: 2,
+  });
+});
