@@ -1,4 +1,4 @@
-# Stackwise: Explain what you want a function to do, and AI builds it..
+# Stackwise: Explain what you want a function to do, and AI builds it.
 
 [![Discord Follow](https://dcbadge.vercel.app/api/server/KfUxa8h3s6?style=flat)](https://discord.gg/KfUxa8h3s6)
 [![Twitter Follow](https://img.shields.io/twitter/follow/stackwiseai?style=social)](https://twitter.com/stackwiseai)
@@ -6,9 +6,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Stackwise is a VS Code extension that automatically writes and imports nodejs functions so that you can write code without context switching.
-
-# demo here
-![Install](https://github.com/stackwiseai/stackwise/blob/main/assets/Built-in%20Retina%20Display.gif)
 
 ### Usage
 
