@@ -18,12 +18,6 @@ stack("brief describing a specific action", {
 })
 ```
 
-The input and output are optional, meaning you will get a fully typed function even if you just use:
-
-```typescript
-stack('brief');
-```
-
 This approach streamlines API interactions, reducing the need for intricate coding and extensive API knowledge. Fully typed, and editable within your repo.
 
 Upon saving your command, Stackwise replaces it with a collapsed function with your inputs and an import statement at the top of your file. The generated code resides in the /stacks directory within your project root, ensuring clean and maintainable codebase.
