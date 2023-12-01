@@ -6,3 +6,5 @@ export const directoryPath = path.join(
   // TODO: pull from config file
   'stacks'
 );
+
+export const placeholderName = 'stackPlaceholder';
