@@ -38,7 +38,7 @@ export default async function buildStack({
   console.log(brief);
   let inputString = '';
   let inputValues = '';
-  if (inputJSON.in !== null || outputJSON.out !== null) {
+  if (inputJSON.in !== null) {
     const result = jsonify(stackSnippet);
     inputString = result.in;
     inputValues = result.inputValues;

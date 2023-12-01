@@ -1,1 +1,1 @@
-
+stack('this is an example');
