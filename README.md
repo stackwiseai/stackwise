@@ -8,6 +8,8 @@
 Stackwise is a VS Code extension that automatically writes and imports nodejs functions so that you can write code without context switching.
 
 # demo here
+Install
+![Alt Text](url-of-gif)
 
 ### Usage
 

@@ -2,8 +2,9 @@
   "name": "stackwise",
   "displayName": "stackwise",
   "description": "Explain what you want a function to do, and AI builds it",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "publisher": "stackwise",
+  "icon": "assets/icon.png",
   "engines": {
     "vscode": "^1.83.0"
   },
