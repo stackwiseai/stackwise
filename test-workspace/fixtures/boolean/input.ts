@@ -1,6 +1,3 @@
+import exampleFunction from '../../stacks/exampleFunction';
 
-stack('this is an example', {
-  in: { test: true },
-  out: { test: 'ok' },
-});
-
+await exampleFunction(true);

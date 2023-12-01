@@ -37,16 +37,27 @@ export function activate(context: vscode.ExtensionContext) {
         console.log(`inputInfo`);
         console.log(inputInfo);
 
-        const inputJSON = convertTypescriptToJson(inputInfo);
+        let inputJSON = convertTypescriptToJson(inputInfo);
+        if (Object.keys(inputJSON).length === 0) {
+          inputJSON = {
+            in: null
+          };
+        }
+
         console.log(`inputJSON after calling convertTypescriptToJson`);
         console.log(inputJSON);
-
+        
         const outputInfo = await getHoverInformation(stackPosition.outPosition);
-
+       
         console.log(`inputInfo`);
         console.log(outputInfo);
 
-        const outputTypeJSON = convertTypescriptToJson(outputInfo);
+        let outputTypeJSON = convertTypescriptToJson(outputInfo);
+        if (Object.keys(outputTypeJSON).length === 0) {
+          outputTypeJSON = {
+            out: null
+          };
+        }
         console.log(`outputTypeJSON`);
         console.log(outputTypeJSON);
 

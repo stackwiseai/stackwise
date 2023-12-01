@@ -1,7 +1,9 @@
-stack('multiply two numbers', {
-  in: { x: 2, y: 5 },
+stack('multiply three numbers', {
+  in: { x: 2, y: 5, z: 3 },
   out: 0,
 });
+
+
 
 
 
