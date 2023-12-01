@@ -8,7 +8,7 @@
 Stackwise is a VS Code extension that automatically writes and imports nodejs functions so that you can write code without context switching.
 
 # demo here
-![Install]([assets/Built-in Retina Display.gif](https://github.com/stackwiseai/stackwise/blob/main/assets/Built-in%20Retina%20Display.gif))
+![Install](https://github.com/stackwiseai/stackwise/blob/main/assets/Built-in%20Retina%20Display.gif)
 
 ### Usage
 
