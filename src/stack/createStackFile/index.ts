@@ -8,8 +8,10 @@ export default function createStackFile(
   methodName: string,
   integration: string
 ) {
+  console.log('createStackFile called', integration);
+  console.log('directoryPath:', directoryPath);
   let stackPath = directoryPath;
-  if (integration && integration !== 'generic') {
+  if (integration !== 'generic') {
     stackPath = path.join(directoryPath, integration);
   }
   // Create directory if it doesn't exist
@@ -17,6 +19,7 @@ export default function createStackFile(
     fs.mkdirSync(stackPath, { recursive: true });
   }
 
+  console.log('stackPath:', stackPath);
   const baseFilePath = path.join(stackPath, `${methodName}`);
 
   // Check for existing file and append a number if necessary

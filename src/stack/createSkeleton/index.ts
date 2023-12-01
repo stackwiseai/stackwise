@@ -1,8 +1,10 @@
+import { placeholderName } from '../../constants';
+
 const BRIEF_TEMPLATE = `/**
  * Brief: {{brief}}
  */`;
 
-const FUNCTION_AND_TYPE_TEMPLATE = `{{outputTypeInterface}}export default async function {{name}}({{flatInput}}): {{outputType}} {
+const FUNCTION_AND_TYPE_TEMPLATE = `{{outputTypeInterface}}export default async function ${placeholderName}({{flatInput}}): {{outputType}} {
     {{returnStatement}}
 }`;
 
@@ -30,15 +32,8 @@ function buildParamList(params) {
   return Object.keys(params).join(', ');
 }
 
-export default function createSkeleton(
-  brief,
-  params,
-  output,
-  signature,
-  flatInput
-) {
+export default function createSkeleton(brief, params, output, flatInput) {
   const processedBrief = brief.trim();
-  const processedSignature = signature.trim();
   const processedParamList = buildParamList(params).trim();
 
   // Determine if output object has only one property
@@ -64,7 +59,6 @@ export default function createSkeleton(
 
   const replacementValues = {
     brief: processedBrief,
-    name: processedSignature,
     paramList: processedParamList,
     outputTypeInterface: outputTypeInterfaceString,
     paramListValues: buildParamList(params),

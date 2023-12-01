@@ -84,7 +84,6 @@ export default async function buildStack({
     brief,
     inputJSON,
     outputJSON,
-    functionId,
     flatInput
   );
 
@@ -103,7 +102,7 @@ export default async function buildStack({
 
   if (methodName) {
     functionAndOutputSkeleton = functionAndOutputSkeleton.replace(
-      'placeholderStackwiseFunction',
+      'stackPlaceholder',
       methodName
     );
 
@@ -121,6 +120,6 @@ export default async function buildStack({
     inputString,
     briefSkeleton,
     functionAndOutputSkeleton,
-    inputValues
+    inputValues,
   };
 }

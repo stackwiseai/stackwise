@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
 
 export default interface PositionObject {
-    stackPosition: vscode.Position;
-    inputPosition?: vscode.Position;
-    outPosition?: vscode.Position;
+  stackPosition: vscode.Position;
+  integration: string | null;
+  inputPosition?: vscode.Position;
+  outPosition?: vscode.Position;
 }
