@@ -1,0 +1,8 @@
+test("callOpenAi correctly", async () => {
+  const question = "What is cryptocurrency?";
+  const response = stack("Define Cryptocurrency Using OpenAI", {
+    in: question,
+    out: "A cryptocurrency is a digital currency, which is an alternative form of payment created using encryption algorithms. The use of encryption technologies means that cryptocurrencies function both as a currency and as a virtual accounting system. To use cryptocurrencies, you need a cryptocurrency wallet. These wallets can be software that is a cloud-based service or is stored on your computer or on your mobile device. The wallets are the tool through which you store your encryption keys that confirm your identity and link to your cryptocurrency.",
+  });
+  console.log(response);
+});
