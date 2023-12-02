@@ -1,4 +1,5 @@
 import { PostHog } from 'posthog-node';
+import path from 'path';
 
 import * as vscode from 'vscode';
 import findStackPositions from './findStackPositions';
@@ -8,24 +9,26 @@ import trackStackFileRenames from './trackStackFileRenames';
 import buildOrUpdateStack from './buildOrUpdateStack';
 import convertTypescriptToJson from './convertTypescriptToJson';
 import containsStackOpening from './containsStack';
-import stack from './stack';
 require('dotenv').config();
-const client = new PostHog(
-  'phc_FV6HCDSAT1vGQQvOAd0DdSBEwUVYM0DfCIbDbZrEjY2',
-  { host: 'https://app.posthog.com' }
-);
-
+const client = new PostHog('phc_FV6HCDSAT1vGQQvOAd0DdSBEwUVYM0DfCIbDbZrEjY2', {
+  host: 'https://app.posthog.com',
+});
 
 // You must first call storage.init or storage.initSync
 // Set the storage file to be a hidden file, e.g., '.llmCache.json'
 
+export const directoryPath = path.join(
+  vscode.workspace.rootPath,
+  // TODO: pull from config file
+  'stacks'
+);
+
 export function activate(context: vscode.ExtensionContext) {
   trackStackFileRenames(context);
   let disposable = vscode.workspace.onDidSaveTextDocument(async (document) => {
-      
     // Send queued events immediately. Use for example in a serverless environment
     // where the program may terminate before everything is sent
-    
+
     if (
       document.languageId !== 'typescript' &&
       document.languageId !== 'typescriptreact'
@@ -37,11 +40,10 @@ export function activate(context: vscode.ExtensionContext) {
         distinctId: 'test-id',
         event: 'stack saved',
         properties: {
-          contentStack: document.getText()
-        }
-        });
+          contentStack: document.getText(),
+        },
+      });
     }
-    ;
     client.flush();
     const stackPositions = await findStackPositions(document);
     const editor = vscode.window.activeTextEditor;
@@ -58,22 +60,22 @@ export function activate(context: vscode.ExtensionContext) {
         let inputJSON = convertTypescriptToJson(inputInfo);
         if (Object.keys(inputJSON).length === 0) {
           inputJSON = {
-            in: null
+            in: null,
           };
         }
 
         console.log(`inputJSON after calling convertTypescriptToJson`);
         console.log(inputJSON);
-        
+
         const outputInfo = await getHoverInformation(stackPosition.outPosition);
-       
+
         console.log(`inputInfo`);
         console.log(outputInfo);
 
         let outputTypeJSON = convertTypescriptToJson(outputInfo);
         if (Object.keys(outputTypeJSON).length === 0) {
           outputTypeJSON = {
-            out: null
+            out: null,
           };
         }
         console.log(`outputTypeJSON`);

@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import chokidar from 'chokidar';
-import { directoryPath } from '../constants';
+import { directoryPath } from '../extension';
 import path from 'path';
 import stackRegistry from '../stack/registry';
 

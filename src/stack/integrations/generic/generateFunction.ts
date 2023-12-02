@@ -11,15 +11,6 @@ export default async function generateFunction(
   integration: string,
   embedding?: number[]
 ): Promise<string> {
-  console.log('integration in generateFunction:', integration);
-  console.log('exampleBoilerplate in generateFunction:', exampleBoilerplate);
-  console.log('briefSkeleton in generateFunction:', briefSkeleton);
-  console.log(
-    'functionAndOutputSkeleton in generateFunction:',
-    functionAndOutputSkeleton
-  );
-  console.log('brief in generateFunction:', brief);
-
   if (integration === 'generic') {
     // it's either null, meaning no example boilerplate was found or a string
     const messages: Message[] = [];

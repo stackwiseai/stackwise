@@ -1,4 +1,5 @@
 import createSkeleton, { combineSkeleton } from '.';
+import { placeholderName } from '../../constants';
 
 describe('createSkeleton', () => {
   test('create Skeleton given a signature', () => {
@@ -9,7 +10,6 @@ describe('createSkeleton', () => {
     // Modified output object to have two keys
     const output = { output: 'string', description: 'string' };
 
-    const signature = 'placeholderStackwiseFunction';
     const flatInput = 'prompt: string';
 
     // Updated expected output to include a documentation comment and a new key in the interface
@@ -21,7 +21,7 @@ describe('createSkeleton', () => {
 /**
  * Brief: use the given prompt to call the Fuyu model to get a description of the image
  */
-export default async function placeholderStackwiseFunction(prompt: string): Promise<OutputType> {
+export default async function ${placeholderName}(prompt: string): Promise<OutputType> {
     return "";
 }`;
 
@@ -29,7 +29,6 @@ export default async function placeholderStackwiseFunction(prompt: string): Prom
       brief,
       params,
       output,
-      signature,
       flatInput
     );
     const combinedFunction = combineSkeleton(
@@ -46,15 +45,13 @@ export default async function placeholderStackwiseFunction(prompt: string): Prom
 
     // Output object with a single key
     const output = { result: 'string' };
-
-    const signature = 'singleOutputFunction';
     const flatInput = 'prompt: string';
 
     // Expected output with an interface having a single key
     const expectedOutput = `/**
  * Brief: use the given prompt to call the Fuyu model to get a description of the image
  */
-export default async function singleOutputFunction(prompt: string): Promise<string> {
+export default async function ${placeholderName}(prompt: string): Promise<string> {
     return "string";
 }`;
 
@@ -62,7 +59,6 @@ export default async function singleOutputFunction(prompt: string): Promise<stri
       brief,
       params,
       output,
-      signature,
       flatInput
     );
     const combinedFunction = combineSkeleton(
@@ -80,14 +76,13 @@ export default async function singleOutputFunction(prompt: string): Promise<stri
     // Output object with a single key
     const output = { result: 'string' };
 
-    const signature = 'singleOutputFunction';
     const flatInput = 'prompt: string';
 
     // Expected output with an interface having a single key
     const expectedOutput = `/**
  * Brief: use the given prompt to call the Fuyu model to get a description of the image
  */
-export default async function singleOutputFunction(prompt: string): Promise<string> {
+export default async function ${placeholderName}(prompt: string): Promise<string> {
     return "string";
 }`;
 
@@ -95,7 +90,6 @@ export default async function singleOutputFunction(prompt: string): Promise<stri
       brief,
       params,
       output,
-      signature,
       flatInput
     );
     const combinedFunction = combineSkeleton(
@@ -113,14 +107,13 @@ export default async function singleOutputFunction(prompt: string): Promise<stri
     // Output object with a single key
     const output = { result: { ok: 'string' } };
 
-    const signature = 'singleOutputFunction';
     const flatInput = 'prompt: string';
 
     // Expected output with an interface having a single key
     const expectedOutput = `/**
  * Brief: use the given prompt to call the Fuyu model to get a description of the image
  */
-export default async function singleOutputFunction(prompt: string): Promise<any> {
+export default async function ${placeholderName}(prompt: string): Promise<any> {
     return {"ok":"string"};
 }`;
 
@@ -128,7 +121,6 @@ export default async function singleOutputFunction(prompt: string): Promise<any>
       brief,
       params,
       output,
-      signature,
       flatInput
     );
     const combinedFunction = combineSkeleton(
@@ -146,7 +138,6 @@ export default async function singleOutputFunction(prompt: string): Promise<any>
     // Modified output object to have two keys
     const output = { output: 'string', description: 'string' };
 
-    const signature = 'placeholderStackwiseFunction';
     const flatInput = 'prompt: string';
 
     // Updated expected output to include a documentation comment and a new key in the interface
@@ -158,7 +149,7 @@ export default async function singleOutputFunction(prompt: string): Promise<any>
 /**
  * Brief: use the given prompt to call the Fuyu model to get a description of the image
  */
-export default async function placeholderStackwiseFunction(prompt: string): Promise<OutputType> {
+export default async function ${placeholderName}(prompt: string): Promise<OutputType> {
     return "";
 }`;
 
@@ -166,7 +157,6 @@ export default async function placeholderStackwiseFunction(prompt: string): Prom
       brief,
       params,
       output,
-      signature,
       flatInput
     );
     const combinedFunction = combineSkeleton(
@@ -184,14 +174,13 @@ export default async function placeholderStackwiseFunction(prompt: string): Prom
     // Modified output object to have two keys
     const output = undefined;
 
-    const signature = 'placeholderStackwiseFunction';
     const flatInput = 'prompt: string';
 
     // Updated expected output to include a documentation comment and a new key in the interface
     const expectedOutput = `/**
  * Brief: use the given prompt to call the Fuyu model to get a description of the image
  */
-export default async function placeholderStackwiseFunction(prompt: string): Promise<null> {
+export default async function ${placeholderName}(prompt: string): Promise<null> {
     return null;
 }`;
 
@@ -199,7 +188,6 @@ export default async function placeholderStackwiseFunction(prompt: string): Prom
       brief,
       params,
       output,
-      signature,
       flatInput
     );
     const combinedFunction = combineSkeleton(
@@ -217,14 +205,13 @@ export default async function placeholderStackwiseFunction(prompt: string): Prom
     // Modified output object to have two keys
     const output = { out: 0 };
 
-    const signature = 'placeholderStackwiseFunction';
     const flatInput = 'prompt: string';
 
     // Updated expected output to include a documentation comment and a new key in the interface
     const expectedOutput = `/**
  * Brief: use the given prompt to call the Fuyu model to get a description of the image
  */
-export default async function placeholderStackwiseFunction(prompt: string): Promise<number> {
+export default async function ${placeholderName}(prompt: string): Promise<number> {
     return 0;
 }`;
 
@@ -232,7 +219,6 @@ export default async function placeholderStackwiseFunction(prompt: string): Prom
       brief,
       params,
       output,
-      signature,
       flatInput
     );
     const combinedFunction = combineSkeleton(
