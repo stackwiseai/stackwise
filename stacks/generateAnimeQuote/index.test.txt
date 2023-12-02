@@ -1,4 +1,4 @@
-test('Generate a random dog image', async () => {
+test('Generate a random Anime quote', async () => {
 
   const response = stack("Generate a random Anime quote");
 
