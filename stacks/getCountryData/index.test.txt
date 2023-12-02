@@ -1,0 +1,8 @@
+import generateRestCountries from '.';
+
+test('get all countries in the world using restcountries.com', async () => {
+
+  const response = stack("get all countries in the world using restcountries.com")
+  expect(response[0].name).toContain('Afghanistan');
+  
+});
