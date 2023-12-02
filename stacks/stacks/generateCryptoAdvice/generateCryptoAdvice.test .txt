@@ -1,0 +1,13 @@
+
+
+test("callOpenAi correctly", async () => {
+  const question = "What do I need to know before buying cryptocurrency?";
+  const response = stack(
+    "Generate Advice in Starting Crypto Using OpenAI",
+    {
+      in: question,
+      out: "Cryptocurrency is a risky investment, so approach it with your eyes open to potential pitfalls. Digital currency is volatile, it’s largely unregulated, and there are many unknowns about how this new form of currency will develop in the future. ",
+    }
+  );
+  console.log(response);
+});
