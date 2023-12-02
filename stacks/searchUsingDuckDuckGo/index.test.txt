@@ -1,0 +1,14 @@
+import searchUsingDuckDuckGo from '../../stacks/searchUsingDuckDuckGo';
+test('Find when the queen died', async () => {
+  const query = 'what date the queen died';
+
+  const response = await stack(
+    'Make a search using duckduckgo',
+    {
+      in: query,
+      out: 'September 8, 2022'
+    }
+  );
+
+  expect(response).toEqual('September 8, 2022');
+});
