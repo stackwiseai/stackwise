@@ -1,0 +1,5 @@
+test('Initialize a client using supabase', async () => {
+
+  const response = stack('Initialize a client using supabase')
+  expect(response.auth).toBeDefined();
+});

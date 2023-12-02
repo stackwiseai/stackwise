@@ -1,0 +1,4 @@
+test('Update data from the table using supabase client', async () => {
+  const response = stack('Update data from the table using supabase client');
+  expect(response).not.toBeNull();
+});
