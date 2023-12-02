@@ -9,4 +9,11 @@ dist
 .vscode/launch.json
 test-workspace/.env
 stacks/.env
-.DS_Store 
+.DS_Store
+.package-lock.json
+.package.json
+tsconfig.json
+stacks/package.json
+stacks/package-lock.json
+tsconfig.json
+.gitignore

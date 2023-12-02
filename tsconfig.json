@@ -109,5 +109,5 @@
   "exclude": [
     "test-workspace",
     "stacks"
-  ]
+  ],
 }
