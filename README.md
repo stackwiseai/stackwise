@@ -1,14 +1,11 @@
-# Stackwise: Explain what you want a function to do, and AI builds it..
+# Stackwise: Explain what you want a function to do, and AI builds it.
 
 [![Discord Follow](https://dcbadge.vercel.app/api/server/KfUxa8h3s6?style=flat)](https://discord.gg/KfUxa8h3s6)
 [![Twitter Follow](https://img.shields.io/twitter/follow/stackwiseai?style=social)](https://twitter.com/stackwiseai)
 [![GitHub Repo stars](https://img.shields.io/github/stars/stackwiseai/stackwise?style=social)](https://github.com/stackwiseai/stackwise/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Stackwise is a VSCode extension that increases development productivity without switching focus. Based on a description of functionality, it generates and imports the code that you need.
-
-
-# demo here
+Stackwise is a VS Code extension that automatically writes and imports nodejs functions so that you can write code without context switching.
 
 ### Usage
 
@@ -19,12 +16,6 @@ stack("brief describing a specific action", {
     in: /* single input or object {} with multiple inputs */,
     out: // same as above, but output
 })
-```
-
-The input and output are optional, meaning you will get a fully typed function even if you just use:
-
-```typescript
-stack('brief');
 ```
 
 This approach streamlines API interactions, reducing the need for intricate coding and extensive API knowledge. Fully typed, and editable within your repo.

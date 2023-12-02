@@ -1,31 +1,29 @@
+import JSON5 from 'json5';
+function preprocessInput(input: string): string {
+  // Remove "typescript", backticks, and "(property)"
+  
+  input = input.replace(/```typescript|```/g, '').trim();
+  input = input.replace(/\(property\)\s*/g, '');
+  input = input.replace(/\s*(\w+):/g, "'$1':");
+
+  // Replace semicolons with colons
+  input = input.replace(/;/g, ',');
+
+  input = input.replace(/:\s*([\w\[\]]+)/g, ": '$1'");
+  input = '{' + input + '}';
+  return input;
+}
+
 export default function convertTypescriptToJson(input: string): any {
-  // Regular expression to match different structures of TypeScript input, including array types
-  if (!input) {return {};}
-  input = addSingleQuotes(input);
-
-  const regex = /(\w+)\s*:\s*{\s*(\w+)\s*:\s*([\w\[\]]+);/g;
-  const regexAlt = /'(.*?)':\s*([\w\[\]]+)/g;
-  let match;
-  const result = {};
-
-  // First pattern
-  while ((match = regex.exec(input)) !== null) {
-    const [, outerKey, innerKey, type] = match;
-    if (!result[outerKey]) {
-      result[outerKey] = {};
-    }
-    result[outerKey][innerKey] = type;
+  if (!input) {
+    return {};
   }
 
-  // Second pattern
-  while ((match = regexAlt.exec(input)) !== null) {
-    const [, key, type] = match;
-    result[key] = type;
-  }
+  input = preprocessInput(input);
+  console.log(input);
+  return JSON5.parse(input);
 
-  return result;
+  // Rest of the parsing logic goes here
 }
 
-function addSingleQuotes(str) {
-  return str.replace(/\(property\)\s*(\w+):/g, "(property) '$1':");
-}
+// Test cases and other code

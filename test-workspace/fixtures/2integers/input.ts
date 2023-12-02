@@ -1,7 +1,9 @@
-stack('multiply two numbers', {
-  in: { x: 2, y: 5 },
-  out: 0,
-});
+import multiplyThreeNumbers from '../../stacks/multiplyThreeNumbers';
+await multiplyThreeNumbers(2, 5, 3);
+
+
+
+
 
 
 
