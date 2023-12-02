@@ -5,9 +5,9 @@ const openai = new OpenAI({
 });
 
 /**
- * Brief: Generate Advice to Start Cryptocurrency Using OpenAI
+ * Brief: Define Copy Trading Using OpenAI
  */
-export default async function generateCryptocurrencyAdvice(input: string): Promise<string> {
+export default async function defineCopyTradingUsingOpenAI(input: string): Promise<string> {
   const chatCompletion = await openai.chat.completions.create({
     messages: [{ role: 'user', content: input }],
     model: 'gpt-4',
