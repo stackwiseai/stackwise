@@ -1,0 +1,23 @@
+
+
+test("callOpenAi correctly", async () => {
+  const question = "Don Quixote";
+
+  const response = stack("Get the book's data", {
+    in: question,
+    out: {
+      properties: {
+        release_date: "1605",
+        author: "Miguel de Cervantes",
+      },
+    },
+  });
+
+  expect(response).toEqual({
+    properties: {
+      release_date: "1605",
+      author: "Miguel de Cervantes",
+    },
+  });
+  console.log(response);
+});
