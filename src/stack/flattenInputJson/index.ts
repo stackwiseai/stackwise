@@ -1,5 +1,8 @@
 export default function flattenInputJson(jsonInput) {
   console.log('BIG jsonInput:', jsonInput);
+  if (jsonInput.in === null) {
+    return ``;
+  }
   if (typeof jsonInput.in !== 'object') {
     return `input: ${jsonInput.in}`;
   }

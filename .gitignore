@@ -9,3 +9,4 @@ dist
 .vscode/launch.json
 test-workspace/.env
 stacks/.env
+.DS_Store 
