@@ -1,0 +1,7 @@
+test('Generate a random Anime quote', async () => {
+
+  const response = stack("Generate a random Anime quote");
+
+  expect(response.message).toBeTruthy();
+});
+
