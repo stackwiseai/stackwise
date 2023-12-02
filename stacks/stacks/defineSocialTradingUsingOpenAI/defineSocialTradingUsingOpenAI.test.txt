@@ -1,0 +1,9 @@
+test("callOpenAi correctly", async () => {
+  const question = "what is Social Trading?";
+  const response = stack("Define Social Trading Using OpenAI", {
+    in: question,
+    out: "Social trading is a form of dealing that enables traders or investors to copy and execute the strategies of their peers or more experienced traders. While most traders perform their own fundamental and technical analysis, there is a class of traders that prefer to observe and replicate the analysis of others.",
+  });
+  console.log(response);
+});
+
