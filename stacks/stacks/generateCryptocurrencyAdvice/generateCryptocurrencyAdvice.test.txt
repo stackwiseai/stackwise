@@ -1,0 +1,8 @@
+test("callOpenAi correctly", async () => {
+  const question = "Is cryptocurrency a good investment?";
+  const response = stack("Generate Advice About Cryptocurrency Using OpenAI", {
+    in: question,
+    out: "Whether crypto will be a good investment for you depends on many factors. As with all investing, the answer comes down to things like your tolerance for risk, both in financial terms and in psychological terms, and your time horizon, as well as how diversified your portfolio is. The volatility of crypto means that the value of your coins can go up or down quickly, and sometimes dramatically. ",
+  });
+  console.log(response);
+});

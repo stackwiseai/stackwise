@@ -1,8 +1,0 @@
-test("callOpenAi correctly", async () => {
-  const question = "What Is Copy Trading?";
-  const response = stack("Define Copy Trading Using OpenAI", {
-    in: question,
-    out: "copy trading is the practice of imitating the trading activity of a stock market veteran. However, there are advantages and disadvantages to taking this approach. What exactly is copy trading, how does it function, and what kind of results can you anticipate seeing from it?",
-  });
-  console.log(response);
-});
