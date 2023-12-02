@@ -1,0 +1,7 @@
+test('Generate a random dog image', async () => {
+
+  const response = stack("Generate a random dog image");
+
+  expect(response.message.status).toEqual('success');
+});
+
