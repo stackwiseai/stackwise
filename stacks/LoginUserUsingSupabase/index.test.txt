@@ -1,0 +1,4 @@
+test('Login existing user using email and password on supabase', async () => {
+    const response = stack('Login existing user using email and password on supabase');
+    expect(response.session.access_token).not.toBeNull();
+});
