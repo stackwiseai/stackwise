@@ -48,4 +48,4 @@ jobs:
         run: git fetch
 
       - name: Run Jest on Modified Folder
-        run: jest --onlyChanged
+        run: npx jest --onlyChanged
