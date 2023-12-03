@@ -1,4 +1,4 @@
-name: TypeScript Build
+name: TypeScript Build and Test
 
 on:
   push:
@@ -14,16 +14,38 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
+      - name: Change to 'stacks' directory
+        run: cd stacks
+
+      - name: Remove node_modules
+        run: rm -rf node_modules
+
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libxtst-dev
+
+      - name: Update Node.js and npm
+        run: |
+          npm install -g npm@latest
+
+      - name: Update robotjs
+        run: |
+          npm install robotjs@latest
+
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "14" # You can specify your Node.js version here
+          node-version: "18" # You can specify your Node.js version here
 
       - name: Install Dependencies
         run: npm install
 
       - name: Run TypeScript Compiler
         run: tsc
+        
+      - name: Fetch Latest Changes
+        run: git fetch
 
-      - name: Run TypeScript Compiler
-        run: jest
+      - name: Run Jest on Modified Folder
+        run: npx jest --onlyChanged
