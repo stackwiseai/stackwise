@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import chokidar from 'chokidar';
-import { directoryPath } from '../constants';
+import { directoryPath } from '../extension';
 import path from 'path';
 import stackRegistry from '../stack/registry';
 
@@ -43,7 +43,7 @@ export default function trackStackFileRenames(
           const newNameWithoutExt = addedFileName.replace('.ts', '');
 
           // Handle file rename
-          if (stackRegistry.nameExists(oldNameWithoutExt)) {
+          if (!!stackRegistry.nameExists(oldNameWithoutExt)) {
             stackRegistry.update(oldNameWithoutExt, newNameWithoutExt);
             console.log(
               `File renamed from ${oldNameWithoutExt} to ${newNameWithoutExt}`
@@ -57,7 +57,7 @@ export default function trackStackFileRenames(
       // Handle file deletion
       if (!isRename) {
         const nameWithoutExt = unlinkedFileName.replace('.ts', '');
-        if (stackRegistry.nameExists(nameWithoutExt)) {
+        if (!!stackRegistry.nameExists(nameWithoutExt)) {
           stackRegistry.remove(nameWithoutExt); // Assuming you have a remove method in stackRegistry
           console.log(`File deleted: ${nameWithoutExt}`);
         }

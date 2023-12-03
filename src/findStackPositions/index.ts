@@ -9,15 +9,39 @@ export default async function findStackPositions(
   const lines = documentContent.split('\n');
 
   let positions = []; // Array to store positions
+  let integration = null;
 
   for (let i = 0; i < lines.length; i++) {
-    let stackIndex = lines[i].indexOf('stack(');
+    let stackIndex;
+    let regex = /stack(\.[a-zA-Z0-9_]*)?\(/;
+
+    // Function to update stackIndex for the next occurrence of 'stack' or 'stack.anythinghere('
+    function updateStackIndex(currentIndex) {
+      // First, try to find 'stack.anythinghere(' pattern
+      let match = lines[i].slice(currentIndex).match(regex);
+      if (match) {
+        // Adjust index relative to the current slice of the line
+        integration = match[1];
+        console.log(`integration: ${integration}`);
+        return currentIndex + match.index;
+      }
+
+      // If not found, look for 'stack(' pattern
+      let nextIndex = lines[i].indexOf('stack(', currentIndex + 1);
+      return nextIndex >= 0 ? nextIndex : -1;
+    }
+
+    stackIndex = updateStackIndex(0);
+
     while (stackIndex >= 0) {
+      console.log('stackIndex:', stackIndex);
       const position = new vscode.Position(i, stackIndex);
+
       const typeInfo = await getHoverInformation(position);
       if (typeInfo) {
         let positionObject: PositionObject = {
           stackPosition: position,
+          integration,
         };
 
         console.log('stackPosition added:', positionObject.stackPosition);
@@ -52,8 +76,8 @@ export default async function findStackPositions(
         console.log('Position object added:', positionObject);
       }
 
-      // Find next occurrence of 'stack(' in the same line
-      stackIndex = lines[i].indexOf('stack(', stackIndex + 1);
+      // Find next occurrence of 'stack' in the same line
+      stackIndex = updateStackIndex(stackIndex + 1);
     }
   }
 

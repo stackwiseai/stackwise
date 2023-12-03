@@ -1,9 +1,8 @@
-import * as vscode from "vscode";
-export default function getStackSnippet(document, stackPosition) {
-  // Log the stackPosition for debugging
-  console.log("Stack Position: ", stackPosition);
+import * as vscode from 'vscode';
 
-  // Get the range from stackPosition to the end of the document
+export default function getStackSnippet(document, stackPosition) {
+  console.log('Stack Position: ', stackPosition);
+
   const endPosition = new vscode.Position(
     document.lineCount - 1,
     document.lineAt(document.lineCount - 1).range.end.character
@@ -12,23 +11,18 @@ export default function getStackSnippet(document, stackPosition) {
     new vscode.Range(stackPosition, endPosition)
   );
 
-  // Log the beginning of textFromPosition for debugging
-  // console.log("Text From Position (first 20 chars): ", textFromPosition.substring(0, 500));
+  // Updated regular expression to match both 'stack()' and 'stack.something()' patterns, handling nested parentheses
+  const stackCallRegex =
+    /stack(\.[a-zA-Z0-9_]*)?\(([^)(]+|\((?:[^)(]+|\([^)(]*\))*\))*\)/;
 
-  // Regular expression to match the 'stack(...)' call, handling nested parentheses
-  const stackCallRegex = /stack\(([^)(]+|\((?:[^)(]+|\([^)(]*\))*\))*\)/;
-
-  // Find the first match
   const match = stackCallRegex.exec(textFromPosition);
 
   if (match && match[0]) {
-    // Return the entire 'stack(...)' call
     const stackSnippet = match[0].trim();
-    console.log("Stack Snippet: ");
+    console.log('Stack Snippet: ');
     console.log(stackSnippet);
     return stackSnippet;
   } else {
-    // Return an empty string or null if no match is found
-    return "";
+    return '';
   }
 }

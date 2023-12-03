@@ -1,6 +1,6 @@
 import { Pinecone, PineconeRecord } from '@pinecone-database/pinecone';
 import { getEmbedding } from '../../stacks/openai/getEmbedding';
-import { BoilerplateMetadata } from '../integrations/lib/types';
+import { DocumentationMetadata } from '../integrations/lib/types';
 import { combineSkeleton } from '../createSkeleton';
 
 const pinecone = new Pinecone({
@@ -27,19 +27,15 @@ export default async function createBoilerplateEmbedding(
     const embedding = await getEmbedding(skeleton);
 
     // Create a Pinecone record
-    const metadata: BoilerplateMetadata = {
-      inputJSON: JSON.stringify(inputJSON),
-      outputJSON: JSON.stringify(outputJSON),
-      brief,
+    const metadata: DocumentationMetadata = {
+      id: '',
+      content: '',
       count: 1,
-      type: 'boilerplate',
+      type: 'documentation',
       integration,
-      skeleton,
-      skeletonType: 'inline-typed',
-      functionString,
-      methodName,
-      functionId,
       createdAt: new Date().toISOString(),
+      retrievedAt: [],
+      retrievedFor: [],
     };
 
     const record: PineconeRecord[] = [

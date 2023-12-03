@@ -16,6 +16,19 @@ export interface BoilerplateMetadata extends RecordMetadata {
   skeletonType: 'inline-typed';
   functionString: string;
   methodName: string;
-  functionId: string;
+  id: string;
   createdAt: string;
+  // retrievedAt: string[];
+  // retrievedFor: string[];
+}
+
+export interface DocumentationMetadata extends RecordMetadata {
+  id: string; // URL of the documentation
+  content: string; // content from the embedding
+  count: number; // number of times documentation used
+  type: 'documentation';
+  integration: string;
+  createdAt: string;
+  // retrievedAt: string[]; // array of dates
+  // retrievedFor: string[]; // array of hashes
 }

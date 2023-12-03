@@ -15,7 +15,6 @@ interface OutputType {
   functionId: string;
   documentContent: string;
   functionExists: boolean;
-  methodName: string;
   inputString: string;
   briefSkeleton: string;
   functionAndOutputSkeleton: string;
@@ -36,8 +35,10 @@ export default async function buildStack({
   const brief = extractBrief(stackSnippet);
   console.log('brief after extraction');
   console.log(brief);
+
   let inputString = '';
   let inputValues = '';
+
   if (inputJSON.in !== null) {
     const result = jsonify(stackSnippet);
     inputString = result.in;
@@ -66,7 +67,7 @@ export default async function buildStack({
   console.log('functionId');
   console.log(functionId);
 
-  const functionExists = stackRegistry.exists(functionId);
+  const functionExists = stackRegistry.idExists(functionId);
 
   const flatInput = flattenInputJson(inputJSON);
 
@@ -84,43 +85,17 @@ export default async function buildStack({
     brief,
     inputJSON,
     outputJSON,
-    functionId,
     flatInput
   );
 
-  const methodName = await getMethodNameWithCache(
-    briefSkeleton,
-    functionAndOutputSkeleton,
-    brief
-  );
-  // store this in the cache, the key should be the concatenation of wholeSkeleton and methodName and the value should be methodName
-  // the cache should be checked before calling getMethodName
-  // the cache is present in .stack/llmCache.json
-  // create the function
-
-  console.log(`we are here - methodName`);
-  console.log(methodName);
-
-  if (methodName) {
-    functionAndOutputSkeleton = functionAndOutputSkeleton.replace(
-      'placeholderStackwiseFunction',
-      methodName
-    );
-
-    functionAndOutputSkeleton = functionAndOutputSkeleton.replace(
-      functionId,
-      methodName
-    );
-  }
   return {
     brief,
     functionId,
     documentContent: 'unused',
-    functionExists,
-    methodName,
+    functionExists: !!functionExists,
     inputString,
     briefSkeleton,
     functionAndOutputSkeleton,
-    inputValues
+    inputValues,
   };
 }

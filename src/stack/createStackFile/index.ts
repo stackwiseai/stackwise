@@ -1,15 +1,17 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-import { directoryPath } from '../../constants';
+import { directoryPath } from '../../extension';
 
 export default function createStackFile(
   skeleton: string,
   methodName: string,
   integration: string
 ) {
+  console.log('createStackFile called', integration);
+  console.log('directoryPath:', directoryPath);
   let stackPath = directoryPath;
-  if (integration && integration !== 'generic') {
+  if (integration !== 'generic') {
     stackPath = path.join(directoryPath, integration);
   }
   // Create directory if it doesn't exist
@@ -17,6 +19,7 @@ export default function createStackFile(
     fs.mkdirSync(stackPath, { recursive: true });
   }
 
+  console.log('stackPath:', stackPath);
   const baseFilePath = path.join(stackPath, `${methodName}`);
 
   // Check for existing file and append a number if necessary
@@ -35,6 +38,7 @@ export default function createStackFile(
     console.log('Next.js version is less than 13 or not nextjs');
   }
 
+  console.log('skeleton:', skeleton);
   // Write the skeleton to the file
   fs.writeFileSync(filePath, skeleton);
   console.log(`File created at ${filePath}`);

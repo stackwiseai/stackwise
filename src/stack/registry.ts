@@ -11,22 +11,19 @@ export default class stackRegistry {
     this.saveRegistry(registry);
   }
 
-  static exists(functionId): boolean {
+  static idExists(functionId: string): string {
     const registry = this.loadRegistry();
     for (const key in registry) {
       if (registry[key] === functionId) {
-        return true;
+        return key;
       }
     }
-    return false;
+    return '';
   }
 
   static nameExists(methodName): boolean {
     const registry = this.loadRegistry();
-    if (registry[methodName]) {
-      return true;
-    }
-    return false;
+    return registry[methodName];
   }
 
   static loadRegistry() {

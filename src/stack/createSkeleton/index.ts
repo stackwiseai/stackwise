@@ -1,8 +1,10 @@
+import { placeholderName } from '../../constants';
+
 const BRIEF_TEMPLATE = `/**
  * Brief: {{brief}}
  */`;
 
-const FUNCTION_AND_TYPE_TEMPLATE = `{{outputTypeInterface}}export default async function {{name}}({{flatInput}}): {{outputType}} {
+const FUNCTION_AND_TYPE_TEMPLATE = `{{outputTypeInterface}}export default async function ${placeholderName}({{flatInput}}): {{outputType}} {
     {{returnStatement}}
 }`;
 
@@ -30,15 +32,8 @@ function buildParamList(params) {
   return Object.keys(params).join(', ');
 }
 
-export default function createSkeleton(
-  brief,
-  params,
-  output,
-  signature,
-  flatInput
-) {
+export default function createSkeleton(brief, params, output, flatInput) {
   const processedBrief = brief.trim();
-  const processedSignature = signature.trim();
   const processedParamList = buildParamList(params).trim();
 
   // Determine if output object has only one property
@@ -64,7 +59,6 @@ export default function createSkeleton(
 
   const replacementValues = {
     brief: processedBrief,
-    name: processedSignature,
     paramList: processedParamList,
     outputTypeInterface: outputTypeInterfaceString,
     paramListValues: buildParamList(params),
@@ -123,4 +117,13 @@ export function combineSkeleton(
     functionAndOutputSkeleton.slice(exportStartIndex);
 
   return combinedSkeleton;
+}
+
+export function insertMethodName(methodName: string, code: string) {
+  // Regex pattern to match the function name, with optional export keyword and handling spaces before the parenthesis
+  const regex =
+    /(export\s+)(default\s+)?async\s+function\s+([a-zA-Z_$][a-zA-Z\d_$]*)\s*\(/;
+
+  // Replace the existing function name with the new one
+  return code.replace(regex, `$1$2async function ${methodName}(`);
 }
