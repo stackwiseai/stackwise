@@ -28,9 +28,10 @@ jobs:
 
       - name: Run TypeScript Compiler
         run: tsc
+        
+      - name: Fetch Latest Changes
+        run: git fetch
 
-      - name: Run Jest on Modified Files
-        run: |
       - name: Run Jest on Modified Folder
         run: |
           # Get the list of modified files
