@@ -20,6 +20,7 @@ jobs:
 
       - name: Change to 'stacks' directory
         run: cd stacks
+        
       - name: Remove node_modules
         run: rm -rf node_modules
       
