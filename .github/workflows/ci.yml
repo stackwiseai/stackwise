@@ -27,10 +27,10 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "18.18.0" # You can specify your Node.js version here
+          node-version: "18" # You can specify your Node.js version here
           
       - name: Install Dependencies
-        run: npm install
+        run: npm install --force
         
       - name: Run TypeScript Compiler
         run: tsc
