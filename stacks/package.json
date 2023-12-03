@@ -19,6 +19,5 @@
   },
   "devDependencies": {
     "@types/jest": "^29.5.10",
-    "@types/mocha": "^10.0.6"
   }
 }
