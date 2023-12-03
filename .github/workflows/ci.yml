@@ -50,7 +50,7 @@ jobs:
           modified_files=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
 
           # Extract the directory paths from the modified files
-          modified_folders=$(echo "$modified_files" | grep -Eo '^[^/]+/' | sort -u)
+          modified_folders=$(echo "$modified_files" | grep -Eo '^stacks/[^/]+/' | sort -u)
 
           # Run Jest only for modified folders
           npx jest --listTests $modified_folders
