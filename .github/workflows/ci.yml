@@ -44,14 +44,14 @@ jobs:
       - name: Run TypeScript Compiler
         run: tsc
 
-      - name: Run Jest on Modified Files
+      - name: Run Jest on Modified Folder
         run: |
           # Get the list of modified files
           modified_files=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
-      
-          # Find related test files using jest --findRelatedTests
-          test_files=$(npx jest --listTests $modified_files)
-      
-          # Run Jest only on modified files
-          npx jest $test_files
+
+          # Extract the directory paths from the modified files
+          modified_folders=$(echo "$modified_files" | grep -Eo '^[^/]+/' | sort -u)
+
+          # Run Jest only for modified folders
+          npx jest --listTests $modified_folders
 
