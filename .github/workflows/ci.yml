@@ -31,11 +31,13 @@ jobs:
 
       - name: Run Jest on Modified Files
         run: |
+      - name: Run Jest on Modified Folder
+        run: |
           # Get the list of modified files
           modified_files=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
 
-          # Find related test files using jest --findRelatedTests
-          test_files=$(npx jest --listTests --findRelatedTests $modified_files)
+          # Extract the directory paths from the modified files
+          modified_folders=$(echo "$modified_files" | grep -Eo '^stacks/[^/]+/' | sort -u)
 
-          # Run Jest only on modified files
-          npx jest $test_files
+          # Run Jest only for modified folders
+          npx jest --listTests $modified_folders
