@@ -1,1 +1,1 @@
-export const placeholderName = 'stackPlaceholder';
+export const placeholderName = 'placeholderName';
