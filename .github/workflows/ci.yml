@@ -26,9 +26,6 @@ jobs:
         with:
           node-version: "18.18.0" # You can specify your Node.js version here
 
-      - name: Install Dependencies
-        run: npm install
-
       - name: Run TypeScript Compiler
         run: tsc
 
