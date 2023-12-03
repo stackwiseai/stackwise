@@ -1,4 +1,4 @@
-test('Fetch data from table in SUPABASE in CSV Format', async () => {
-  const response = stack('Fetch data from table in SUPABASE in CSV Format')
+test('Create a bucket using supabase', async () => {
+  const response = stack('Create a bucket using supabase')
   expect(response).not.toBeNull();
 });
