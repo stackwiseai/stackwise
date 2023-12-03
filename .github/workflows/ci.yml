@@ -23,7 +23,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "18" # You can specify your Node.js version here
+          node-version: "18.0.0" # You can specify your Node.js version here
 
       - name: Install Build Dependencies
         run: |
