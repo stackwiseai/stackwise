@@ -43,6 +43,9 @@ jobs:
 
       - name: Run TypeScript Compiler
         run: tsc
+        
+      - name: Fetch Latest Changes
+        run: git fetch
 
       - name: Run Jest on Modified Folder
         run: npx jest --onlyChanged
