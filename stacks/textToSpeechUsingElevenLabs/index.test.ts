@@ -1,8 +1,10 @@
-import LetYourCuriosityGuideYou from ".";
+import convertTTS from ".";
 
-test("Convert this text to speech: Let your curiosity guide you", async () => {
-  const response = await LetYourCuriosityGuideYou();
-  console.log(response)
+test("Convert text to speech", async () => {
+  const text = "Hello World!";
+  const pathToAudio = "textToSpeechUsingElevenLabs/";
 
-  expect(response.status).toEqual('ok');
+  const response = await convertTTS({ text, pathToAudio });
+
+  expect(response.status).toEqual("ok");
 });

@@ -1,15 +1,27 @@
 const ElevenLabs = require("elevenlabs-node");
+import * as dotenv from "dotenv";
+dotenv.config();
 
-export default async function LetYourCuriosityGuideYou(): Promise<any> {
+interface IconvertTTS {
+  text: string;
+  pathToAudio: string;
+}
+
+export default async function convertTTS({
+  text,
+  pathToAudio,
+}: IconvertTTS): Promise<any> {
   try {
     const voice = new ElevenLabs({
-      apiKey: "5deb1d4cc1b76bd25e7188ebfda883c5",
+      apiKey: process.env.API_KEY as string,
       voiceId: "pNInz6obpgDQGcFmaJgB",
     });
 
+    console.log(process.env.API_KEY);
+
     const response = await voice.textToSpeech({
-      fileName: "textToSpeechUsingElevenLabs/audio.mp3",
-      textInput: "Let your curiosity guide you",
+      fileName: pathToAudio + "audio.mp3",
+      textInput: text,
       stability: 0.5,
       similarityBoost: 0.5,
       style: 1,
