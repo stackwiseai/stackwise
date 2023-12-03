@@ -1,5 +1,6 @@
 import OpenAI from 'openai';
 import { openai } from './integrations/openai/construct';
+import { placeholderName } from '../constants';
 
 interface InputType {
   wholeSkeleton: string;
@@ -22,7 +23,7 @@ export default async function getMethodName({
             content: `Find a good name for this function given the brief that generated it.
 Brief: ${brief}
 Function: ${wholeSkeleton}
-Now, come up with a name for the function to replace the 'placeholderStackwiseFunction'. It should be a unique, descriptive name including verb that describes what the function does. Do not include the word 'function' or 'Stackwise' in the name unless it is in the brief.
+Now, come up with a name for the function to replace the '${placeholderName}'. It should be a unique, descriptive name including verb that describes what the function does.
 Respond with nothing but the name of the function. Literally the only thing in your response should be the name of the function.`,
             // TODO: pass previous names and ask not the same unless it absolutely has to be
           },
