@@ -6,17 +6,23 @@ stack(
   }
 );  
   // TODO: allow the usage of in a string, but for now incentiviwe people to use in: ['this is an example', 'this is an example']
-import getNullValue from '../../stacks/getNullValue';
+import getBriefData from '../../stacks/getBriefData';
 
 
-await getNullValue();  
+await getBriefData();  
   // TODO: allow the usage of in a string, but for now incentiviwe people to use in: ['this is an example', 'this is an example']
+
+import axios from 'axios';
 
 /**
  * Brief: brief
  */
-export default async function getNullValue(): Promise<any> {
-    return new Promise((resolve, reject) => {
-        resolve(null);
-    });
+export default async function getBriefData(): Promise<any> {
+    try {
+        const response = await axios.get('https://api.example.com/briefdata');
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
 }
