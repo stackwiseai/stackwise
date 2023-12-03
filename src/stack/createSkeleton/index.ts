@@ -118,3 +118,12 @@ export function combineSkeleton(
 
   return combinedSkeleton;
 }
+
+export function insertMethodName(methodName: string, code: string) {
+  // Regex pattern to match the function name, with optional export keyword and handling spaces before the parenthesis
+  const regex =
+    /(export\s+)(default\s+)?async\s+function\s+([a-zA-Z_$][a-zA-Z\d_$]*)\s*\(/;
+
+  // Replace the existing function name with the new one
+  return code.replace(regex, `$1$2async function ${methodName}(`);
+}

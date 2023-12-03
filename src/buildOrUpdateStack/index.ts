@@ -9,7 +9,7 @@ import createBoilerplateEmbedding from '../stack/createEmbedding/boilerplateEmbe
 import { BoilerplateMetadata } from '../stack/integrations/lib/types';
 import updateEmbedding from '../stack/updateEmbedding';
 import stackRegistry from '../stack/registry';
-import { combineSkeleton } from '../stack/createSkeleton';
+import { combineSkeleton, insertMethodName } from '../stack/createSkeleton';
 import createMethodName from '../stack/createMethodName';
 
 export default async function buildOrUpdateStack(
@@ -89,6 +89,7 @@ export default async function buildOrUpdateStack(
       );
 
       generatedFunction = combineSkeleton(briefSkeleton, generatedFunction);
+      generatedFunction = insertMethodName(methodName, generatedFunction);
 
       console.log(
         `generatedFunction in buildOrUpdateStack:`,
