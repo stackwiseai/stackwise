@@ -2,16 +2,16 @@
 import { createClient } from '@supabase/supabase-js'
 
 /**
- * Brief: Sign Up and Create a New Account on a Project in Supabase Client
+ * Brief: Authenticate and login existing user using email and password on supabase
  */
-export default async function signupAndCreateAccountOnProject({email,password}:{email:string,password:string}): Promise<any> {
+export default async function loginExistingUserWithEmailPassword({email,password}:{email:string,password:string}): Promise<any> {
     try {
         const supabaseUrl = String(process.env.SUPABASE_URL)
         const supabaseKey = String(process.env.SUPABASE_KEY)
         const supabase = createClient(supabaseUrl, supabaseKey)
-        let { data } = await supabase.auth.signUp({
+        const { data } = await supabase.auth.signInWithPassword({
             email: email,
-            password: password
+            password: password,
           })
         return data
     } catch (error) {
