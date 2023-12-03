@@ -5,7 +5,7 @@ test('Create a bucket using supabase', async () => {
   const response = await createABucketOnSupabase({
     bucket_name: 'your_bucket_name', options: {
       public: false,
-      allowedMimeTypes: ['image/jpg'],
+      allowedMimeTypes: ['image/png'],
       fileSizeLimit: 1024
     }
   })
