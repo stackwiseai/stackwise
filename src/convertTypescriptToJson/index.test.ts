@@ -70,18 +70,17 @@ test('flattenInputJson correctly', () => {
   expect(result).toEqual(expectedOutput);
 });
 
-// test('flattenInputJson correctly', () => {
-//   const jsonInput = `
-// \`\`\`(property) in: {
-//     x: number;
-//     y: number;
-// }
-// \`\`\`
-// `;
-//   const expectedOutput = {
-//     in: 'string'
-//   };
+test('flattenInputJson correctly', () => {
+  const jsonInput = `
+\`\`\`(property) in: string | undefined
+\`\`\`
+  
+`;
+  const expectedOutput = {
+    in: 'string | undefined'
+  };
 
-//   const result = convertTypescriptToJson(jsonInput);
-//   expect(result).toEqual(expectedOutput);
-// });
+  const result = convertTypescriptToJson(jsonInput);
+  expect(result).toEqual(expectedOutput);
+});
+
