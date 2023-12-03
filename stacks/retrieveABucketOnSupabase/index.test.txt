@@ -1,0 +1,4 @@
+test('Retrieve the details of an Storage bucket in supabase', async () => {
+  const response = stack('Retrieve the details of an Storage bucket in supabase')
+  expect(response.id).toBe('your_bucket_name');
+});
