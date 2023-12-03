@@ -3,8 +3,12 @@ name: TypeScript Build and Test
 on:
   push:
     branches: [main, "ci-test*"]
+    paths:
+      - 'stacks/**'
   pull_request_target:
     branches: [main, "ci-test*"]
+    paths:
+      - 'stacks/**'
 
 jobs:
   build:
