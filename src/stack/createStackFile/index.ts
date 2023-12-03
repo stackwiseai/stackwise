@@ -38,6 +38,7 @@ export default function createStackFile(
     console.log('Next.js version is less than 13 or not nextjs');
   }
 
+  console.log('skeleton:', skeleton);
   // Write the skeleton to the file
   fs.writeFileSync(filePath, skeleton);
   console.log(`File created at ${filePath}`);

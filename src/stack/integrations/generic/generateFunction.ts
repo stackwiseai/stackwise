@@ -58,6 +58,7 @@ Respond with just what would go in the function file and nothing else. No explan
   } else {
     // if non generic it means we have an integration
     try {
+      return functionAndOutputSkeleton;
       // Dynamically import the module based on the integration variable
       const integrationModule = await import(`../${integration}/construct`);
       // Assuming the imported module has a default function that you need to call

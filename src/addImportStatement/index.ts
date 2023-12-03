@@ -26,9 +26,21 @@ export default function addImportStatement(
 
   const importStatement = `import ${methodName} from '${importPath}';\n`;
 
-  // Insert the import statement at the top of the document
+  const firstLine = document.lineAt(0).text;
+  let insertPosition;
+
+  // Check if the first line contains 'use client' or 'use server'
+  if (firstLine.includes('use client') || firstLine.includes('use server')) {
+    // Insert on the second line
+    insertPosition = new vscode.Position(1, 0);
+  } else {
+    // Otherwise, insert at the top of the document
+    insertPosition = new vscode.Position(0, 0);
+  }
+
+  // Insert the import statement at the determined position
   const edit = new vscode.WorkspaceEdit();
-  edit.insert(document.uri, new vscode.Position(0, 0), importStatement);
+  edit.insert(document.uri, insertPosition, importStatement);
   vscode.workspace.applyEdit(edit).then(() => {
     saveDocument(document);
   });
