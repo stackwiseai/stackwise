@@ -1,0 +1,5 @@
+test('Convert this text to speech: Let your curiosity guide you', async () => {
+  const response = stack("Convert this text to speech: Let your curiosity guide you");
+  expect(response.status).toEqual('ok');
+});
+
