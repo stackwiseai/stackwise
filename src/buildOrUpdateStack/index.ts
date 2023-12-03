@@ -113,6 +113,7 @@ export default async function buildOrUpdateStack(
 
     stackRegistry.register(methodName, functionId);
   } else {
+    methodName = stackRegistry.idExists(functionId);
     console.log(`function already exists`);
   }
   console.log(`inputString in buildOrUpdateStack:`, inputString);

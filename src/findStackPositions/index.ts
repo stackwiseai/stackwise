@@ -13,7 +13,7 @@ export default async function findStackPositions(
 
   for (let i = 0; i < lines.length; i++) {
     let stackIndex;
-    let regex = /stack\.([a-zA-Z0-9_]*)\(/;
+    let regex = /stack(\.[a-zA-Z0-9_]*)?\(/;
 
     // Function to update stackIndex for the next occurrence of 'stack' or 'stack.anythinghere('
     function updateStackIndex(currentIndex) {
