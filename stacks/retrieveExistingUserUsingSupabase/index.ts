@@ -5,7 +5,7 @@ require('dotenv').config();
 /**
  * Brief: Retrieve a user object using Supabase AUTH Admin
  */
-export default async function retrieveUser({ id }: { id: any }): Promise<any> {
+export default async function retrieveUser({ id }: { id: string }): Promise<any> {
     try {
         const supabaseUrl = String(process.env.SUPABASE_URL)
         const supabaseServiceRole = String(process.env.SUPABASE_SERVICE_ROLE)

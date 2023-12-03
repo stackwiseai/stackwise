@@ -5,7 +5,7 @@ require('dotenv').config();
 /**
  * Brief: Delete user from the supabase project using supabase Admin AUTH
  */
-export default async function deleteUser({ id }: { id: any }): Promise<any> {
+export default async function deleteUser({ id }: { id: string }): Promise<any> {
     try {
         const supabaseUrl = String(process.env.SUPABASE_URL)
         const supabaseServiceRole = String(process.env.SUPABASE_SERVICE_ROLE)

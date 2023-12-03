@@ -4,7 +4,12 @@ import { createClient } from '@supabase/supabase-js'
 /**
  * Brief: Fetch data from table in SUPABASE in CSV Format
  */
-export default async function createABucketOnSupabase({ bucket_name, options }: { bucket_name: string, options: any }): Promise<any> {
+type options = {
+    public: boolean;
+    fileSizeLimit?: string | number | null | undefined;
+    allowedMimeTypes?: string[] | null | undefined;
+}
+export default async function createABucketOnSupabase({ bucket_name, options }: { bucket_name: string, options: options }): Promise<any> {
     try {
         const supabaseUrl = String(process.env.SUPABASE_URL)
         const supabaseKey = String(process.env.SUPABASE_KEY)
