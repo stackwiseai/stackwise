@@ -1,0 +1,32 @@
+name: Check 'Stack' Pull Request Format
+
+on:
+  pull_request:
+  push:
+    branches: ["stack/*", "chore/*"] # temporarily 'chore/*'
+  pull_request_target:
+    branches: [main]
+
+jobs:
+  check-format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Check branch name
+        run: |
+          if [[ "${{ github.head_ref }}" != stack/* ]]; then
+            echo "Branch name does not match the format 'stack/*'"
+            exit 1
+          fi
+
+      - name: Check changed files
+        run: |
+          changed_files=$(git diff --name-only HEAD^ HEAD)
+          for file in $changed_files; do
+            if [[ "$file" != stacks/* || "$file" != *"index.ts"* || "$file" != *"index.test.ts"* || "$file" != *"index.test.txt"* || "$file" != *"package.json"* || "$file" != *"package-lock.json"* ]]; then
+              echo "Changed files do not match the required format"
+              exit 1
+            fi
+          done
