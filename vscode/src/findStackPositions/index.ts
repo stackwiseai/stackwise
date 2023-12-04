@@ -21,7 +21,7 @@ export default async function findStackPositions(
       let match = lines[i].slice(currentIndex).match(regex);
       if (match) {
         // Adjust index relative to the current slice of the line
-        integration = match[1];
+        integration = match[1].substring(1);
         console.log(`integration: ${integration}`);
         return currentIndex + match.index;
       }

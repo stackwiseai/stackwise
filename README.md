@@ -67,7 +67,7 @@ git clone https://github.com/stackwiseai/stackwise.git
 
 ```typescript
 const prompt = "What's the capital of the United States ?"
-result = await stack(
+result = stack.openai(
     "Ask a question to GPT-4",
     {
         in: prompt
