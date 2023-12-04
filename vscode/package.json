@@ -21,12 +21,7 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
-    "commands": [
-      {
-        "command": "test-extension4.helloWorld",
-        "title": "stackwise: Fix tsc errors"
-      }
-    ],
+    "commands": [],
     "views": {}
   },
   "scripts": {
