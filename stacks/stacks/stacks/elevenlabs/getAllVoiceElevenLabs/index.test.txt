@@ -1,0 +1,9 @@
+import getListOfVoicesElevenLabs from ".";
+
+test("Gets a list of all available voices.", async () => {
+  const method = "Get";
+  const response =stack("Gets a list of all available voices.")
+
+  expect(response).not.toBeNull();
+  console.log(response);
+});
