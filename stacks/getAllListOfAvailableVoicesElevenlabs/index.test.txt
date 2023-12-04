@@ -1,0 +1,4 @@
+test('Get all list of available voices for a user in elevenlabs', async () => {
+  const response = stack('Get all list of available voices for a user in elevenlabs')
+  expect(response.voices).toBeTruthy();
+});
