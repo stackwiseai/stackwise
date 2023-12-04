@@ -5,10 +5,14 @@ import Replicate from "replicate";
 
 type inputType = {
     prompt: string
-
 }
 type modelType = `${string}/${string}:${string}`
-export default async function generateImageUsingReplicate({ model, input }: { model: modelType, input:inputType }): Promise<any> {
+
+interface ModelInfo  {
+    model: modelType,
+    input: inputType
+}
+export default async function generateImageUsingReplicate({ model, input }: ModelInfo): Promise<any> {
     try {
         const replicate = new Replicate({
             auth: process.env.REPLICATE_API_TOKEN,
