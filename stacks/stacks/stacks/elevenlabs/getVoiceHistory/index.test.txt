@@ -1,0 +1,9 @@
+import getVoiceHistory from ".";
+
+test("Gets metadata about all your generated audio.", async () => {
+  const method = "Get";
+  const response =stack("Gets metadata about all your generated audio.");
+
+  expect(response).not.toBeNull();
+  console.log(response);
+});
