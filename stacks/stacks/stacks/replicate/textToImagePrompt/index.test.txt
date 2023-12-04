@@ -1,0 +1,7 @@
+import textToImagePrompt from ".";
+
+test("Generate image from text prompt", async () => {
+  const prompt = "Mountain Sunrise";
+  const response = stack("Generate image from text prompt")
+  console.log(response);
+});
