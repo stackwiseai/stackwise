@@ -13,10 +13,12 @@
         "outFiles": ["${workspaceFolder}/dist/**/*.js"],
         "preLaunchTask": "${defaultBuildTask}",
         "env": {
-          "OPENAI_API_KEY": "YOUR_OPENAI_API_KEY",
-          "PINECONE_API_KEY": "YOUR_PINECONE_API_KEY",
-          "REPLICATE_API_TOKEN": "YOUR_REPLICATE_API_TOKEN",
-          "PINECONE_ENVIRONMENT": "YOUR_PINECONE_ENVIRONMENT"
+          "OPENAI_API_KEY": "OPENAI_API_KEY",
+          "PINECONE_API_KEY": "PINECONE_API_KEY",
+          "PINECONE_ENVIRONMENT": "PINECONE_ENVIRONMENT",
+          "HELICONE_API_KEY": "HELICONE_API_KEY",
+          "SUPABASE_URL": "SUPABASE_URL",
+          "SUPABASE_KEY": "SUPABASE_KEY"
         }
       },
       {
