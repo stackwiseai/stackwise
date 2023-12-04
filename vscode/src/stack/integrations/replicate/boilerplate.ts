@@ -10,7 +10,7 @@ export async function queryReplicateBoilerplate(
 ): Promise<object> {
   // this function is for a model that takes an image and a prompt and returns a prediction, potentially a description
   try {
-    const version = ''; // CHANGE
+    const version = 'example/example:example'; // CHANGE
     const prediction = await replicate.run(version, {
       input: {
         // THIS CAN CHANGE
