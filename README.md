@@ -98,7 +98,7 @@ Stacks are stored in the `stacks/` folder of this repository. This folder is lik
 a completely new node project with its own `package.json`, `node_modules`, and
 test environment.
 
-In order **Get Started** writing _stacks_, do the following first:
+In order to **Get Started** writing _stacks_, do the following first:
 
 ```sh
 # Clone and change directory into the repo if you haven't yet.
