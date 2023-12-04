@@ -1,0 +1,4 @@
+test('Delete voice from voice library in elevenlabs', async () => {
+  const response = stack('Delete voice from voice library in elevenlabs')
+  expect(response.status).toBe('ok')
+});
