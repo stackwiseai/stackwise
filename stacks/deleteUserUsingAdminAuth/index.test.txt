@@ -1,0 +1,6 @@
+test('Delete user from the supabase project using supabase Admin AUTH', async () => {
+
+  const response = stack('Delete user from the supabase project using supabase Admin AUTH');
+  console.log(response)
+  expect(response.user).not.toBeNull();
+});

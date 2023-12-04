@@ -1,0 +1,4 @@
+test('Fetch data from table in SUPABASE in CSV Format', async () => {
+  const response = stack('Fetch data from table in SUPABASE in CSV Format')
+  expect(response).not.toBeNull();
+});

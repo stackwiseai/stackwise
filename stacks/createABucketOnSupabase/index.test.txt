@@ -1,0 +1,4 @@
+test('Create a bucket using supabase', async () => {
+  const response = stack('Create a bucket using supabase')
+  expect(response).not.toBeNull();
+});
