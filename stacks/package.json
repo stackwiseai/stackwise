@@ -9,9 +9,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
     "jest": "^29.7.0",
+    "pocketbase": "^0.19.0",
     "ts-node": "^10.9.1",
-    "typescript": "^5.3.2",
-    "pocketbase": "^0.19.0"
+    "typescript": "^5.3.2"
   }
 }
