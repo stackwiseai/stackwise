@@ -14,19 +14,34 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Check branch name
+      - name: Branch must be 'stack/*'
         run: |
           if [[ "${{ github.head_ref }}" != stack/* ]]; then
-            echo "Branch name does not match the format 'stack/*'"
+            echo "Branch name should follow the format: 'stack/*' e.g. stack/openai-streaming-text"
             exit 1
           fi
 
-      - name: Check changed files
+      - name: Check allowed file changes
         run: |
           changed_files=$(git diff --name-only HEAD^ HEAD)
           for file in $changed_files; do
             if [[ "$file" != stacks/* || "$file" != *"index.ts"* || "$file" != *"index.test.ts"* || "$file" != *"index.test.txt"* || "$file" != *"package.json"* || "$file" != *"package-lock.json"* ]]; then
-              echo "Changed files do not match the required format"
+              echo "Allowed file changes in the your stack PR should only be:"
+              echo "  - stacks/<your-stack-name>/index.ts"
+              echo "  - stacks/<your-stack-name>/index.test.ts"
+              echo "  - stacks/<your-stack-name>/index.test.txt"
+              echo "  - stacks/package.json"
+              echo "  - stacks/package-lock.json"
               exit 1
             fi
-          done
+
+      - name: Must only have 1 stack per PR
+        run: |
+          index_ts_count=$(echo "$changed_files" | grep -c "index.ts")
+          index_test_ts_count=$(echo "$changed_files" | grep -c "index.test.ts")
+          index_test_txt_count=$(echo "$changed_files" | grep -c "index.test.txt")
+          if [[ "$index_ts_count" -gt 1 || "$index_test_ts_count" -gt 1 || "$index_test_txt_count" -gt 1 ]]; then
+            echo "There should only be one of each file type in every PR"
+            exit 1
+          fi
+        done
