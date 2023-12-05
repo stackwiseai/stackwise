@@ -5,6 +5,6 @@ test('Create a new predicition in replicate', async () => {
       "text": "Alice"
     }
   }
-  const response = stack('create a new prediction in replicate,, {in: data, out: ''}')
+  const response = stack('create a new prediction in replicate', {in: data, out: ''})
   expect(response.statusText).toBe('Created');
 });
