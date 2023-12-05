@@ -1,0 +1,11 @@
+test('useOpenAIstreamEndpoint', async () => {
+  const question = "what is the meaning of life?";
+  const response = stack(
+    'what is the meaning of life?',
+    {
+      in: question,
+    });
+  console.log(response);
+});
+
+
