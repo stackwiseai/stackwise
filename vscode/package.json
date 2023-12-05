@@ -2,7 +2,7 @@
   "name": "stackwise",
   "displayName": "stackwise",
   "description": "Explain what you want a function to do, and AI builds it",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "publisher": "stackwise",
   "icon": "assets/icon.png",
   "engines": {
