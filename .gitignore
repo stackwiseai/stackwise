@@ -1,12 +1,4 @@
-node_modules/
-.env.hidden
-react/components/Component.tsx
-out
-.vscode-test
+.DS_Store
+node_modules
 stackRegistry.json
 dist
-.env
-.vscode/launch.json
-test-workspace/.env
-stacks/.env
-.DS_Store 
