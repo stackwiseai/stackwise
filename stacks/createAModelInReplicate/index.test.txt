@@ -1,0 +1,11 @@
+test('Create a model in replicate', async () => {
+  const data = {
+    owner: "pagebook1",
+    name: "my-model2",
+    description: "An example model",
+    visibility: "public",
+    hardware: "cpu"
+  };
+  const response = stack('Create a model in replicate', { in: data, out: 'data but output'})
+  expect(response.name).toBe(data.name);
+});
