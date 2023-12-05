@@ -51,6 +51,7 @@ export default async function buildOrUpdateStack(
   }
 
   let methodName;
+  let inputStringFromDB;
   if (!functionExists) {
     console.log(`function does not exist yet`);
     // embedding is null if exactMatch is true
@@ -67,7 +68,8 @@ export default async function buildOrUpdateStack(
       // if it's an exact match it means that's it's a single BoilerplateMetadata (hash directly matched or >0.98 similarity)
       const boilerplate = nearestBoilerplate as BoilerplateMetadata;
       methodName = boilerplate.methodName;
-
+      inputStringFromDB = boilerplate.inputString;
+      console.log(`inputStringFromDB in buildOrUpdateStack:`, inputStringFromDB);
       createStackFile(boilerplate.functionString, methodName, integrationType);
       // increment count of times it's been used and what it was retrieved by
       await updateEmbedding(boilerplate, functionId);
@@ -116,9 +118,10 @@ export default async function buildOrUpdateStack(
     methodName = stackRegistry.idExists(functionId);
     console.log(`function already exists`);
   }
-  console.log(`inputString in buildOrUpdateStack:`, inputString);
+  let inputStringToUse = inputStringFromDB || inputValues;
+  console.log(`inputValues in buildOrUpdateStack:`, inputStringToUse);
 
-  const injectedFunction = `await ${methodName}(${inputValues})`;
+  const injectedFunction = `await ${methodName}(${inputStringToUse})`;
 
   console.log(`stackSnippet in buildOrUpdateStack:`, stackSnippet);
   // console.log(`document in buildOrUpdateStack:`, document);

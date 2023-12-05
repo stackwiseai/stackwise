@@ -30,16 +30,20 @@ export default async function updateEmbedding(
     let currentCount =
       typeof currentMetadata.count === 'number' ? currentMetadata.count : 0;
     currentCount += 1;
+    const new_metadata = {
+      count: currentCount,
+    };
 
     // Update the record with the new count
     await index.update({
       id: toUpdate.id,
-      metadata: {
-        ...currentMetadata,
-        count: currentCount,
-        // retrievedAt: [...currentMetadata.retrievedAt, new Date().toISOString()],
-        // retrievedFor: [...currentMetadata.retrievedFor, newFunctionId],
-      },
+      metadata: new_metadata
+      // metadata: {
+      //   ...currentMetadata,
+        
+      //   // retrievedAt: [...currentMetadata.retrievedAt, new Date().toISOString()],
+      //   // retrievedFor: [...currentMetadata.retrievedFor, newFunctionId],
+      // },
     });
 
     console.log('Count incremented successfully for documentId:', toUpdate.id);
