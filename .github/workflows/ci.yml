@@ -41,9 +41,6 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Run TypeScript Compiler
-        run: tsc
-        
       - name: Fetch Latest Changes
         run: git fetch
 

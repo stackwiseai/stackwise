@@ -1,0 +1,4 @@
+test('Get user subscription info in elevenlabs', async () => {
+  const response = stack('Get user subscription info in elevenlabs')
+  expect(response.tier).toEqual('free');
+});

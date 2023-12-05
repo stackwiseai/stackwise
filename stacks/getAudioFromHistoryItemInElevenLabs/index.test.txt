@@ -1,0 +1,5 @@
+test('Get Audio From History Item in elevenlabs', async () => {
+  const response = stack('Get Audio From History Item in elevenlabs')
+  expect(response).toEqual(expect.any(ReadableStream))
+  response.cancel();
+});

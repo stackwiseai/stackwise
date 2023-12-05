@@ -1,0 +1,4 @@
+test('Get one item from history in elevenlabs', async () => {
+  const response = stack('Delete one item from history in elevenlabs')
+  expect(response.detail.status).toBeTruthy()
+});
