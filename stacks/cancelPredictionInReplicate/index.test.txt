@@ -1,0 +1,5 @@
+test('Cancel a predicition in replicate', async () => {
+  const id = 'qrrkkhdbgxdj7udh4ykhv3n7bi'
+  const response = stack('delete a prediction in replicate', { in: id, out: ''});
+  expect(response.status).toBe('succeeded');
+});
