@@ -1,47 +1,52 @@
-name: Check 'Stack' Pull Request Format
+name: Validate Pull Request
 
 on:
   pull_request:
-  push:
-    branches: ["stack/*", "chore/*"] # temporarily 'chore/*'
-  pull_request_target:
-    branches: [main]
+    types:
+      - opened
+      - synchronize
 
 jobs:
   check-format:
-    runs-on: ubuntu-latest
+    name: Validate Stack PR
+
+    # Only run if the PR branch starts with `stack/`
+    if: startsWith(github.head_ref, 'stack/')
+
+    runs-on: ubuntu-latest # can also change to: windows-latest || macos-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # OR "2" -> To retrieve the preceding commit.
 
-      - name: Branch must be 'stack/*'
-        run: |
-          if [[ "${{ github.head_ref }}" != stack/* ]]; then
-            echo "Branch name should follow the format: 'stack/*' e.g. stack/openai-streaming-text"
-            exit 1
-          fi
+      - name: Get all changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v40
 
-      - name: Check allowed file changes
+      - name: List all changed files
         run: |
-          changed_files=$(git diff --name-only HEAD^ HEAD)
-          for file in $changed_files; do
-            if [[ "$file" != stacks/* || "$file" != *"index.ts"* || "$file" != *"index.test.ts"* || "$file" != *"index.test.txt"* || "$file" != *"package.json"* || "$file" != *"package-lock.json"* ]]; then
-              echo "Allowed file changes in the your stack PR should only be:"
-              echo "  - stacks/<your-stack-name>/index.ts"
-              echo "  - stacks/<your-stack-name>/index.test.ts"
-              echo "  - stacks/<your-stack-name>/index.test.txt"
-              echo "  - stacks/package.json"
-              echo "  - stacks/package-lock.json"
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            echo "$file was changed"
+          done
+
+      - name: Fail if unexpected files were changed
+        run: |
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            if [[ ! "$file" =~ ^(stacks/[^/]*/index.test.ts|stacks/[^/]*/index.ts|stacks/[^/]*/index.test.txt)$ ]]; then
+              echo "😡 File '$file' was changed. This is not allowed in a stack Pull Request."
+              echo ""
+              echo "You're only allowed to change the following:"
+              echo "  - stacks/*/index.ts"
+              echo "  - stacks/*/index.test.ts"
+              echo "  - stacks/*/index.test.txt"
               exit 1
             fi
+          done
 
-      - name: Must only have 1 stack per PR
+      - name: Fail if more than one (1) stack was made
         run: |
-          index_ts_count=$(echo "$changed_files" | grep -c "index.ts")
-          index_test_ts_count=$(echo "$changed_files" | grep -c "index.test.ts")
-          index_test_txt_count=$(echo "$changed_files" | grep -c "index.test.txt")
-          if [[ "$index_ts_count" -gt 1 || "$index_test_ts_count" -gt 1 || "$index_test_txt_count" -gt 1 ]]; then
-            echo "There should only be one of each file type in every PR"
+          if ((${{ steps.changed-files.outputs.all_changed_files_count }} > 3)); then
+            echo "😡 Detected more than 1 stack. Please make only 1 stack per pull request."
             exit 1
           fi
-        done
