@@ -1,0 +1,7 @@
+import callOpenAIUsingLangchain from "."
+
+async function main() {
+  const response = await stack("call OpenAI using langchain")
+  console.log(response)
+};
+main()
