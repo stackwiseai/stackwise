@@ -1,7 +1,7 @@
 {
-  "name": "typescript-npm-package-template",
+  "name": "stackwise",
   "version": "0.0.0-development",
-  "description": "A template for creating npm packages using TypeScript and VSCode",
+  "description": "Explain what you want to do, and AI builds it.",
   "main": "./lib/index.js",
   "files": [
     "lib/**/*"
@@ -11,7 +11,6 @@
     "clean": "rm -rf ./lib/",
     "cm": "cz",
     "lint": "eslint ./src/ --fix",
-    "prepare": "husky install",
     "semantic-release": "semantic-release",
     "test:watch": "jest --watch",
     "test": "jest --coverage",
@@ -19,13 +18,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ryansonshine/typescript-npm-package-template.git"
+    "url": "git+https://github.com/stackwiseai/stackwise"
   },
   "license": "MIT",
   "author": {
-    "name": "Ryan Sonshine",
-    "email": "ryansonshine@users.noreply.github.com",
-    "url": "https://github.com/ryansonshine"
+    "name": "Silen Naihin, Merwane hamadi",
+    "email": "contact@stackwise.ai",
+    "url": "https://github.com/stackwiseai"
   },
   "engines": {
     "node": ">=12.0"
@@ -36,15 +35,13 @@
     "typescript",
     "vscode",
     "jest",
-    "husky",
     "commitizen",
     "semantic-release",
     "codecov"
   ],
   "bugs": {
-    "url": "https://github.com/ryansonshine/typescript-npm-package-template/issues"
+    "url": "https://github.com/stackwiseai/stackwise/issues"
   },
-  "homepage": "https://github.com/ryansonshine/typescript-npm-package-template#readme",
   "devDependencies": {
     "@ryansonshine/commitizen": "^4.2.8",
     "@ryansonshine/cz-conventional-changelog": "^3.3.4",
@@ -57,7 +54,6 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.4.0",
-    "husky": "^6.0.0",
     "jest": "^27.2.0",
     "lint-staged": "^13.2.1",
     "prettier": "^2.2.1",

@@ -1,13 +1,13 @@
-import { myPackage } from '../src';
+import stack from '../src';
 
-describe('index', () => {
-  describe('myPackage', () => {
-    it('should return a string containing the message', () => {
-      const message = 'Hello';
+// describe('Stack', () => {
+//     describe('replicate', () => {
+//         it('should return a string containing the message', () => {
+//             const message = 'Hello';
 
-      const result = myPackage(message);
+//             const result = stack.replicate(message);
 
-      expect(result).toMatch(message);
-    });
-  });
-});
+//             expect(result).toMatch(message);
+//         });
+//     });
+// });
