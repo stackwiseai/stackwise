@@ -1,5 +1,5 @@
 import { Pinecone, PineconeRecord } from '@pinecone-database/pinecone';
-import { getEmbedding } from '../../stacks/openai/getEmbedding';
+import { getEmbedding } from './getEmbedding';
 import { DocumentationMetadata } from '../integrations/lib/types';
 import { combineSkeleton } from '../createSkeleton';
 
