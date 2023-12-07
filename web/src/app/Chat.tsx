@@ -64,7 +64,6 @@ export const Chat = () => {
       setStackResponse(responseData);
     } catch (error) {
       console.error('Error in POST /api/stack:', error);
-      setStackResponse(`Error: ${error.message}`); // Handle error in stack response
     }
   };
 
@@ -133,14 +132,14 @@ export const Chat = () => {
         {stackResponse.gitDiffUrl && (
           <div>
             <a
-              href={stackResponse.gitDiffUrl}
+              href={stackResponse.vercelLink}
               style={{ color: 'blue', textDecoration: 'none' }}
             >
               Check your new app!
             </a>
             <br />
             <a
-              href={stackResponse.vercelLink}
+              href={stackResponse.gitDiffUrl}
               style={{ color: 'blue', textDecoration: 'none' }}
             >
               Check your new commit!
