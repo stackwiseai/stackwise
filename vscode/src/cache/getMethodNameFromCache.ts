@@ -1,4 +1,4 @@
-import getMethodName from '../stack/getMethodName';
+import getMethodName from '../../../shared/getMethodName';
 import { combineSkeleton } from '../stack/createSkeleton';
 
 const storage = require('node-persist');

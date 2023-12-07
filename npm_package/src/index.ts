@@ -1,33 +1,22 @@
-export default class stack {
-  /**
-   * Generates a json of input and output types
-   */
-  static getIO(query: string): Record<string, unknown> {
-    // Pretend you are now the skeleton of a function. What are the input and return types that the function that does the following will need? Respond with absolutely nothing but the input and return types in a json. Only include necessary input and output types.
-    return {};
-  }
+import createStackFile from './createStackFile';
+import { getIO } from './getIO';
+import { createHtml } from './createHtml';
 
-  /**
-   * Creates a skeleton function from a json
-   */
-  static skeletonConversion(json: Record<string, unknown>): string {
-    // get method name
-    return '';
-  }
+/**
+ * Retrieves a completed stack
+ * @param {string} brief - The user request for a stack
+ * @returns {Record<string, unknown>} Data representing the stack
+ */
+export async function stack(brief: string): Promise<Record<string, unknown>> {
+  try {
+    const ioData = await getIO(brief);
 
-  /**
-   * Actually generates the function
-   */
-  static generateCode(): string {
-    // choose Boilerplate
-    // adjustIO, triggers a html adjustment
-    return '';
-  }
+    const methodName = await createStackFile(ioData, brief);
+    await createHtml(ioData, methodName);
 
-  /**
-   * Creates the html
-   */
-  static createHtml(): string {
-    return '';
+    return { message: 'Success' };
+  } catch (error) {
+    console.log(error);
+    return { message: 'Error' };
   }
 }
