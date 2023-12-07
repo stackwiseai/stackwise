@@ -112,40 +112,52 @@ export const Chat = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          placeholder="Type here..."
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') handleSubmit(e);
-          }}
-        />
-        <button type="submit" disabled={loading}>
-          Submit
-        </button>
-        {loading && <span>GO take a coffee</span> && LoadingComponent()}
-      </form>
-      <div>
-        {stackResponse.gitDiffUrl && (
-          <div>
-            <a
-              href={stackResponse.vercelLink}
-              style={{ color: 'blue', textDecoration: 'none' }}
-            >
-              Check your new app!
-            </a>
-            <br />
-            <a
-              href={stackResponse.gitDiffUrl}
-              style={{ color: 'blue', textDecoration: 'none' }}
-            >
-              Check your new commit!
-            </a>
-          </div>
-        )}
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+      <div style={{ flex: 1 }}>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            placeholder="Type here..."
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleSubmit(e);
+            }}
+          />
+          <button type="submit" disabled={loading}>
+            Submit
+          </button>
+          {loading && <span>Might take a minute or 2 ... </span>}
+          {loading && LoadingComponent()}
+        </form>
+        <div>
+          {stackResponse.gitDiffUrl && (
+            <div>
+              <a
+                href={stackResponse.vercelLink}
+                style={{ color: 'blue', textDecoration: 'none' }}
+              >
+                Check your new app!
+              </a>
+              <br />
+              <a
+                href={stackResponse.gitDiffUrl}
+                style={{ color: 'blue', textDecoration: 'none' }}
+              >
+                Check your new commit!
+              </a>
+            </div>
+          )}
+        </div>
+      </div>
+      <div style={{ position: 'absolute', bottom: '20px', right: '20px' }}>
+        <a
+          href="https://github.com/stackwiseai/stackwise"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <FaGithub size={30} />
+        </a>
       </div>
     </div>
   );

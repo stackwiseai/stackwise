@@ -10,6 +10,7 @@ const openai = new OpenAI({
   baseURL: 'https://oai.hconeai.com/v1',
   defaultHeaders: {
     'Helicone-Auth': `Bearer ${heliconeAPIKey}`,
+    'Helicone-Cache-Enabled': 'true',
   },
 });
 
@@ -51,6 +52,7 @@ Please could you rewrite entirely this file, following the system instructions ?
       { role: 'user', content: content },
     ],
     stream: true,
+    temperature: 0,
   });
   const stream = OpenAIStream(response);
 

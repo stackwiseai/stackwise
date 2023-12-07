@@ -153,10 +153,6 @@ async function deployToVercel(branch) {
   try {
     const response = await axios(config);
     return `https://${response.data.alias[0]}`;
-    // return 'https://stackwise.vercel.app/';
-
-    // console.log('Deployment created successfully:', response.data);
-    return response.data; // Optional: Return response data if needed
   } catch (error) {
     if (error.response) {
       // The request was made and the server responded with a status code
@@ -176,7 +172,7 @@ async function deployToVercel(branch) {
 }
 
 function extractTsxOrJsx(inputString) {
-  const regex = /```(tsx|jsx|javascript|js|ts)\s*([\s\S]*?)\s*```/;
+  const regex = /```(tsx|jsx|javascript|js|ts|typescript)\s*([\s\S]*?)\s*```/;
   const match = inputString.match(regex);
   return match ? match[2].trim() : inputString;
 }
