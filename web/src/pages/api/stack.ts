@@ -82,7 +82,6 @@ async function pushToBranch(newContent) {
             mode: '100644', // blob (file)
             type: 'blob',
             content: newContent,
-            encoding: 'base64',
         }],
         base_tree: treeSha,
     });
