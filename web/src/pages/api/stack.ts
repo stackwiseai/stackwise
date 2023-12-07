@@ -9,7 +9,7 @@ const vercelToken = process.env.VERCEL_TOKEN;
 const teamId = process.env.TEAM_ID;  
 const repoId = process.env.REPO_ID;
 const randomString = generateRandomString(10) 
-const vercelCommitRef = process.env.VERCEL_GIT_COMMIT_REF
+const vercelCommitRef = process.env.VERCEL_GIT_COMMIT_REF  ?? ''
 const openAIAPIKey = process.env.OPENAI_API_KEY;
 const heliconeAPIKey = process.env.HELICONE_API_KEY;
 import { v4 as uuidv4 } from 'uuid';
