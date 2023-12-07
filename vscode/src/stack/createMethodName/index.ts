@@ -1,5 +1,5 @@
 import getMethodNameWithCache from '../../cache/getMethodNameFromCache';
-import { placeholderName } from '../../constants';
+import { placeholderName } from '../../../../shared/constants';
 
 interface OutputType {
   updatedMethodName: string;

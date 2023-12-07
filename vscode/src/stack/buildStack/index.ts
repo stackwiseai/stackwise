@@ -1,4 +1,4 @@
-import getMethodName from '../getMethodName';
+import getMethodName from '../../../../shared/getMethodName';
 import {
   generateSignature,
   createMD5HashFromSignature,

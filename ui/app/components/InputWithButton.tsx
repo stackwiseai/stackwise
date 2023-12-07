@@ -3,12 +3,33 @@ import { useState } from 'react';
 import tw from 'tailwind-styled-components';
 import { callStack } from '../actions';
 
-const InputWithButton: React.FC = () => {
+import { useFormState, useFormStatus } from 'react-dom';
+
+const SubmitButton = () => {
+  const { pending } = useFormStatus();
+
   return (
-    <form action={callStack}>
-      <Input placeholder="Enter something..." type="text" name="stack" />
-      <Button type="submit">Submit</Button>
-    </form>
+    <Button type="submit" disabled={pending}>
+      Submit
+    </Button>
+  );
+};
+
+const InputWithButton: React.FC = () => {
+  const [state, formAction] = useFormState(callStack, { message: null });
+  return (
+    <>
+      <form action={formAction}>
+        <Input
+          placeholder="Enter something..."
+          type="text"
+          name="stack"
+          required
+        />
+        <SubmitButton />
+      </form>
+      <p>{JSON.stringify(state.message)}</p>
+    </>
   );
 };
 
@@ -33,6 +54,7 @@ const Button = tw.button`
   py-3
   px-4
   rounded
+  disabled:bg-slate-500
 `;
 
 export default InputWithButton;

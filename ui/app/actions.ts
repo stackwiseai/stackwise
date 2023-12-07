@@ -1,9 +1,9 @@
 'use server';
 
-import stack from 'stackwise';
+import { stack } from 'stackwise';
 
-export const callStack = async (formData: FormData) => {
-  const data = formData.get('stack');
-  console.log('data', data);
-  return '';
+export const callStack = async (prevState: any, formData: FormData) => {
+  const userRequest = formData.get('stack') as string;
+  const message = await stack(userRequest);
+  return message;
 };

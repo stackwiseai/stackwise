@@ -1,6 +1,6 @@
 import OpenAI from 'openai';
-import { openai } from './integrations/openai/construct';
-import { placeholderName } from '../constants';
+import { openai } from '../vscode/src/stack/integrations/openai/construct';
+import { placeholderName } from './constants';
 
 interface InputType {
   wholeSkeleton: string;
