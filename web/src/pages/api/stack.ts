@@ -9,19 +9,19 @@ const vercelToken = process.env.VERCEL_TOKEN;
 const teamId = process.env.TEAM_ID;  
 const repoId = process.env.REPO_ID;
 const randomString = generateRandomString(10) 
-
+const vercelCommitRef = process.env.VERCEL_GIT_COMMIT_REF
 const openAIAPIKey = process.env.OPENAI_API_KEY;
 const heliconeAPIKey = process.env.HELICONE_API_KEY;
 import { v4 as uuidv4 } from 'uuid';
 
 export default async function handler(req, res) {
-  let envInfo = ""
-  for (let key in process.env) {
-    console.log(`${key}: ${process.env[key]}`);
-    // concatenate to envInfo
-    envInfo += `${key}: ${process.env[key]}\n`
-   }
-   res.status(200).json({ message: envInfo });
+  // let envInfo = ""
+  // for (let key in process.env) {
+  //   console.log(`${key}: ${process.env[key]}`);
+  //   // concatenate to envInfo
+  //   envInfo += `${key}: ${process.env[key]}\n`
+  //  }
+  //  res.status(200).json({ message: envInfo });
   // Only allow POST method
   if (req.method === 'POST') {
     const codeToChange = await getCurrentCode()
@@ -52,18 +52,18 @@ async function pushToBranch(newContent) {
   const path = 'web/src/app/Home.tsx';
   // const content = Buffer.from(newContent).toString('base64');
   const message = 'Your commit message';
-  const defaultBranch = 'main'; // or 'master', depending on your repository
+  const sourceBranch = vercelCommitRef; // or 'master', depending on your repository
   const branch = uuidv4();
   try {
       // Get the SHA of the latest commit on the branch
 
       let parentSha;
-        const { data: defaultBranchData } = await octokit.repos.getBranch({
+        const { data: sourceBranchData } = await octokit.repos.getBranch({
           owner,
           repo,
-          branch: defaultBranch,
+          branch: sourceBranch,
       });
-      parentSha = defaultBranchData.commit.sha;
+      parentSha = sourceBranchData.commit.sha;
 
     // Create a new branch
     console.log('Creating ref for :', branch);
