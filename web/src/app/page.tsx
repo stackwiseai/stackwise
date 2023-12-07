@@ -1,18 +1,32 @@
-"use client";
-
-import { Chat } from './Chat';
+'use client';
+import React from 'react';
 import Home from './Home'; // Adjust the path to where your Home.tsx is located
+import { Chat } from './Chat';
 
-// Define the WrapperComponent directly in the page.tsx file
 const WrapperComponent = ({ children }) => {
-  return <div className="wrapper">{children}</div>;
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        width: '100%',
+        height: '100vh', // Set the height to 100% of the viewport height
+      }}
+    >
+      {children}
+    </div>
+  );
 };
 
 const WrappedHome = () => {
   return (
     <WrapperComponent>
-      <Home />
-      <Chat />
+      <div style={{ flex: 10, height: '100%' }}>
+        <Home />
+      </div>
+      <div style={{ flex: 2, height: '100%' }}>
+        <Chat />
+      </div>
     </WrapperComponent>
   );
 };

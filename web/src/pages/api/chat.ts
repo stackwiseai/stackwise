@@ -4,7 +4,7 @@ const openAIAPIKey = process.env.OPENAI_API_KEY;
 const heliconeAPIKey = process.env.HELICONE_API_KEY;
 const owner = 'stackwiseai';
 const repo = 'stackwise';
-
+const sourceBranch = process.env.VERCEL_GIT_COMMIT_REF ?? '';
 const openai = new OpenAI({
   apiKey: openAIAPIKey,
   baseURL: 'https://oai.hconeai.com/v1',
@@ -53,7 +53,7 @@ Please always rewrite the whole file. I repeat, please always rewrite the whole 
 async function getCurrentCode() {
   try {
     const response = await fetch(
-      `https://api.github.com/repos/${owner}/${repo}/contents/web/src/app/Home.tsx`,
+      `https://api.github.com/repos/${owner}/${repo}/contents/web/src/app/Home.tsx?ref=${sourceBranch}`,
       {
         headers: {
           Authorization: `token ${process.env.GITHUB_TOKEN}`,

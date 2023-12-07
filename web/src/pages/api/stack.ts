@@ -9,8 +9,7 @@ const vercelToken = process.env.VERCEL_TOKEN;
 const teamId = process.env.TEAM_ID;
 const repoId = process.env.REPO_ID;
 const randomString = generateRandomString(10);
-const vercelCommitRef = process.env.VERCEL_GIT_COMMIT_REF ?? '';
-
+const sourceBranch = process.env.VERCEL_GIT_COMMIT_REF ?? ''; // or 'master', depending on your repository
 import { v4 as uuidv4 } from 'uuid';
 
 export default async function handler(req, res) {
@@ -30,11 +29,12 @@ export default async function handler(req, res) {
     }
     const extractedContent = extractTsxOrJsx(fileContent);
     console.log(extractedContent);
-    pushToBranch(extractedContent);
+    const branch = uuidv4();
 
-    // // Send a response back
-
-    // deployToVercel(branch);
+    const gitDiffUrl = await pushToBranch(extractedContent, branch);
+    console.log('gitDiffUrl', gitDiffUrl);
+    const vercelLink = await deployToVercel(branch);
+    return res.status(200).json({ gitDiffUrl, vercelLink });
   } else {
     // Handle any other HTTP method
     res.setHeader('Allow', ['POST']);
@@ -42,13 +42,12 @@ export default async function handler(req, res) {
   }
 }
 
-async function pushToBranch(newContent) {
+async function pushToBranch(newContent, branch) {
   // Generates a random string of 10 characters
   const path = 'web/src/app/Home.tsx';
   // const content = Buffer.from(newContent).toString('base64');
   const message = 'Your commit message';
-  const sourceBranch = vercelCommitRef; // or 'master', depending on your repository
-  const branch = uuidv4();
+
   try {
     // Get the SHA of the latest commit on the branch
 
@@ -111,6 +110,9 @@ async function pushToBranch(newContent) {
     });
 
     console.log('Successfully pushed to branch:', branch);
+    const gitDiffLink = `https://github.com/${owner}/${repo}/compare/${sourceBranch}...${branch}`;
+    console.log('gitDiffLink', gitDiffLink);
+    return gitDiffLink;
   } catch (error) {
     console.error('Error pushing to branch:', error);
   }
@@ -150,7 +152,10 @@ async function deployToVercel(branch) {
 
   try {
     const response = await axios(config);
-    console.log('Deployment created successfully:', response.data);
+    return `https://${response.data.alias[0]}`;
+    // return 'https://stackwise.vercel.app/';
+
+    // console.log('Deployment created successfully:', response.data);
     return response.data; // Optional: Return response data if needed
   } catch (error) {
     if (error.response) {
