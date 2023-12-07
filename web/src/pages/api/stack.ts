@@ -219,7 +219,7 @@ Please always rewrite the whole file. I repeat, please always rewrite the whole 
 }
 
 function extractTsxOrJsx(inputString) {
-  const regex = /```(tsx|jsx)\s*([\s\S]*?)\s*```/; 
+  const regex = /```(tsx|jsx|javascript)\s*([\s\S]*?)\s*```/; 
   const match = inputString.match(regex);
   return match ? match[2].trim() : inputString;
 }
