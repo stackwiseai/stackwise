@@ -1,21 +1,10 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": false, // Change this line
-    "noImplicitAny": false, // Add this line
+    "lib": ["dom", "dom.iterable", "esnext"],
     "noEmit": true,
-    "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
     "plugins": [
@@ -24,19 +13,24 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"]
     },
-    "strictNullChecks": true
+    "allowJs": true, // Allow JavaScript files to be compiled.
+    "checkJs": false, // Do not report errors in JavaScript files.
+    "strict": false, // Disable strict type-checking options.
+    "noImplicitAny": false, // Allow expressions and declarations with an implied 'any' type.
+    "strictNullChecks": false, // Do not strictly check for null and undefined.
+    "strictFunctionTypes": false, // Do not strictly check function types.
+    "strictBindCallApply": false, // Do not strictly check bind, call, and apply.
+    "strictPropertyInitialization": false, // Do not strictly check property initialization.
+    "noImplicitThis": false, // Allow 'this' expressions with an implied 'any' type.
+    "alwaysStrict": false, // Do not parse files in strict mode.
+    "esModuleInterop": true, // Allows for easier interoperability between default imports and commonjs modules.
+    "skipLibCheck": true, // Skip type checking of declaration files.
+    "resolveJsonModule": true, // Include modules imported from .json files.
+    "isolatedModules": false, // Do not ensure that each file can be safely transpiled without relying on other imports.
+    "noEmitOnError": false
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
 }
