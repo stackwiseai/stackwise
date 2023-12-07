@@ -38,7 +38,8 @@ export default async function handler(req, res) {
 You always return a single snippet of typescript code and it's always the full code, even if it's repetitive and long. 
 
 Please note that the code should be fully functional. No placeholders.
-Always stay in the same page, you're not allowed to switch page.`;
+Always stay in the same page, you're not allowed to switch page.
+please Note You are using nextjs 14.`;
 
   const content = `This is the app I am working with:
 ${codeToChange}
