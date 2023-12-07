@@ -1,23 +1,22 @@
-import { createParser, ParsedEvent, ReconnectInterval } from "eventsource-parser";
-import OpenAI from "openai";
+import { OpenAIStream, StreamingTextResponse } from 'ai';
+import OpenAI from 'openai';
+
 const openai = new OpenAI();
 export const config = {
     runtime: "edge",
-  };
+};
 
 export default async function handler(req, res) {
-    const stream = await openai.chat.completions.create({
-      model: 'gpt-4',
-      messages: [{ role: 'user', content: 'tell me a story' }],
-      stream: true,
-    });
+ const response = await openai.chat.completions.create({
+   model: 'gpt-4',
+   messages: [{ role: 'user', content: 'tell me a story' }],
+   stream: true,
+ });
+ const stream = OpenAIStream(response);
 
-    for await (const chunk of stream) {
-      res.write(chunk.choices[0]?.delta?.content || '');
-    }
+ return new StreamingTextResponse(stream);
 
-    res.end();
-  }
+}
 
 // export async function OpenAIStream(payload) {
 //   const encoder = new TextEncoder();
