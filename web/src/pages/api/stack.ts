@@ -26,9 +26,8 @@ export default async function handler(req, res) {
   if (req.method === 'POST') {
     const codeToChange = await getCurrentCode()
     console.log(codeToChange, req.body.brief)
-    const changedCode = "yes"
 
-    // const changedCode = await getChangedCode(codeToChange, req.body.brief)
+    const changedCode = await getChangedCode(codeToChange, req.body.brief)
     console.log(changedCode)
     const tsxExtracted = extractTsxOrJsx(changedCode)
     if (!tsxExtracted) {
@@ -197,7 +196,7 @@ async function getChangedCode(codeToChange, brief) {
   const chat = new ChatOpenAI({
     openAIApiKey: openAIAPIKey,
     // maxTokens: 4096,
-    modelName: "gpt-3.5-turbo-1106",
+    modelName: "gpt-3.5-turbo",
     configuration: {
       basePath: "https://oai.hconeai.com/v1",
       defaultHeaders: {
