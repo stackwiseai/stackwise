@@ -1,8 +1,9 @@
+'use server';
 import tw from 'tailwind-styled-components';
 import Image from 'next/image';
 import InputWithButton from './components/InputWithButton';
 
-export default function Home() {
+export default async function Home() {
   return (
     <Container>
       <div>

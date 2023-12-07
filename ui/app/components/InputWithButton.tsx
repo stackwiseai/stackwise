@@ -1,23 +1,12 @@
 'use client';
 import { useState } from 'react';
 import tw from 'tailwind-styled-components';
+import { callStack } from '../actions';
 
-const InputWithButton: React.FC = ({}) => {
-  const [inputValue, setInputValue] = useState('');
-
-  const handleSubmit = (event) => {
-    event.preventDefault(); // Prevent the default form submit action
-    console.log('Input value:', inputValue);
-    // Additional logic here
-  };
-
+const InputWithButton: React.FC = () => {
   return (
-    <form onSubmit={handleSubmit}>
-      <Input
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        placeholder="Enter something..."
-      />
+    <form action={callStack}>
+      <Input placeholder="Enter something..." type="text" name="stack" />
       <Button type="submit">Submit</Button>
     </form>
   );
