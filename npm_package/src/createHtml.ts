@@ -7,6 +7,5 @@ export async function createHtml(
   methodName: string
 ): Promise<string> {
   // Implementation here
-  await new Promise(resolve => setTimeout(resolve, 1000));
   return 'testing this';
 }
