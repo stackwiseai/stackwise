@@ -5,6 +5,7 @@ import Home from './Home'; // Adjust the path to where your Home.tsx is located
 // Chat component
 export const Chat = () => {
   const [inputValue, setInputValue] = useState('');
+  const [generatedBios, setGeneratedBios] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -32,6 +33,47 @@ export const Chat = () => {
       setInputValue(''); // Clear the input field
     }
   };
+  const [loading, setLoading] = useState(false);
+
+  const generateBio = async (e) => {
+    e.preventDefault();
+    setGeneratedBios('');
+    setLoading(true);
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt: inputValue }), // Use inputValue as the prompt
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.body;
+      if (!data) {
+        return;
+      }
+
+      const reader = data.getReader();
+      const decoder = new TextDecoder();
+      let done = false;
+
+      while (!done) {
+        const { value, done: doneReading } = await reader.read();
+        done = doneReading;
+        const chunkValue = decoder.decode(value);
+        setGeneratedBios((prev) => prev + chunkValue);
+      }
+    } catch (error) {
+      console.error('Error during fetch:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit}>
@@ -42,6 +84,11 @@ export const Chat = () => {
         placeholder="Type here..."
         onKeyDown={(e) => { if (e.key === 'Enter') handleSubmit(e); }}
       />
+      <button onClick={generateBio} disabled={loading}>
+        Generate Bio
+      </button>
+      {loading && <p>Loading...</p>}
+      {generatedBios && <div>{generatedBios}</div>}
     </form>
   );
 };
