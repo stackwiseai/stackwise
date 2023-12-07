@@ -26,7 +26,9 @@ export default async function handler(req, res) {
   if (req.method === 'POST') {
     const codeToChange = await getCurrentCode()
     console.log(codeToChange, req.body.brief)
-    const changedCode = await getChangedCode(codeToChange, req.body.brief)
+    const changedCode = "yes"
+
+    // const changedCode = await getChangedCode(codeToChange, req.body.brief)
     console.log(changedCode)
     const tsxExtracted = extractTsxOrJsx(changedCode)
     if (!tsxExtracted) {
