@@ -28,8 +28,9 @@ export default async function handler(req, res) {
     if (!fileContent) {
       throw new Error('No tsx code found in the response');
     }
-    console.log(fileContent);
-    pushToBranch(fileContent);
+    const extractedContent = extractTsxOrJsx(fileContent);
+    console.log(extractedContent);
+    pushToBranch(extractedContent);
 
     // // Send a response back
 
