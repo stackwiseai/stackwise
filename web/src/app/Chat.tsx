@@ -130,7 +130,7 @@ export const Chat = () => {
         {loading && <span>GO take a coffee</span> && LoadingComponent()}
       </form>
       <div>
-        {stackResponse && (
+        {stackResponse.gitDiffUrl && (
           <div>
             <a
               href={stackResponse.gitDiffUrl}

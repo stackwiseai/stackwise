@@ -176,7 +176,7 @@ async function deployToVercel(branch) {
 }
 
 function extractTsxOrJsx(inputString) {
-  const regex = /```(tsx|jsx|javascript)\s*([\s\S]*?)\s*```/;
+  const regex = /```(tsx|jsx|javascript|js)\s*([\s\S]*?)\s*```/;
   const match = inputString.match(regex);
   return match ? match[2].trim() : inputString;
 }
