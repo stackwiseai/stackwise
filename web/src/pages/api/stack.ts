@@ -1,17 +1,16 @@
-import { Octokit } from "@octokit/rest";
-const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN});
+import { Octokit } from '@octokit/rest';
+const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 import axios from 'axios';
-import { ChatOpenAI } from "langchain/chat_models/openai";
-import { OpenAI } from "langchain/llms/openai";
+import { ChatOpenAI } from 'langchain/chat_models/openai';
+import { OpenAI } from 'langchain/llms/openai';
 const owner = 'stackwiseai';
 const repo = 'stackwise';
 const vercelToken = process.env.VERCEL_TOKEN;
-const teamId = process.env.TEAM_ID;  
+const teamId = process.env.TEAM_ID;
 const repoId = process.env.REPO_ID;
-const randomString = generateRandomString(10) 
-const vercelCommitRef = process.env.VERCEL_GIT_COMMIT_REF  ?? ''
-const openAIAPIKey = process.env.OPENAI_API_KEY;
-const heliconeAPIKey = process.env.HELICONE_API_KEY;
+const randomString = generateRandomString(10);
+const vercelCommitRef = process.env.VERCEL_GIT_COMMIT_REF ?? '';
+
 import { v4 as uuidv4 } from 'uuid';
 
 export default async function handler(req, res) {
@@ -23,60 +22,54 @@ export default async function handler(req, res) {
   //  }
   //  res.status(200).json({ message: envInfo });
   // Only allow POST method
-  if (req.method === 'POST') {
-    const codeToChange = await getCurrentCode()
-    console.log(codeToChange, req.body.brief)
 
-    const changedCode = await getChangedCode(codeToChange, req.body.brief)
-    console.log(changedCode)
-    const tsxExtracted = extractTsxOrJsx(changedCode)
-    if (!tsxExtracted) {
-      throw new Error('No tsx code found in the response')
+  if (req.method === 'POST') {
+    const fileContent = req.body.fileContent;
+    if (!fileContent) {
+      throw new Error('No tsx code found in the response');
     }
-    console.log(tsxExtracted)
-    pushToBranch(tsxExtracted);
-    
+    console.log(fileContent);
+    pushToBranch(fileContent);
+
     // // Send a response back
 
     // deployToVercel(branch);
-    
   } else {
     // Handle any other HTTP method
     res.setHeader('Allow', ['POST']);
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
-  
+
 async function pushToBranch(newContent) {
-  
-  ; // Generates a random string of 10 characters
+  // Generates a random string of 10 characters
   const path = 'web/src/app/Home.tsx';
   // const content = Buffer.from(newContent).toString('base64');
   const message = 'Your commit message';
   const sourceBranch = vercelCommitRef; // or 'master', depending on your repository
   const branch = uuidv4();
   try {
-      // Get the SHA of the latest commit on the branch
+    // Get the SHA of the latest commit on the branch
 
-      let parentSha;
-        const { data: sourceBranchData } = await octokit.repos.getBranch({
-          owner,
-          repo,
-          branch: sourceBranch,
-      });
-      parentSha = sourceBranchData.commit.sha;
+    let parentSha;
+    const { data: sourceBranchData } = await octokit.repos.getBranch({
+      owner,
+      repo,
+      branch: sourceBranch,
+    });
+    parentSha = sourceBranchData.commit.sha;
 
     // Create a new branch
     console.log('Creating ref for :', branch);
     await octokit.git.createRef({
-        owner,
-        repo,
-        ref: `refs/heads/${branch}`,
-        sha: parentSha,
+      owner,
+      repo,
+      ref: `refs/heads/${branch}`,
+      sha: parentSha,
     });
     console.log('Created ref for :', branch);
 
-      // Get the SHA of the tree from the latest commit
+    // Get the SHA of the tree from the latest commit
     const { data: commitData } = await octokit.git.getCommit({
       owner,
       repo,
@@ -86,46 +79,49 @@ async function pushToBranch(newContent) {
 
     // Create a new tree with the changes
     const { data: treeData } = await octokit.git.createTree({
-        owner,
-        repo,
-        tree: [{
-            path,
-            mode: '100644', // blob (file)
-            type: 'blob',
-            content: newContent,
-        }],
-        base_tree: treeSha,
+      owner,
+      repo,
+      tree: [
+        {
+          path,
+          mode: '100644', // blob (file)
+          type: 'blob',
+          content: newContent,
+        },
+      ],
+      base_tree: treeSha,
     });
 
     // Create a new commit with the new tree and the parent commit
     const { data: newCommitData } = await octokit.git.createCommit({
-        owner,
-        repo,
-        message,
-        tree: treeData.sha,
-        parents: [parentSha],
+      owner,
+      repo,
+      message,
+      tree: treeData.sha,
+      parents: [parentSha],
     });
 
     // Update the branch reference to point to the new commit
     await octokit.git.updateRef({
-        owner,
-        repo,
-        ref: `heads/${branch}`,
-        sha: newCommitData.sha,
+      owner,
+      repo,
+      ref: `heads/${branch}`,
+      sha: newCommitData.sha,
     });
 
     console.log('Successfully pushed to branch:', branch);
-} catch (error) {
+  } catch (error) {
     console.error('Error pushing to branch:', error);
-}
+  }
 }
 
 function generateRandomString(length: number): string {
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
   const charactersLength = characters.length;
   for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
 }
@@ -138,7 +134,7 @@ async function deployToVercel(branch) {
     url: apiEndpoint + (teamId ? `?teamId=${teamId}` : ''),
     headers: {
       Authorization: `Bearer ${vercelToken}`,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
     data: {
       name: repo,
@@ -146,9 +142,9 @@ async function deployToVercel(branch) {
         type: 'github',
         ref: branch,
         repo: `${owner}/${repo}`,
-        repoId: repoId
-      }
-    }
+        repoId: repoId,
+      },
+    },
   };
 
   try {
@@ -173,63 +169,8 @@ async function deployToVercel(branch) {
   }
 }
 
-
-async function getCurrentCode() {
-  try {
-    const response = await axios.get(`https://api.github.com/repos/${owner}/${repo}/contents/web/src/app/Home.tsx`, {
-      headers: {
-        'Authorization': `token ${process.env.GITHUB_TOKEN}`
-      }
-    });
-    const fileContentBase64 = response.data.content;
-    console.log(fileContentBase64);
-    const fileContent = Buffer.from(fileContentBase64, 'base64').toString('utf-8');
-    console.log(fileContent);
-    return fileContent;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-
-async function getChangedCode(codeToChange, brief) {
-  const chat = new ChatOpenAI({
-    openAIApiKey: openAIAPIKey,
-    // maxTokens: 4096,
-    modelName: "gpt-3.5-turbo",
-    configuration: {
-      basePath: "https://oai.hconeai.com/v1",
-      defaultHeaders: {
-        "Helicone-Auth": `Bearer ${heliconeAPIKey}`,
-        },
-      },
-    }
-  )
-  
-  // llm = ChatOpenAI(openai_api_key='<>',
-  //     headers={
-  //         "Helicone-Auth": f"Bearer {env.HELICONE_API_KEY}"
-  //     },
-  //     openai_api_base="https://oai.hconeai.com/v1",
-  // )
-
-  // const llm = new OpenAI(
-  //   {
-  //     openAIApiKey: openAIAPIKey,
-  //     maxTokens: 6000,
-  //     modelName: "gpt-4"
-  //   }
-  // );
-  return await chat.predict(`
-${codeToChange}
-
-${brief}
-Please always rewrite the whole file. I repeat, please always rewrite the whole file.
-`);
-}
-
 function extractTsxOrJsx(inputString) {
-  const regex = /```(tsx|jsx|javascript)\s*([\s\S]*?)\s*```/; 
+  const regex = /```(tsx|jsx|javascript)\s*([\s\S]*?)\s*```/;
   const match = inputString.match(regex);
   return match ? match[2].trim() : inputString;
 }

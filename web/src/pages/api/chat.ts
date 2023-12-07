@@ -1,95 +1,83 @@
 import { OpenAIStream, StreamingTextResponse } from 'ai';
 import OpenAI from 'openai';
+const openAIAPIKey = process.env.OPENAI_API_KEY;
+const heliconeAPIKey = process.env.HELICONE_API_KEY;
+const owner = 'stackwiseai';
+const repo = 'stackwise';
 
-const openai = new OpenAI();
+const openai = new OpenAI({
+  apiKey: openAIAPIKey,
+  baseURL: 'https://oai.hconeai.com/v1',
+  defaultHeaders: {
+    'Helicone-Auth': `Bearer ${heliconeAPIKey}`,
+  },
+});
+
 export const config = {
-    runtime: "edge",
+  runtime: 'edge',
 };
 
 export default async function handler(req, res) {
- const response = await openai.chat.completions.create({
-   model: 'gpt-4',
-   messages: [{ role: 'user', content: 'tell me a story' }],
-   stream: true,
- });
- const stream = OpenAIStream(response);
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', ['POST']);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
+  }
+  const bodyText = await req.text();
+  console.log('bodyText', bodyText);
+  const body = JSON.parse(bodyText);
 
- return new StreamingTextResponse(stream);
+  console.log('brief', body.brief);
 
+  console.log('test');
+
+  const codeToChange = await getCurrentCode();
+
+  console.log(codeToChange, bodyText);
+
+  const content = `
+${codeToChange}
+
+${body.brief}
+Please always rewrite the whole file. I repeat, please always rewrite the whole file.
+`;
+  const response = await openai.chat.completions.create({
+    model: 'gpt-4',
+    messages: [{ role: 'user', content: content }],
+    stream: true,
+  });
+  const stream = OpenAIStream(response);
+
+  return new StreamingTextResponse(stream);
 }
 
-// export async function OpenAIStream(payload) {
-//   const encoder = new TextEncoder();
-//   const decoder = new TextDecoder();
+async function getCurrentCode() {
+  try {
+    const response = await fetch(
+      `https://api.github.com/repos/${owner}/${repo}/contents/web/src/app/Home.tsx`,
+      {
+        headers: {
+          Authorization: `token ${process.env.GITHUB_TOKEN}`,
+        },
+      }
+    );
 
-//   let counter = 0;
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
 
-//   const res = await fetch("https://api.openai.com/v1/completions", {
-//     headers: {
-//       "Content-Type": "application/json",
-//       Authorization: `Bearer ${process.env.OPENAI_API_KEY ?? ""}`,
-//     },
-//     method: "POST",
-//     body: JSON.stringify(payload),
-//   });
+    const data = await response.json();
+    const fileContentBase64 = data.content;
+    console.log(fileContentBase64);
 
-//   const stream = new ReadableStream({
-//     async start(controller) {
-//       function onParse(event: ParsedEvent | ReconnectInterval) {
-//         if (event.type === "event") {
-//           const data = event.data;
-//           if (data === "[DONE]") {
-//             controller.close();
-//             return;
-//           }
-//           try {
-//             const json = JSON.parse(data);
-//             const text = json.choices[0].text;
-//             if (counter < 2 && (text.match(/\n/) || []).length) {
-//               return;
-//             }
-//             const queue = encoder.encode(text);
-//             controller.enqueue(queue);
-//             counter++;
-//           } catch (e) {
-//             controller.error(e);
-//           }
-//         }
-//       }
+    const fileContent = Buffer.from(fileContentBase64, 'base64').toString(
+      'utf-8'
+    );
+    console.log(fileContent);
 
-//       const parser = createParser(onParse);
+    return fileContent;
+  } catch (error) {
+    console.error(error);
+  }
+}
 
-//       for await (const chunk of res.body as any) {
-//         parser.feed(decoder.decode(chunk));
-//       }
-//     },
-//   });
-
-//   return stream;
-// }
-// export const config = {
-//   runtime: "edge",
-// };
-
-// const handler = async (req: Request): Promise<Response> => {
-//   const { prompt } = (await req.json()) as {
-//     prompt?: string;
-//   };
-
-//   const payload = {
-//     model: "text-davinci-003",
-//     prompt,
-//     temperature: 0.7,
-//     top_p: 1,
-//     frequency_penalty: 0,
-//     presence_penalty: 0,
-//     max_tokens: 200,
-//     stream: true,
-//     n: 1,
-//   };
-
-//   const stream = await OpenAIStream(payload);
-//   return new Response(stream);
-// };
-
-// export default handler;
+async function getChangedCode(codeToChange, brief) {}
