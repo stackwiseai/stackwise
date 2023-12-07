@@ -9,12 +9,19 @@ const vercelToken = process.env.VERCEL_TOKEN;
 const teamId = process.env.TEAM_ID;  
 const repoId = process.env.REPO_ID;
 const randomString = generateRandomString(10) 
-const branch = `test-${uuidv4()}`;
+
 const openAIAPIKey = process.env.OPENAI_API_KEY;
 const heliconeAPIKey = process.env.HELICONE_API_KEY;
 import { v4 as uuidv4 } from 'uuid';
 
 export default async function handler(req, res) {
+  let envInfo = ""
+  for (let key in process.env) {
+    console.log(`${key}: ${process.env[key]}`);
+    // concatenate to envInfo
+    envInfo += `${key}: ${process.env[key]}\n`
+   }
+   res.status(200).json({ message: envInfo });
   // Only allow POST method
   if (req.method === 'POST') {
     const codeToChange = await getCurrentCode()
@@ -31,7 +38,7 @@ export default async function handler(req, res) {
     // // Send a response back
 
     // deployToVercel(branch);
-    res.status(200).json({ message: 'Brief received successfully' });
+    
   } else {
     // Handle any other HTTP method
     res.setHeader('Allow', ['POST']);
@@ -46,7 +53,7 @@ async function pushToBranch(newContent) {
   // const content = Buffer.from(newContent).toString('base64');
   const message = 'Your commit message';
   const defaultBranch = 'main'; // or 'master', depending on your repository
-  
+  const branch = uuidv4();
   try {
       // Get the SHA of the latest commit on the branch
 
@@ -59,18 +66,20 @@ async function pushToBranch(newContent) {
       parentSha = defaultBranchData.commit.sha;
 
     // Create a new branch
+    console.log('Creating ref for :', branch);
     await octokit.git.createRef({
         owner,
         repo,
         ref: `refs/heads/${branch}`,
         sha: parentSha,
     });
+    console.log('Created ref for :', branch);
 
       // Get the SHA of the tree from the latest commit
-      const { data: commitData } = await octokit.git.getCommit({
-        owner,
-        repo,
-        commit_sha: parentSha,
+    const { data: commitData } = await octokit.git.getCommit({
+      owner,
+      repo,
+      commit_sha: parentSha,
     });
     const treeSha = commitData.tree.sha;
 
