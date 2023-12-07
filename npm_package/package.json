@@ -2,11 +2,11 @@
   "name": "stackwise",
   "version": "0.0.0-development",
   "description": "Explain what you want to do, and AI builds it.",
-  "main": "./lib/index.js",
+  "main": "./lib/npm_package/src/index.js",
   "files": [
     "lib/**/*"
   ],
-  "types": "./lib/index.d.ts",
+  "types": "./lib/npm_package/src/index.d.ts",
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
     "clean": "rm -rf ./lib/",

@@ -2,7 +2,7 @@ import getMethodName from '../../../../shared/getMethodName';
 import {
   generateSignature,
   createMD5HashFromSignature,
-} from '../generateSignature';
+} from '../../../../shared/generateSignature';
 import stackRegistry from '../registry';
 import extractBrief from '../extractBrief';
 import jsonify from '../jsonify/jsonify';

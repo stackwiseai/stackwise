@@ -1,5 +1,4 @@
-import OpenAI from 'openai';
-import { openai } from '../vscode/src/stack/integrations/openai/construct';
+import { openai } from './constants';
 import { placeholderName } from './constants';
 
 interface InputType {

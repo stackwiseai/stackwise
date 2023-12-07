@@ -1,21 +1,10 @@
 import { Pinecone } from '@pinecone-database/pinecone';
-import OpenAI from 'openai';
+import { openai } from '../../../../../../shared/constants';
 import { BoilerplateMetadata } from '../../lib/types';
 
 const pinecone = new Pinecone({
   apiKey: process.env.PINECONE_API_KEY as string,
   environment: process.env.PINECONE_ENVIRONMENT as string,
-});
-
-const defaultHeaders = process.env.HELICONE_API_KEY ? {
-  'Helicone-Auth': `Bearer ${process.env.HELICONE_API_KEY}`,
-  'Helicone-Cache-Enabled': 'true',
-} : {};
-
-export const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-  baseURL: 'https://oai.hconeai.com/v1',
-  defaultHeaders: defaultHeaders,
 });
 
 export default async function constructOpenAI(
