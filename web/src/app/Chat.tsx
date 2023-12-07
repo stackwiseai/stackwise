@@ -5,7 +5,6 @@ import Home from './Home'; // Adjust the path to where your Home.tsx is located
 // Chat component
 export const Chat = () => {
   const [inputValue, setInputValue] = useState('');
-  const [apiKey, setApiKey] = useState('Your-Default-API-Key'); // Replace with your actual default API key
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -16,7 +15,6 @@ export const Chat = () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}` // Include the API key in the Authorization header
           },
           body: JSON.stringify({ brief: inputValue })
         });
@@ -42,13 +40,6 @@ export const Chat = () => {
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         placeholder="Type here..."
-        onKeyDown={(e) => { if (e.key === 'Enter') handleSubmit(e); }}
-      />
-      <input
-        type="password"
-        value={apiKey}
-        onChange={(e) => setApiKey(e.target.value)}
-        placeholder="Enter API Key"
         onKeyDown={(e) => { if (e.key === 'Enter') handleSubmit(e); }}
       />
     </form>
