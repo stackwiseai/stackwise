@@ -37,7 +37,10 @@ export const Chat = () => {
   const [inputValue, setInputValue] = useState('');
   const [generatedFileContents, setGeneratedFileContents] = useState('');
   const [loading, setLoading] = useState(false);
-  const [stackResponse, setStackResponse] = useState(''); // State to hold stack response
+  const [stackResponse, setStackResponse] = useState({
+    gitDiffUrl: '',
+    vercelLink: '',
+  }); // State to hold stack response
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const togglePanel = () => {
     setIsPanelOpen(!isPanelOpen);
@@ -58,7 +61,7 @@ export const Chat = () => {
       }
 
       const responseData = await response.json(); // Assuming the response is JSON
-      setStackResponse(JSON.stringify(responseData)); // Update state with stack response
+      setStackResponse(responseData);
     } catch (error) {
       console.error('Error in POST /api/stack:', error);
       setStackResponse(`Error: ${error.message}`); // Handle error in stack response
@@ -130,14 +133,14 @@ export const Chat = () => {
         {stackResponse && (
           <div>
             <a
-              href="https://stackwise-git-a32f3e19-8204-46c4-b664-8a1642d20c6f-stackwiseai.vercel.app"
+              href={stackResponse.gitDiffUrl}
               style={{ color: 'blue', textDecoration: 'none' }}
             >
               Check your new app!
             </a>
             <br />
             <a
-              href="https://github.com/stackwiseai/stackwise/compare/main...a32f3e19-8204-46c4-b664-8a1642d20c6f"
+              href={stackResponse.vercelLink}
               style={{ color: 'blue', textDecoration: 'none' }}
             >
               Check your new commit!
