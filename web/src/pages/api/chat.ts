@@ -34,6 +34,11 @@ export default async function handler(req, res) {
   const codeToChange = await getCurrentCode();
 
   console.log(codeToChange, bodyText);
+  const systemInstructions = `You are a developer focused on writing on only one single file.
+You always return a single snippet of typescript code and it's always the full code, even if it's repetitive and long. 
+
+Please note that the code should be fully functional. No placeholders.
+Always stay in the same page, you're not allowed to switch page.`;
 
   const content = `This is the app I am working with:
 ${codeToChange}
@@ -46,8 +51,7 @@ Please could you rewrite entirely this file, following the system instructions ?
     messages: [
       {
         role: 'system',
-        content:
-          "You are a developer focused on writing on only one single file. You always return a single snippet of typescript code and it's always the full code, even if it's repetitive and long. Please note that the code should be fully functional. No placeholders.",
+        content: systemInstructions,
       },
       { role: 'user', content: content },
     ],
