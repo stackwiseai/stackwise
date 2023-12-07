@@ -9,9 +9,10 @@ const vercelToken = process.env.VERCEL_TOKEN;
 const teamId = process.env.TEAM_ID;  
 const repoId = process.env.REPO_ID;
 const randomString = generateRandomString(10) 
-const branch = `test-${randomString}`;
+const branch = `test-${uuidv4()}`;
 const openAIAPIKey = process.env.OPENAI_API_KEY;
 const heliconeAPIKey = process.env.HELICONE_API_KEY;
+import { v4 as uuidv4 } from 'uuid';
 
 export default async function handler(req, res) {
   // Only allow POST method
@@ -184,8 +185,8 @@ async function getCurrentCode() {
 async function getChangedCode(codeToChange, brief) {
   const chat = new ChatOpenAI({
     openAIApiKey: openAIAPIKey,
-    maxTokens: 6000,
-    modelName: "gpt-4",
+    // maxTokens: 4096,
+    modelName: "gpt-3.5-turbo-1106",
     configuration: {
       basePath: "https://oai.hconeai.com/v1",
       defaultHeaders: {
