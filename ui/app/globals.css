@@ -1,3 +1,29 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+input {
+  @apply rounded-md
+  p-3
+  border
+  border-gray-300
+  focus:outline-none
+  focus:border-blue-500
+  transition
+  duration-200
+  w-full;
+}
+
+button,
+[type='button'],
+[type='reset'],
+[type='submit'] {
+  @apply bg-blue-500
+  hover:bg-blue-700
+  text-white
+  font-bold
+  py-3
+  px-4
+  rounded
+  disabled:bg-slate-500;
+}

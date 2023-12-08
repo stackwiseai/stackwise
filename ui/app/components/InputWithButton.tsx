@@ -9,52 +9,82 @@ const SubmitButton = () => {
   const { pending } = useFormStatus();
 
   return (
-    <Button type="submit" disabled={pending}>
+    <button type="submit" disabled={pending}>
       Submit
-    </Button>
+    </button>
   );
 };
 
-const InputWithButton: React.FC = () => {
+interface InputWithButtonProps {
+  setBrief: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const InputWithButton: React.FC<InputWithButtonProps> = ({ setBrief }) => {
   const [state, formAction] = useFormState(callStack, { message: null });
+
+  const handleSubmit = (e) => {
+    const inputValue = e.target.elements.stack.value;
+    setBrief(inputValue);
+  };
+
+  const rainbowText = {
+    background:
+      'linear-gradient(45deg, gray, red, orange, yellow, green, blue, indigo, violet)',
+    color: 'transparent',
+    backgroundClip: 'text',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+  };
+
   return (
-    <>
-      <form action={formAction}>
-        <Input
+    <FormWrapper>
+      <Form onSubmit={handleSubmit} action={formAction}>
+        <input
+          className="mr-4"
           placeholder="Enter something..."
           type="text"
           name="stack"
           required
         />
         <SubmitButton />
-      </form>
-      <p>{JSON.stringify(state.message)}</p>
-    </>
+      </Form>
+      <LuckyButton style={rainbowText}>i'm feeling lucky</LuckyButton>
+      {state.message && <div>{state.message}</div>}
+    </FormWrapper>
   );
 };
-
-const Input = tw.input`
-  rounded-md
-  p-3
-  border
-  border-gray-300
-  focus:outline-none
-  focus:border-blue-500
-  transition
-  duration-200
-  w-[500px]
-  mr-4
+const FormWrapper = tw.div`
+  w-1/2
+  mb-32
+  flex
+  flex-col
+  items-center
 `;
 
-const Button = tw.button`
-  bg-blue-500
-  hover:bg-blue-700
+const Form = tw.form`
+  flex
+  items-center
+  w-full
+  mb-2
+`;
+
+const LuckyButton = tw.button`
+  bg-gradient-to-r
+  from-gray-400
+  to-[#FF0000]
+  hover:from-gray-500
+  hover:to-[#FF7F00]
   text-white
   font-bold
   py-3
-  px-4
+  px-6
   rounded
-  disabled:bg-slate-500
+  transition
+  duration-300
+  ease-in-out
+  transform
+  hover:scale-110
+  
 `;
 
 export default InputWithButton;
