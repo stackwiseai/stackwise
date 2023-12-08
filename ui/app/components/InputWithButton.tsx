@@ -49,7 +49,7 @@ const InputWithButton: React.FC<InputWithButtonProps> = ({ setBrief }) => {
         <SubmitButton />
       </Form>
       <LuckyButton style={rainbowText}>i'm feeling lucky</LuckyButton>
-      {state.message && <div>{state.message}</div>}
+      {/* {state.message && <div>{state.message}</div>} */}
     </FormWrapper>
   );
 };
