@@ -27,7 +27,7 @@ export default async function createStackFile(
       'export const parseFormData'
     );
 
-    const fullContents = '\n\n' + parseFormData + '\n\n' + functionCode;
+    const fullContents = parseFormData + '\n\n' + functionCode;
 
     // If 'parseFormData' function exists, replace everything after it
     if (parseFormDataIndex !== -1) {
