@@ -115,6 +115,7 @@
     ]
   },
   "dependencies": {
-    "crypto-js": "^4.2.0"
+    "crypto-js": "^4.2.0",
+    "replicate": "^0.24.0"
   }
 }
