@@ -1,12 +1,10 @@
 import { BoilerplateMetadata } from '../../../shared/integrations/lib/types';
 import generateFunction from '../../../shared/integrations/generic/generateFunction';
-import createStackFile from '../createStackFile/index';
-import createComponent from '../createComponent/index';
-import {
-  combineSkeleton,
-  getFunctionName,
-} from '../skeleton/buildSkeleton/index';
+import createStackFile from '../createStackFile';
+import createComponent from '../createComponent';
+import { combineSkeleton, getFunctionName } from '../skeleton/buildSkeleton';
 import createBoilerplateEmbedding from '../../../shared/createEmbedding/boilerplateEmbedding';
+import createFormDataWrapper from '../createFormDataWrapper';
 
 export default async function createStack(
   ioData: Record<string, unknown>,
@@ -49,5 +47,10 @@ export default async function createStack(
     'boilerplate_1'
   );
 
-  createStackFile(generatedFunction);
+  const parseFormDataWrapper = await createFormDataWrapper(
+    ioData.input,
+    methodName
+  );
+
+  createStackFile(generatedFunction, parseFormDataWrapper);
 }

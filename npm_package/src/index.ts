@@ -5,6 +5,7 @@ import { BoilerplateMetadata } from '../../shared/integrations/lib/types';
 import createStackFile from './createStackFile/index';
 import updateEmbedding from './updateEmbedding/index';
 import createStack from './createStack/index';
+import createFormDataWrapper from './createFormDataWrapper';
 
 /**
  * Retrieves a completed stack
@@ -39,7 +40,11 @@ export async function stack(brief: string): Promise<Record<string, unknown>> {
       methodName = boilerplate.methodName;
       stackServerCode = boilerplate.functionString;
       stackClientCode = boilerplate.component;
-      await createStackFile(stackServerCode);
+      const parseFormDataWrapper = await createFormDataWrapper(
+        ioData.input,
+        methodName
+      );
+      await createStackFile(stackServerCode, parseFormDataWrapper);
 
       // increment count of times it's been used and what it was retrieved by
       await updateEmbedding(boilerplate, functionId);

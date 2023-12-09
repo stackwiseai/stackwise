@@ -6,7 +6,7 @@ const BRIEF_TEMPLATE = `/**
  * Brief: {{brief}}
  */`;
 
-const FUNCTION_AND_TYPE_TEMPLATE = `{{outputTypeInterface}}export default async function ${placeholderName}({{flatInput}}): {{outputType}} {
+const FUNCTION_AND_TYPE_TEMPLATE = `{{outputTypeInterface}}async function ${placeholderName}({{flatInput}}): {{outputType}} {
     {{returnStatement}}
 }`;
 

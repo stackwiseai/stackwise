@@ -15,7 +15,7 @@ export default async function generateFunction(
     const messages: Message[] = [];
     messages.push({
       role: 'system',
-      content: `You are an expert at writing functions that match the brief that the user provides. You can change the body of the function to whatever you want as long as you ensure that you keep the return type, function name, and parameters the same as the skeleton. 
+      content: `You are an expert at writing functions that match the brief that the user provides. You can change the body and name of the function to whatever you want as long as you ensure that you keep the return type, and parameters the same as the skeleton. 
 Feel free to make assumptions about what the user wants based on their input and output types and brief. If the user brief does not make sense or is not possible given the input and return types, just do your best and leave comments where the user would need to fill in the gaps.`,
     });
 
@@ -38,7 +38,7 @@ ${startingBoilerplate}`,
             content: `Here is the boilerplate that you are working with: 
 ${functionAndOutputSkeleton}
 
-Ensure that you keep the return type, function name, and parameters the same. You can change the body of the function to whatever you want.`,
+Ensure that you keep the return type, and parameters the same. Please change the name and body of the function to whatever makes the most sense.`,
           },
           {
             role: 'user',
