@@ -1,11 +1,11 @@
 import { getIO } from './getIO';
-import { buildSkeleton } from './skeleton/buildSkeleton/index';
-import chooseBoilerplate from '../../shared/integrations/generic/chooseBoilerplate';
-import { BoilerplateMetadata } from '../../shared/integrations/lib/types';
+import { buildSkeleton } from './skeleton/buildSkeleton/buildSkeleton';
+import chooseBoilerplate from './integrations/generic/chooseBoilerplate';
+import { BoilerplateMetadata } from './integrations/utils/types';
 import createStackFile from './createStackFile/index';
 import updateEmbedding from './updateEmbedding/index';
 import createStack from './createStack/index';
-import createFormDataWrapper from './createFormDataWrapper';
+import createFormDataWrapper from './createFormDataWrapper/index';
 
 /**
  * Retrieves a completed stack
@@ -40,7 +40,7 @@ export async function stack(brief: string): Promise<Record<string, unknown>> {
       methodName = boilerplate.methodName;
       stackServerCode = boilerplate.functionString;
       stackClientCode = boilerplate.component;
-      const parseFormDataWrapper = await createFormDataWrapper(
+      const parseFormDataWrapper = createFormDataWrapper(
         ioData.input,
         methodName
       );

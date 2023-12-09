@@ -2,7 +2,7 @@ import { Pinecone } from '@pinecone-database/pinecone';
 import {
   BoilerplateMetadata,
   DocumentationMetadata,
-} from '../../../shared/integrations/lib/types';
+} from '../integrations/utils/types';
 
 const pinecone = new Pinecone({
   apiKey: process.env.PINECONE_API_KEY as string,

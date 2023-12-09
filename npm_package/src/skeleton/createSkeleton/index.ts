@@ -1,4 +1,4 @@
-import { placeholderName } from '../../../../shared/constants';
+import { placeholderName } from '../../constants';
 import flattenInputJson from '../flattenInputJson';
 import flattenOutput from '../flattenOutput';
 

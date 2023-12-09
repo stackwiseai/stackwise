@@ -1,4 +1,4 @@
-import { openai } from '../../shared/constants';
+import { openai } from './constants';
 import { SkeletonJson } from './types';
 
 /**

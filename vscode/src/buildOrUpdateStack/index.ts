@@ -3,7 +3,7 @@ import buildStack from '../stack/buildStack';
 import createStackFile from '../stack/createStackFile';
 import replaceStackSnippetWithInjectFunction from '../collapseStack';
 import addImportStatement from '../addImportStatement';
-import chooseBoilerplate from '../../../shared/integrations/generic/chooseBoilerplate';
+import chooseBoilerplate from '../../../npm_package/src//integrations/generic/chooseBoilerplate';
 import generateFunction from '../../../shared/integrations/generic/generateFunction';
 import createBoilerplateEmbedding from '../../../shared/createEmbedding/boilerplateEmbedding';
 import { BoilerplateMetadata } from '../../../shared/integrations/lib/types';

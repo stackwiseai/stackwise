@@ -1,0 +1,47 @@
+import fetch from 'node-fetch';
+import { CreateEmbeddingResponse } from 'openai/resources';
+import { Pinecone, RecordMetadata } from '@pinecone-database/pinecone';
+
+const pinecone = new Pinecone({
+  apiKey: process.env.PINECONE_API_KEY as string,
+  environment: process.env.PINECONE_ENVIRONMENT as string,
+});
+
+export default async function pineconeQueryBoilerplate(
+  toEmbed: string
+): Promise<RecordMetadata> {
+  // this function embeds the input string, finds the 3 nearest vectors in the index, and returns the metadata for the first one
+  const index = pinecone.index('general');
+
+  const requestBody = {
+    input: toEmbed,
+    model: 'text-embedding-ada-002',
+  };
+
+  // Call the OpenAI API to get the embedding
+  const response = await fetch('https://api.openai.com/v1/embeddings', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+    },
+    body: JSON.stringify(requestBody),
+  });
+
+  const embedding = (await response.json()) as CreateEmbeddingResponse;
+
+  // Get just the embedding vector
+  const embeddingVector = embedding.data[0].embedding;
+
+  // Query the index with the embedding to find the top 3 closest matches
+  const queryResponse = await index.query({
+    vector: embeddingVector,
+    topK: 3,
+  });
+
+  // Extract matches from the query response
+  const matches = queryResponse.matches;
+
+  // Return metadata for the closest match
+  return matches[0].metadata;
+}

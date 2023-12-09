@@ -1,5 +1,5 @@
 import createSkeleton, { combineSkeleton } from '.';
-import { placeholderName } from '../../../../shared/constants';
+import { placeholderName } from '../../../../npm_package/src//constants';
 
 describe('createSkeleton', () => {
   test('create Skeleton given a signature', () => {

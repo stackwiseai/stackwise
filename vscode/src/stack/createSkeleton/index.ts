@@ -1,4 +1,4 @@
-import { placeholderName } from '../../../../shared/constants';
+import { placeholderName } from '../../../../npm_package/src/constants';
 
 const BRIEF_TEMPLATE = `/**
  * Brief: {{brief}}

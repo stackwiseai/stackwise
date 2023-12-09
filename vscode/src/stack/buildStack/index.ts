@@ -1,8 +1,8 @@
-import getMethodName from '../../../../shared/getMethodName';
+import getMethodName from '../getMethodName';
 import {
   generateSignature,
   createMD5HashFromSignature,
-} from '../../../../shared/generateSignature';
+} from '../../../../npm_package/src/generateSignature';
 import stackRegistry from '../registry';
 import extractBrief from '../extractBrief';
 import jsonify from '../jsonify/jsonify';

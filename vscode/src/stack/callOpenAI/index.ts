@@ -1,4 +1,4 @@
-import { openai } from '../../../../shared/integrations/openai/construct';
+import { openai } from '../../../../npm_package/src/constants';
 
 interface OutputType {
   methodName: string;
