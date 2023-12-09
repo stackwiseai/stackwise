@@ -1,7 +1,6 @@
 import { Pinecone, PineconeRecord } from '@pinecone-database/pinecone';
 import { getEmbedding } from './getEmbedding';
-import { DocumentationMetadata } from '../integrations/lib/types';
-import { combineSkeleton } from '../createSkeleton';
+import { DocumentationMetadata } from '../../vscode/src/stack/integrations/lib/types';
 
 const pinecone = new Pinecone({
   apiKey: process.env.PINECONE_API_KEY as string,
@@ -16,11 +15,8 @@ export default async function createBoilerplateEmbedding(
   functionId: string,
   functionString: string,
   methodName: string,
-  briefSkeleton: string,
-  functionAndOutputSkeleton: string
+  skeleton
 ) {
-  const skeleton = combineSkeleton(briefSkeleton, functionAndOutputSkeleton);
-
   const index = pinecone.index('general');
 
   try {

@@ -10,10 +10,10 @@ export interface BoilerplateMetadata extends RecordMetadata {
   outputJSON: string;
   brief: string;
   count: number;
-  type: 'boilerplate';
+  type: string;
   integration: string;
   skeleton: string;
-  skeletonType: 'inline-typed';
+  skeletonType?: 'inline-typed';
   functionString: string;
   methodName: string;
   id: string;

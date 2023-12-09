@@ -1,1 +1,0 @@
-OpenAI is used to convert text to vector embeddings and for language generation. It is also used to generate text for a variety of tasks including summarization, translation, question answering, code, etc.

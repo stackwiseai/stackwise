@@ -1,6 +1,6 @@
 import { Pinecone, PineconeRecord } from '@pinecone-database/pinecone';
 
-import { getEmbedding } from '../../createEmbedding/getEmbedding';
+import { getEmbedding } from '../../../../../shared/createEmbedding/getEmbedding';
 import { models } from '../replicate/documentation/shortenedModels';
 
 const pinecone = new Pinecone({

@@ -1,5 +1,5 @@
 import { Pinecone } from '@pinecone-database/pinecone';
-import { openai } from '../../../../../../shared/constants';
+import { openai } from '../../../constants';
 import { BoilerplateMetadata } from '../../lib/types';
 
 const pinecone = new Pinecone({

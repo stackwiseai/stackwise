@@ -1,13 +1,10 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
 import { stack } from 'stackwise';
 
 export const callStack = async (prevState: any, formData: FormData) => {
   const userRequest = formData.get('stack') as string;
-  //   const message = await stack(userRequest);
-  const message = { message: 'testing this' };
-  console.log(message);
+  const message = await stack(userRequest);
   return message;
 };
 

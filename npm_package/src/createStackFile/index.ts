@@ -1,62 +1,19 @@
-// import { buildSkeleton } from '../buildSkeleton';
+import path from 'path';
+import fs from 'fs';
 
-// export default async function createStackFile(
-//   ioData: Record<string, unknown>,
-//   brief: string
-// ): Promise<string> {
-//   const { functionId, briefSkeleton, functionAndOutputSkeleton } =
-//     buildSkeleton(ioData);
+export default function createStackFile(functionCode: string) {
+  // find directory root here
+  const stackPath = path.join(process.cwd(), 'app', 'actions.ts');
 
-//   const fullSkeleton = combineSkeleton(
-//     briefSkeleton,
-//     functionAndOutputSkeleton
-//   );
+  // Create directory if it doesn't exist
+  if (!fs.existsSync(stackPath)) {
+    fs.mkdirSync(stackPath, { recursive: true });
+    functionCode = `'use server'\n\n` + functionCode;
+  } else {
+    functionCode = `\n\n` + functionCode;
+  }
 
-//   let methodName = '';
-//   let generatedFunction = '';
-//   const { nearestBoilerplate, exactMatch, embedding } = await chooseBoilerplate(
-//     fullSkeleton,
-//     functionId,
-//     'generic'
-//   );
-
-//   if (exactMatch) {
-//     // if it's an exact match it means that's it's a single BoilerplateMetadata (hash directly matched or >0.98 similarity)
-//     const boilerplate = nearestBoilerplate as BoilerplateMetadata;
-//     methodName = boilerplate.methodName;
-//     generatedFunction = boilerplate.inputString;
-//     createStackFile(generatedFunction, methodName);
-//     // increment count of times it's been used and what it was retrieved by
-//     await updateEmbedding(boilerplate, functionId);
-//   } else {
-//     console.log(`NO exact match for the functionId ${functionId}`);
-//     // generate a function from the default values
-//     let generatedFunction = await generateFunction(
-//       briefSkeleton,
-//       functionAndOutputSkeleton,
-//       brief,
-//       nearestBoilerplate,
-//       embedding
-//     );
-
-//     // integrations = await getIntegrationData(generatedFunction);
-//     // match IO data here (trigger html adjustment)
-//     // extract methodName
-
-//     generatedFunction = combineSkeleton(briefSkeleton, generatedFunction);
-
-//     await createBoilerplateEmbedding(
-//       brief,
-//       ioData,
-//       // integrations,
-//       functionId,
-//       generatedFunction,
-//       methodName,
-//       fullSkeleton
-//     );
-
-//     createStackFile(generatedFunction, methodName);
-//   }
-
-//   return methodName;
-// }
+  // Write the skeleton to the file
+  fs.writeFileSync(stackPath, functionCode);
+  console.log(`File created at ${stackPath}`);
+}

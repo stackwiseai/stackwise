@@ -3,10 +3,10 @@ import buildStack from '../stack/buildStack';
 import createStackFile from '../stack/createStackFile';
 import replaceStackSnippetWithInjectFunction from '../collapseStack';
 import addImportStatement from '../addImportStatement';
-import chooseBoilerplate from '../stack/integrations/generic/chooseBoilerplate';
-import generateFunction from '../stack/integrations/generic/generateFunction';
-import createBoilerplateEmbedding from '../stack/createEmbedding/boilerplateEmbedding';
-import { BoilerplateMetadata } from '../stack/integrations/lib/types';
+import chooseBoilerplate from '../../../shared/integrations/generic/chooseBoilerplate';
+import generateFunction from '../../../shared/integrations/generic/generateFunction';
+import createBoilerplateEmbedding from '../../../shared/createEmbedding/boilerplateEmbedding';
+import { BoilerplateMetadata } from '../../../shared/integrations/lib/types';
 import updateEmbedding from '../stack/updateEmbedding';
 import stackRegistry from '../stack/registry';
 import { combineSkeleton, insertMethodName } from '../stack/createSkeleton';
@@ -69,7 +69,10 @@ export default async function buildOrUpdateStack(
       const boilerplate = nearestBoilerplate as BoilerplateMetadata;
       methodName = boilerplate.methodName;
       inputStringFromDB = boilerplate.inputString;
-      console.log(`inputStringFromDB in buildOrUpdateStack:`, inputStringFromDB);
+      console.log(
+        `inputStringFromDB in buildOrUpdateStack:`,
+        inputStringFromDB
+      );
       createStackFile(boilerplate.functionString, methodName, integrationType);
       // increment count of times it's been used and what it was retrieved by
       await updateEmbedding(boilerplate, functionId);
@@ -107,7 +110,8 @@ export default async function buildOrUpdateStack(
         functionId,
         generatedFunction,
         methodName,
-        fullSkeleton
+        fullSkeleton,
+        'boilerplate'
       );
 
       createStackFile(generatedFunction, methodName, integrationType);

@@ -1,1 +1,0 @@
-Replicate can be used for a wide array of ai applications, including textual models, image models, and language models. Examples of tasks performed are image classification, explaining images, text to speech, etc.

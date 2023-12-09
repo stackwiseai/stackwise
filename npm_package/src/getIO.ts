@@ -1,13 +1,12 @@
 import { openai } from '../../shared/constants';
+import { SkeletonJson } from './types';
 
 /**
  * Generates a json of input and output types
  * @param {string} query - The query string
  * @returns {Record<string, unknown>} JSON of input and output types
  */
-export async function getIO(
-  query: string
-): Promise<Record<string, unknown> | null> {
+export async function getIO(query: string): Promise<SkeletonJson> {
   const response = await openai.chat.completions.create({
     model: 'gpt-4-1106-preview',
     seed: 42,
@@ -37,10 +36,9 @@ Function types:`,
   });
 
   const completion = response.choices[0].message.content;
-
   if (completion) {
-    return JSON.parse(completion) as Record<string, unknown>;
+    return JSON.parse(completion) as SkeletonJson;
+  } else {
+    throw new Error('No completion was returned');
   }
-
-  return null;
 }

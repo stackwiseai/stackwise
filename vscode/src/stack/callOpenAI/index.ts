@@ -1,4 +1,4 @@
-import { openai } from '../integrations/openai/construct';
+import { openai } from '../../../../shared/integrations/openai/construct';
 
 interface OutputType {
   methodName: string;

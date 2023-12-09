@@ -1,7 +1,6 @@
-import OpenAI from 'openai';
 import { BoilerplateMetadata, Message } from '../lib/types';
 import { processBoilerplate } from '../lib/utils';
-import { openai } from '../openai/construct';
+import { openai } from '../../constants';
 
 export default async function generateFunction(
   briefSkeleton: string,

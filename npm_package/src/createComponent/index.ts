@@ -2,9 +2,8 @@
  * Creates the HTML
  * @returns {string} HTML content
  */
-export async function createHtml(
-  ioData: Record<string, unknown>,
-  methodName: string
+export default async function createComponent(
+  ioData: Record<string, unknown>
 ): Promise<string> {
   // Implementation here
   return 'testing this';

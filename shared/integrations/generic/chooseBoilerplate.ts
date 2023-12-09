@@ -4,7 +4,6 @@ import { Pinecone } from '@pinecone-database/pinecone';
 import { getEmbedding } from '../../createEmbedding/getEmbedding';
 import { readExplainFiles } from '../lib/utils';
 import { BoilerplateMetadata } from '../lib/types';
-import { combineSkeleton } from '../../createSkeleton';
 
 const pinecone = new Pinecone({
   apiKey: process.env.PINECONE_API_KEY as string,
@@ -25,7 +24,7 @@ interface OutputType {
 export default async function chooseBoilerplate(
   fullSkeleton: string,
   functionId: string,
-  integration: string
+  brief: string
 ): Promise<OutputType> {
   // decide if there's an integration required
 
@@ -92,34 +91,51 @@ export default async function chooseBoilerplate(
       path.join(__dirname, '..')
     );
 
-    console.log('integrationStrings in chooseBoilerplate:', integration);
-    if (integration === 'generic') {
-      try {
-        const response = await openai.chat.completions.create({
-          model: 'gpt-3.5-turbo',
-          messages: [
-            {
-              role: 'system',
-              content: `You are an expert and figuring out what the correct starting point for a user request is. This can either be a specific integration required based on desired functionality, or a generic template. Below you will be given a skeleton of a function along with the desired input and output types. You will also be given a brief description of what the function should do. Your job is to choose which integration you should use to satisfy the skeleton and brief description.
-The skeleton of the function is: ${fullSkeleton}
-Your choices for potential starting points are: ${integrationStrings}`,
-            },
-            {
-              role: 'system',
-              content: `Now, choose which one of the above integrations you would use to satisfy the skeleton and brief description. If you don't think that any of the functionalities are needed, just respond with 'generic'. 
-Only respond with either 'generic' or the names of one of the above integrations. Do not under any circumstances respond with anything else, JUST a single word representing which starting point is needed.`,
-            },
-          ],
-          temperature: 0,
-        });
+    let integration = '';
+    try {
+      const response = await openai.chat.completions.create({
+        model: 'gpt-3.5-turbo',
+        messages: [
+          {
+            role: 'system',
+            content: `You are an expert and figuring out what the correct integration for a user request is. This can either be a specific integration required based on desired functionality. Below you will be given a skeleton of a function along with the desired input and output types. You will also be given a brief description of what the function should do. Your job is to choose which integrations you should use to satisfy the skeleton and brief description.
+The skeleton of the function is: ${fullSkeleton}`,
+          },
+          {
+            role: 'system',
+            content: `Your choices for potential starting points are: ${integrationStrings}`,
+          },
+          {
+            role: 'system',
+            content: `Now, choose which of the above integrations which may be useful in creating the function. If you don't think that any of the functionalities are needed, just respond with 'generic'. Here are some examples
 
-        integration = response.choices[0].message.content;
-        console.log('Integration chosen:', integration);
-      } catch (error) {
-        console.log('Error querying OpenAI:', error);
-      }
+Example 1:
+User: Summarize key points from a lengthy conference video.
+Rationale: This requires first converting the video content into text, possibly through speech-to-text technology, and then summarizing the textual content.
+Response: replicate, openai
 
-      console.log('Chose integration:', integration);
+Example 2:
+User: Identify similar artworks in a digital art collection.
+Rationale: First we need to get the image embedding, then we need to compare to images in the Pinecone index.
+Response: replicate, pinecone
+
+Example 3:
+User: Multiply two numbers together
+Rationale: There is not integration required, it is just logic.
+Response: generic
+
+Only respond with either 'generic' or the names of the above integrations. Do not under any circumstances respond with anything else, other then a list of integrations separated by a comma.
+
+User: ${brief}`,
+          },
+        ],
+        temperature: 0,
+      });
+
+      integration = response.choices[0].message.content;
+      console.log('Integration chosen:', integration);
+    } catch (error) {
+      console.log('Error querying OpenAI:', error);
     }
 
     return {
