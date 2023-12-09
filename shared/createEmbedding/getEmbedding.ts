@@ -1,3 +1,5 @@
+const fetch = require('node-fetch');
+
 export async function getEmbedding(toEmbed: string): Promise<number[]> {
   try {
     const requestBody = {

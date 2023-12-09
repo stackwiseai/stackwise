@@ -2,7 +2,7 @@
 
 import fs from 'fs';
 import fsExtra from 'fs-extra';
-import fsPromise from 'fs/promises';
+const fsPromise = require('fs').promises;
 import path from 'path';
 import { BoilerplateMetadata } from './types';
 
