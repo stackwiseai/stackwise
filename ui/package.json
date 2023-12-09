@@ -14,6 +14,7 @@
     "openai": "^4.20.1",
     "react": "^18",
     "react-dom": "^18",
+    "react-icons": "^4.12.0",
     "tailwind-styled-components": "^2.2.0"
   },
   "devDependencies": {

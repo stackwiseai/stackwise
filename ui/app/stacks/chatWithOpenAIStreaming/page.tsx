@@ -85,15 +85,10 @@ export const Chat = () => {
         </form>
       </div>
       <>
-        <ClipboardComponent
-          displayMessage="Copy frontend"
-          path="/stacks/chatWithOpenAIStreaming/frontend.txt"
-        />
-
-        <ClipboardComponent
-          displayMessage="Copy backend"
-          path="/stacks/chatWithOpenAIStreaming/backend.txt"
-        />
+        <span className="text-sm text-gray-500 mt-2">Copy FrontEnd</span>
+        <ClipboardComponent path="/stacks/chatWithOpenAIStreaming/frontend.txt" />
+        <span className="text-sm text-gray-500 mt-2">Copy Backend</span>
+        <ClipboardComponent path="/stacks/chatWithOpenAIStreaming/backend.txt" />
       </>
     </div>
   );

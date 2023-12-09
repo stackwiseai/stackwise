@@ -1,28 +1,34 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { FaClipboard, FaCheckCircle } from 'react-icons/fa'; // Importing icons
 
-// Define a component
-const ClipboardComponent = ({ displayMessage, path }) => {
-  const [fileContent, setFileContent] = useState('');
+const ClipboardComponent = ({ path }) => {
+  const [icon, setIcon] = useState(<FaClipboard style={{ color: 'black' }} />); // Clipboard icon in black
 
   const handleClick = async () => {
     try {
-      fetch(path)
-        .then((response) => response.text())
-        .then((data) => {
-          setFileContent(data);
-        })
-        .catch((error) => {
-          console.error('Error fetching the file:', error);
-        });
-      await navigator.clipboard.writeText(fileContent);
+      const response = await fetch(path);
+      const data = await response.text();
+
+      await navigator.clipboard.writeText(data);
       console.log('Text copied to clipboard');
+      setIcon(<FaCheckCircle style={{ color: 'black' }} />);
+      setTimeout(() => {
+        setIcon(<FaClipboard style={{ color: 'black' }} />);
+      }, 3000);
     } catch (err) {
       console.error('Failed to copy: ', err);
     }
   };
 
-  return <button onClick={handleClick}>{displayMessage}</button>;
+  return (
+    <button
+      onClick={handleClick}
+      style={{ border: 'none', background: 'none' }}
+    >
+      {icon}
+    </button>
+  );
 };
 
 export default ClipboardComponent;
