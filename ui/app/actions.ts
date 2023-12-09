@@ -8,22 +8,18 @@ export const callStack = async (prevState: any, formData: FormData) => {
   return message;
 };
 
+
+
 export const parseFormData = async (prevState: any, formData: FormData) => {
-  const num1 = formData.get('num1') as string;
-  const num2 = formData.get('num2') as string;
+  const num1 = Number(formData.get('num1'));
+  const num2 = Number(formData.get('num2'));
 
-  return multiplyNumbers(Number(num1), Number(num2));
+  return await multiplyNumbers(num1, num2);
 };
-
-// this needs to be llm
-const multiplyNumbers = (num1: number, num2: number): number => {
-  return num1 * num2;
-};
-
 
 /**
  * Brief: multiply two numbers
  */
-export default async function placeholderName(num1: number, num2: number): Promise<number> {
+async function multiplyNumbers(num1: number, num2: number): Promise<number> {
     return num1 * num2;
 }

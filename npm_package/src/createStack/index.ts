@@ -2,10 +2,7 @@ import { BoilerplateMetadata } from '../integrations/utils/types';
 import generateFunction from '../integrations/generic/generateFunction';
 import createStackFile from '../createStackFile/index';
 import createComponent from '../createComponent/index';
-import {
-  combineSkeleton,
-  getFunctionName,
-} from '../skeleton/buildSkeleton/buildSkeleton';
+import { combineSkeleton, getFunctionName } from '../skeleton/buildSkeleton';
 import createBoilerplateEmbedding from '../createEmbedding/boilerplateEmbedding';
 import createFormDataWrapper from '../createFormDataWrapper/index';
 
@@ -33,7 +30,7 @@ export default async function createStack(
   // match IO data here (trigger html adjustment)
   // extract methodName
   const methodName = getFunctionName(generatedFunction);
-
+  console.log('methodName', methodName);
   generatedFunction = combineSkeleton(briefSkeleton, generatedFunction);
 
   await createComponent(ioData);

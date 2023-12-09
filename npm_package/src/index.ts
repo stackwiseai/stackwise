@@ -1,5 +1,5 @@
 import { getIO } from './getIO';
-import { buildSkeleton } from './skeleton/buildSkeleton/buildSkeleton';
+import { buildSkeleton } from './skeleton/buildSkeleton';
 import chooseBoilerplate from './integrations/generic/chooseBoilerplate';
 import { BoilerplateMetadata } from './integrations/utils/types';
 import createStackFile from './createStackFile/index';

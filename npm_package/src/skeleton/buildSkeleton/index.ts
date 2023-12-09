@@ -61,12 +61,13 @@ export function combineSkeleton(
   briefSkeleton: string,
   functionAndOutputSkeleton: string
 ): string {
+  console.log('WE ARE IN THE COMBINE SKELTON');
   // Find the index of the start of the export statement
-  const exportStartIndex = functionAndOutputSkeleton.indexOf('export default');
+  const exportStartIndex = functionAndOutputSkeleton.indexOf('async function');
 
   // Check if 'export' was found to avoid errors
   if (exportStartIndex === -1) {
-    throw new Error('Export statement not found in the skeleton.');
+    console.log('Export statement not found in the skeleton.');
   }
 
   // Insert the briefSkeleton at the found index
