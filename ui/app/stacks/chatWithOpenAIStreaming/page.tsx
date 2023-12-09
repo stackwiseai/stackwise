@@ -3,7 +3,7 @@ import ClipboardComponent from '@/app/components/clipboard';
 import React, { useState } from 'react';
 
 // Chat component
-export const Chat = () => {
+const Chat = () => {
   const [inputValue, setInputValue] = useState('');
   const [generatedFileContents, setGeneratedFileContents] = useState('');
   const [loading, setLoading] = useState(false);
