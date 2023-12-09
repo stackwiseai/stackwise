@@ -1,24 +1,24 @@
-"use client";
-import React, { useState } from "react";
+'use client';
+import React, { useState } from 'react';
 
 // Chat component
 export const Chat = () => {
-  const [inputValue, setInputValue] = useState("");
-  const [generatedFileContents, setGeneratedFileContents] = useState("");
+  const [inputValue, setInputValue] = useState('');
+  const [generatedFileContents, setGeneratedFileContents] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("Submitting:", inputValue);
+    console.log('Submitting:', inputValue);
     if (inputValue.trim()) {
-      setGeneratedFileContents("");
+      setGeneratedFileContents('');
       setLoading(true);
 
       try {
-        const response = await fetch("/api/chat", {
-          method: "POST",
+        const response = await fetch('/api/chatWithOpenAIStreaming', {
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({ messages: inputValue }),
         });
@@ -31,7 +31,7 @@ export const Chat = () => {
         const reader = data.getReader();
         const decoder = new TextDecoder();
         let done = false;
-        let fullContent = "";
+        let fullContent = '';
 
         while (!done) {
           const { value, done: doneReading } = await reader.read();
@@ -42,9 +42,9 @@ export const Chat = () => {
           fullContent += chunkValue;
         }
       } catch (error) {
-        console.error("Error during fetch:", error);
+        console.error('Error during fetch:', error);
       } finally {
-        setInputValue(""); // Clear the input field
+        setInputValue(''); // Clear the input field
         setLoading(false);
       }
     }
@@ -61,14 +61,14 @@ export const Chat = () => {
             placeholder="Type here..."
             className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             onKeyDown={(e) => {
-              if (e.key === "Enter")
+              if (e.key === 'Enter')
                 handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
             }}
           />
           <button
             type="submit"
             className={`mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${
-              loading ? "opacity-50 cursor-not-allowed" : ""
+              loading ? 'opacity-50 cursor-not-allowed' : ''
             }`}
             disabled={loading}
           >
@@ -76,7 +76,7 @@ export const Chat = () => {
           </button>
           {loading && (
             <span className="text-sm text-gray-500 mt-2">
-              Might take a minute or 2 ...{" "}
+              Might take a minute or 2 ...{' '}
             </span>
           )}
           {/* {loading && LoadingComponent()} */}
