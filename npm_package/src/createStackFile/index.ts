@@ -1,19 +1,26 @@
 import path from 'path';
 import fs from 'fs';
 
-export default function createStackFile(functionCode: string) {
-  // find directory root here
-  const stackPath = path.join(process.cwd(), 'app', 'actions.ts');
+export default async function createStackFile(functionCode: string) {
+  // Find directory root here
+  const filePath = path.join(process.cwd(), 'app', 'actions.ts');
 
-  // Create directory if it doesn't exist
-  if (!fs.existsSync(stackPath)) {
-    fs.mkdirSync(stackPath, { recursive: true });
-    functionCode = `'use server'\n\n` + functionCode;
+  // Check if the file exists
+  if (!fs.existsSync(filePath)) {
+    // If the file does not exist, create the directory if needed
+    const dirPath = path.dirname(filePath);
+    if (!fs.existsSync(dirPath)) {
+      fs.mkdirSync(dirPath, { recursive: true });
+    }
+
+    // Add 'use server' at the beginning and create a new file
+    functionCode = "'use server'\n\n" + functionCode;
+    fs.writeFileSync(filePath, functionCode);
   } else {
-    functionCode = `\n\n` + functionCode;
+    // If the file exists, append the new content
+    functionCode = '\n\n' + functionCode;
+    fs.appendFileSync(filePath, functionCode);
   }
 
-  // Write the skeleton to the file
-  fs.writeFileSync(stackPath, functionCode);
-  console.log(`File created at ${stackPath}`);
+  console.log(`File updated at ${filePath}`);
 }

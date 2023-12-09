@@ -18,6 +18,7 @@ export interface BoilerplateMetadata extends RecordMetadata {
   methodName: string;
   id: string;
   createdAt: string;
+  component?: string;
   // retrievedAt: string[];
   // retrievedFor: string[];
 }

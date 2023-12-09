@@ -1,4 +1,5 @@
-// import createSkeleton, { combineSkeleton } from '.';
+// import createSkeleton from '.';
+// import { combineSkeleton } from '../buildSkeleton/index';
 // import { placeholderName } from '../../../../shared/constants';
 
 // describe('createSkeleton', () => {

@@ -1,4 +1,5 @@
-const fetch = require('node-fetch');
+import fetch from 'node-fetch';
+import { CreateEmbeddingResponse } from 'openai/resources';
 
 export async function getEmbedding(toEmbed: string): Promise<number[]> {
   try {
@@ -7,14 +8,16 @@ export async function getEmbedding(toEmbed: string): Promise<number[]> {
       model: 'text-embedding-ada-002',
     };
 
-    const embedding = await fetch('https://api.openai.com/v1/embeddings', {
+    const response = await fetch('https://api.openai.com/v1/embeddings', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify(requestBody),
-    }).then((response) => response.json());
+    });
+
+    const embedding = (await response.json()) as CreateEmbeddingResponse;
 
     return embedding.data[0].embedding;
   } catch (error) {

@@ -19,3 +19,11 @@ export const parseFormData = async (prevState: any, formData: FormData) => {
 const multiplyNumbers = (num1: number, num2: number): number => {
   return num1 * num2;
 };
+
+
+/**
+ * Brief: multiply two numbers
+ */
+export default async function placeholderName(num1: number, num2: number): Promise<number> {
+    return num1 * num2;
+}

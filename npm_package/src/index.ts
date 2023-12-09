@@ -1,10 +1,10 @@
 import { getIO } from './getIO';
-import { buildSkeleton } from './skeleton/buildSkeleton';
+import { buildSkeleton } from './skeleton/buildSkeleton/index';
 import chooseBoilerplate from '../../shared/integrations/generic/chooseBoilerplate';
 import { BoilerplateMetadata } from '../../shared/integrations/lib/types';
-import createStackFile from './createStackFile';
-import updateEmbedding from './updateEmbedding';
-import createStack from './createStack';
+import createStackFile from './createStackFile/index';
+import updateEmbedding from './updateEmbedding/index';
+import createStack from './createStack/index';
 
 /**
  * Retrieves a completed stack
@@ -17,7 +17,11 @@ export async function stack(brief: string): Promise<Record<string, unknown>> {
     console.log('ioData', ioData);
 
     const { functionId, briefSkeleton, functionAndOutputSkeleton } =
-      buildSkeleton(ioData, brief);
+      await buildSkeleton(ioData, brief);
+
+    console.log('functionId', functionId);
+    console.log('briefSkeleton', briefSkeleton);
+    console.log('functionAndOutputSkeleton', functionAndOutputSkeleton);
 
     let methodName = '';
     let stackServerCode;
@@ -25,13 +29,17 @@ export async function stack(brief: string): Promise<Record<string, unknown>> {
     const { nearestBoilerplate, integration, exactMatch, embedding } =
       await chooseBoilerplate(functionAndOutputSkeleton, functionId, brief);
 
+    console.log('nearestBoilerplate', nearestBoilerplate);
+    console.log('integration', integration);
+    console.log('exactMatch', exactMatch);
+
     if (exactMatch) {
       // if it's an exact match it means that's it's a single BoilerplateMetadata (hash directly matched or >0.98 similarity)
       const boilerplate = nearestBoilerplate as BoilerplateMetadata;
       methodName = boilerplate.methodName;
-      stackServerCode = boilerplate.inputString;
+      stackServerCode = boilerplate.functionString;
       stackClientCode = boilerplate.component;
-      createStackFile(stackServerCode);
+      await createStackFile(stackServerCode);
 
       // increment count of times it's been used and what it was retrieved by
       await updateEmbedding(boilerplate, functionId);

@@ -3,8 +3,7 @@ import {
   generateSignature,
   createMD5HashFromSignature,
 } from '../../../../shared/generateSignature';
-import flattenInputJson from '../../../../shared/flattenInputJson';
-import createSkeleton from '../createSkeleton';
+import createSkeleton from '../createSkeleton/index';
 
 interface OutputType {
   functionId: string;
@@ -12,10 +11,10 @@ interface OutputType {
   functionAndOutputSkeleton: string;
 }
 
-export const buildSkeleton = (
+export const buildSkeleton = async (
   ioData: SkeletonJson,
   brief: string
-): OutputType => {
+): Promise<OutputType> => {
   const signature = generateSignature(
     brief,
     ioData.input,
@@ -33,13 +32,10 @@ export const buildSkeleton = (
   console.log('functionId');
   console.log(functionId);
 
-  const flatInput = flattenInputJson(ioData.input);
-
   const { briefSkeleton, functionAndOutputSkeleton } = createSkeleton(
     brief,
     ioData.input,
-    ioData.output,
-    flatInput
+    ioData.output
   );
 
   return {

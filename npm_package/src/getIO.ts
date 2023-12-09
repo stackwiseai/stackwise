@@ -27,7 +27,7 @@ Function types: { input: { description: 'string' }, output: { image: 'image' }}
 Input: return a string into an array of chars
 Function types: {input: { str: 'string' }, output: { chars: 'string[]' }}
 
-Your turn, remembering to only respond with a json, and the necessary input and outputs of the function. 
+Your turn, remembering to only respond with a json, and the necessary input and outputs of the function. 'null' if there is no input or output, and use | syntax for unions of types.
 Query: ${query}
 Function types:`,
       },

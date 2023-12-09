@@ -1,8 +1,11 @@
 import { BoilerplateMetadata } from '../../../shared/integrations/lib/types';
 import generateFunction from '../../../shared/integrations/generic/generateFunction';
-import createStackFile from '../createStackFile';
-import createComponent from '../createComponent';
-import { combineSkeleton, getFunctionName } from '../skeleton/buildSkeleton';
+import createStackFile from '../createStackFile/index';
+import createComponent from '../createComponent/index';
+import {
+  combineSkeleton,
+  getFunctionName,
+} from '../skeleton/buildSkeleton/index';
 import createBoilerplateEmbedding from '../../../shared/createEmbedding/boilerplateEmbedding';
 
 export default async function createStack(

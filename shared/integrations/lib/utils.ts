@@ -1,5 +1,3 @@
-'use server';
-
 import fs from 'fs';
 import fsExtra from 'fs-extra';
 const fsPromise = require('fs').promises;
