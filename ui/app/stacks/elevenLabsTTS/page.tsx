@@ -1,8 +1,9 @@
 'use client';
+import ClipboardComponent from '@/app/components/clipboard';
 import React, { useState } from 'react';
 
 // Chat component
-export const Chat = () => {
+const Chat = () => {
   const [inputValue, setInputValue] = useState('');
   const [generatedFileContents, setGeneratedFileContents] = useState('');
   const [loading, setLoading] = useState(false);
@@ -11,42 +12,8 @@ export const Chat = () => {
     event.preventDefault();
     console.log('Submitting:', inputValue);
     if (inputValue.trim()) {
-      setGeneratedFileContents('');
-      setLoading(true);
-
-      try {
-        const response = await fetch('/api/chatWithOpenAIStreaming', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ messages: inputValue }),
-        });
-        const data = await response.body;
-
-        if (!data) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const reader = data.getReader();
-        const decoder = new TextDecoder();
-        let done = false;
-        let fullContent = '';
-
-        while (!done) {
-          const { value, done: doneReading } = await reader.read();
-          done = doneReading;
-          const chunkValue = decoder.decode(value, { stream: !done });
-          setGeneratedFileContents((prev) => prev + chunkValue);
-          setLoading(false);
-          fullContent += chunkValue;
-        }
-      } catch (error) {
-        console.error('Error during fetch:', error);
-      } finally {
-        setInputValue(''); // Clear the input field
-        setLoading(false);
-      }
+      console.log('Submitting:', inputValue);
+      playText(inputValue.trim());
     }
   };
 
@@ -83,8 +50,41 @@ export const Chat = () => {
           <div className="mt-4">{generatedFileContents}</div>
         </form>
       </div>
+      <>
+        <span className="text-sm text-gray-500 mt-2">Copy FrontEnd</span>
+        <ClipboardComponent path="/stacks/chatWithOpenAIStreaming/frontend.txt" />
+        <span className="text-sm text-gray-500 mt-2">Copy Backend</span>
+        <ClipboardComponent path="/stacks/chatWithOpenAIStreaming/backend.txt" />
+      </>
     </div>
   );
 };
+
+async function playText(text: string) {
+  const response = await fetch('/api/elevenLabsTTS', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ text }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Speech generation failed');
+  }
+
+  const audioContext = new window.AudioContext();
+  const audioData = await response.arrayBuffer();
+  const audioBuffer = await audioContext.decodeAudioData(audioData);
+
+  const source = audioContext.createBufferSource();
+  source.buffer = audioBuffer;
+  source.connect(audioContext.destination);
+  source.start();
+
+  source.onended = () => {
+    audioContext.close();
+  };
+}
 
 export default Chat;

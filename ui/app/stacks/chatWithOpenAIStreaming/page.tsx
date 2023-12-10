@@ -1,8 +1,9 @@
 'use client';
+import ClipboardComponent from '@/app/components/clipboard';
 import React, { useState } from 'react';
 
 // Chat component
-export const Chat = () => {
+const Chat = () => {
   const [inputValue, setInputValue] = useState('');
   const [generatedFileContents, setGeneratedFileContents] = useState('');
   const [loading, setLoading] = useState(false);
@@ -83,6 +84,12 @@ export const Chat = () => {
           <div className="mt-4">{generatedFileContents}</div>
         </form>
       </div>
+      <>
+        <span className="text-sm text-gray-500 mt-2">Copy FrontEnd</span>
+        <ClipboardComponent path="/stacks/chatWithOpenAIStreaming/frontend.txt" />
+        <span className="text-sm text-gray-500 mt-2">Copy Backend</span>
+        <ClipboardComponent path="/stacks/chatWithOpenAIStreaming/backend.txt" />
+      </>
     </div>
   );
 };
