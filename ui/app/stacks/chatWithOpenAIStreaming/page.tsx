@@ -8,7 +8,7 @@ import Link from 'next/link';
 // Chat component
 const Chat = () => {
   const [inputValue, setInputValue] = useState('');
-  const [generatedFileContents, setGeneratedFileContents] = useState(``);
+  const [generatedFileContents, setGeneratedFileContents] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -91,8 +91,8 @@ const Chat = () => {
           inputValue={inputValue}
           setInputValue={setInputValue}
           loading={loading}
-          generatedFileContents={generatedFileContents}
         />
+        {generatedFileContents}
       </MainWrapper>
     </Container>
   );

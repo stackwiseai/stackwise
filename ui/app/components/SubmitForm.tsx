@@ -5,7 +5,6 @@ interface SubmitFormProps {
   inputValue: string;
   setInputValue: React.Dispatch<React.SetStateAction<string>>;
   loading: boolean;
-  generatedFileContents: string;
 }
 
 const SubmitForm: React.FC<SubmitFormProps> = ({
@@ -13,7 +12,6 @@ const SubmitForm: React.FC<SubmitFormProps> = ({
   inputValue,
   setInputValue,
   loading,
-  generatedFileContents,
 }) => {
   return (
     <>
@@ -44,8 +42,6 @@ const SubmitForm: React.FC<SubmitFormProps> = ({
       <div className="mt-4 min-h-4 p-4 w-full overflow-auto rounded-md bg-[#faf0e6]">
         {loading ? (
           <span className="text-sm text-gray-400">Generating... </span>
-        ) : generatedFileContents ? (
-          generatedFileContents
         ) : (
           <p className="text-gray-400 text-sm">Output here...</p>
         )}
