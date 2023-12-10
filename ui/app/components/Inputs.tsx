@@ -8,7 +8,7 @@ interface InputsProps {
 
 const Inputs: React.FC<InputsProps> = ({ formAction, state }) => {
   return (
-    <Form action={formAction}>
+    <Form className="common-styled" action={formAction}>
       {parse(state)}
       <button type="submit">Submit</button>
     </Form>
