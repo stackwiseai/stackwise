@@ -9,7 +9,7 @@ export async function POST(req: Request) {
   const response = await openai.chat.completions.create({
     model: 'gpt-3.5-turbo',
     stream: true,
-    messages: [{ role: 'user', content: 'test' }],
+    messages: [{ role: 'user', content: messages }],
   });
   const stream = OpenAIStream(response);
   return new StreamingTextResponse(stream);
