@@ -3,7 +3,7 @@ import SubmitForm from '@/app/components/SubmitForm';
 import ClipboardComponent from '@/app/components/clipboard';
 import React, { useState } from 'react';
 import tw from 'tailwind-styled-components';
-import { FaGithub } from 'react-icons/fa';
+import Link from 'next/link';
 
 // Chat component
 const Chat = () => {
@@ -57,17 +57,33 @@ const Chat = () => {
   return (
     <Container>
       <TitleContainer>
-        <div className="mb-8 flex items-center justify-between w-full">
-          <img className="w-32" src="/stackwise_logo.png" />
-          <FaGithub className="w-8 h-8" />
+        <div className="w-full mb-4 flex justify-center">
+          <Link
+            className="cursor-pointer"
+            href={'https://github.com/stackwiseai/stackwise'}
+          >
+            <img className="w-32" src="/stackwise_logo.png" />
+          </Link>
         </div>
         <Subtitle>Vercel edge function for OpenAI response streaming.</Subtitle>
       </TitleContainer>
-      <div className="flex mb-4">
-        <span className="text-sm text-gray-500 mt-2">Copy FrontEnd</span>
-        <ClipboardComponent path="/stacks/chatWithOpenAIStreaming/frontend.txt" />
-        <span className="text-sm text-gray-500 mt-2">Copy Backend</span>
-        <ClipboardComponent path="/stacks/chatWithOpenAIStreaming/backend.txt" />
+      <div className="flex space-x-6">
+        <ClipboardComponent
+          title={
+            <>
+              Copy <b className="text-black">Frontend</b>
+            </>
+          }
+          path="/stacks/chatWithOpenAIStreaming/frontend.txt"
+        />
+        <ClipboardComponent
+          title={
+            <>
+              Copy <b className="text-black">Backend</b>
+            </>
+          }
+          path="/stacks/chatWithOpenAIStreaming/backend.txt"
+        />
       </div>
       <MainWrapper>
         <SubmitForm
@@ -90,6 +106,7 @@ const Container = tw.div`
   justify-center
   items-center
   h-screen
+  space-y-6
 `;
 
 const TitleContainer = tw.div`
@@ -99,7 +116,6 @@ const TitleContainer = tw.div`
   items-center
   h-[45%]
   justify-end
-  mb-4
   w-1/2
 `;
 const Subtitle = tw.p`
