@@ -17,6 +17,8 @@ const Content: React.FC = () => {
   });
   const [brief, setBrief] = useState<string>('');
 
+  console.log('outputState, stackIO', outputState, stackIO);
+
   return (
     <>
       <InputWithButton setBrief={setBrief} formAction={createStack} />
@@ -28,7 +30,7 @@ const Content: React.FC = () => {
         />
         <Outputs
           state={stackIO.output ? stackIO.output : 'No output'}
-          values={outputState}
+          value={outputState}
         />
       </Container>
     </>

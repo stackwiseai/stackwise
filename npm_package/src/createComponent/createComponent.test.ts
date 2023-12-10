@@ -7,7 +7,7 @@ test('number input string output', () => {
   };
   const expectedInput = `<input type="number" name="num1" placeholder="Enter num1" required />
 <input type="number" name="num2" placeholder="Enter num2" required />`;
-  const expectedOutput = '<p>{state.result}</p>';
+  const expectedOutput = '<p>{value}</p>';
 
   const { inputContent, outputContent } = createComponent(ioData);
   expect(inputContent).toEqual(expectedInput);
@@ -18,7 +18,7 @@ test('string input number output', () => {
   const ioData = { input: { num: 'string' }, output: { length: 'number' } };
 
   const expectedInput = `<input type="text" name="num" placeholder="Enter num" required />`;
-  const expectedOutput = `<div>{state.length}</div>`;
+  const expectedOutput = `<div>{value}</div>`;
 
   const { inputContent, outputContent } = createComponent(ioData);
   expect(inputContent).toEqual(expectedInput);
@@ -33,9 +33,9 @@ test('boolean input string array multiple output', () => {
 
   const expectedInput = `<label htmlFor="isTrue">Is True</label>
 <input type="checkbox" name="isTrue" required />`;
-  const expectedOutput = `<div>{state.chars.map((item, i) => <p key={i}>{item}</p>)}</div>
+  const expectedOutput = `<div>{value.chars.map((item, i) => <p key={i}>{item}</p>)}</div>
 <label htmlFor="transformedString">Transformed String</label>
-<input type="checkbox" name="transformedString" checked={state.transformedString} readonly />`;
+<input type="checkbox" name="transformedString" checked={value.transformedString} readonly />`;
 
   const { inputContent, outputContent } = createComponent(ioData);
   expect(inputContent).toEqual(expectedInput);
@@ -46,7 +46,7 @@ test('no input video output', () => {
   const ioData = { input: 'null', output: { videoOut: 'video' } };
 
   const expectedInput = `No input for this stack`;
-  const expectedOutput = `<video src={state.videoOut} controls></video>`;
+  const expectedOutput = `<video src={value} controls></video>`;
 
   const { inputContent, outputContent } = createComponent(ioData);
   expect(inputContent).toEqual(expectedInput);
@@ -61,7 +61,7 @@ test('image input and output', () => {
 
   const expectedInput = `<label htmlFor="originalImage">Original Image</label>
 <input type="file" name="originalImage" accept="image/*" required />`;
-  const expectedOutput = `<img src={state.image} alt="Image" />`;
+  const expectedOutput = `<img src={value} alt="Image" />`;
 
   const { inputContent, outputContent } = createComponent(ioData);
   expect(inputContent).toEqual(expectedInput);
@@ -91,7 +91,7 @@ test('video input ', () => {
 
   const expectedInput = `<label htmlFor="originalVideo">Original Video</label>
 <input type="file" name="originalVideo" accept="video/*" required />`;
-  const expectedOutput = `<audio src={state.newVideo} controls></audio>`;
+  const expectedOutput = `<audio src={value} controls></audio>`;
 
   const { inputContent, outputContent } = createComponent(ioData);
   expect(inputContent).toEqual(expectedInput);
@@ -117,8 +117,8 @@ test('complex form input with text and file output', () => {
   <option value="Medium">Medium</option>
   <option value="Low">Low</option>
 </select>`;
-  const expectedOutput = `<p>{state.summary}</p>
-<a href={state.reportFile} download>Report File</a>`;
+  const expectedOutput = `<p>{value.summary}</p>
+<a href={value.reportFile} download>Report File</a>`;
 
   const { inputContent, outputContent } = createComponent(ioData);
   expect(inputContent).toEqual(expectedInput);
@@ -143,8 +143,8 @@ test('user profile edit form with text and image output', () => {
 <label htmlFor="profilePicture">Profile Picture</label>
 <input type="file" name="profilePicture" accept="image/*" required />
 <input type="text" name="bio" placeholder="Enter bio" required />`;
-  const expectedOutput = `<p>{state.confirmation}</p>
-<img src={state.picturePreview} alt="Picture Preview" />`;
+  const expectedOutput = `<p>{value.confirmation}</p>
+<img src={value.picturePreview} alt="Picture Preview" />`;
 
   const { inputContent, outputContent } = createComponent(ioData);
   expect(inputContent).toEqual(expectedInput);

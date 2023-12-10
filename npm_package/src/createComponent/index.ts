@@ -65,42 +65,80 @@ export default function createComponent(
 
   // Process output
   const output = ioData.output;
+  const outputKeys = Object.keys(output);
   if (output === 'null') {
     outputContent = 'No output for this stack';
+  } else if (outputKeys.length === 1) {
+    const key = outputKeys[0];
+    const type = output[key];
+    switch (type) {
+      case 'string':
+        outputContent += `<p>{value}</p>\n`;
+        break;
+      case 'number':
+        outputContent += `<div>{value}</div>\n`;
+        break;
+      case 'string[]':
+        outputContent += `<div>{value.map((item, i) => <p key={i}>{item}</p>)}</div>\n`;
+        break;
+      case 'boolean':
+        outputContent += `<input type="checkbox" checked={value} readonly />\n`;
+        break;
+      case 'boolean[]':
+        outputContent += `<div>{value.map((item, i) => <input type="checkbox" key={i} checked={item} readonly />)}</div>\n`;
+        break;
+      case 'number[]':
+        outputContent += `<div>{value.map((item, i) => <div key={i}>{item}</div>)}</div>\n`;
+        break;
+      case 'image':
+        outputContent += `<img src={value} alt="Image" />\n`;
+        break;
+      case 'audio':
+        outputContent += `<audio src={value} controls></audio>\n`;
+        break;
+      case 'video':
+        outputContent += `<video src={value} controls></video>\n`;
+        break;
+      case 'file':
+        outputContent += `<a href={value} download>Download File</a>\n`;
+        break;
+      default:
+        break;
+    }
   } else {
     for (const key in output) {
       const type = output[key];
       const label = formatLabel(key);
       switch (type) {
         case 'string':
-          outputContent += `<p>{state.${key}}</p>\n`;
+          outputContent += `<p>{value.${key}}</p>\n`;
           break;
         case 'number':
-          outputContent += `<div>{state.${key}}</div>\n`;
+          outputContent += `<div>{value.${key}}</div>\n`;
           break;
         case 'string[]':
-          outputContent += `<div>{state.${key}.map((item, i) => <p key={i}>{item}</p>)}</div>\n`;
+          outputContent += `<div>{value.${key}.map((item, i) => <p key={i}>{item}</p>)}</div>\n`;
           break;
         case 'boolean[]':
-          outputContent += `<div>{state.${key}.map((item, i) => <div key={i}>\n<label htmlFor="${key}">${label}{' ' + i}</label>\n<input type="checkbox" name="${key}" checked={item} readonly />\n</div>)}</div>\n`;
+          outputContent += `<div>{value.${key}.map((item, i) => <div key={i}>\n<label htmlFor="${key}">${label}{' ' + i}</label>\n<input type="checkbox" name="${key}" checked={item} readonly />\n</div>)}</div>\n`;
           break;
         case 'number[]':
-          outputContent += `<div>{state.${key}.map((item, i) => <div key={i}>{item}</div>)}</div>\n`;
+          outputContent += `<div>{value.${key}.map((item, i) => <div key={i}>{item}</div>)}</div>\n`;
           break;
         case 'boolean':
-          outputContent += `<label htmlFor="${key}">${label}</label>\n<input type="checkbox" name="${key}" checked={state.${key}} readonly />\n`;
+          outputContent += `<label htmlFor="${key}">${label}</label>\n<input type="checkbox" name="${key}" checked={value.${key}} readonly />\n`;
           break;
         case 'image':
-          outputContent += `<img src={state.${key}} alt="${label}" />\n`;
+          outputContent += `<img src={value.${key}} alt="${label}" />\n`;
           break;
         case 'audio':
-          outputContent += `<audio src={state.${key}} controls></audio>\n`;
+          outputContent += `<audio src={value.${key}} controls></audio>\n`;
           break;
         case 'video':
-          outputContent += `<video src={state.${key}} controls></video>\n`;
+          outputContent += `<video src={value.${key}} controls></video>\n`;
           break;
         case 'file':
-          outputContent += `<a href={state.${key}} download>${formatLabel(
+          outputContent += `<a href={value.${key}} download>${formatLabel(
             key
           )}</a>\n`;
           break;
