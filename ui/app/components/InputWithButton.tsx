@@ -1,9 +1,7 @@
 'use client';
-import { useState } from 'react';
 import tw from 'tailwind-styled-components';
-import { callStack } from '../actions';
 
-import { useFormState, useFormStatus } from 'react-dom';
+import { useFormStatus } from 'react-dom';
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -17,11 +15,13 @@ const SubmitButton = () => {
 
 interface InputWithButtonProps {
   setBrief: React.Dispatch<React.SetStateAction<string>>;
+  formAction: (payload: FormData) => void;
 }
 
-const InputWithButton: React.FC<InputWithButtonProps> = ({ setBrief }) => {
-  const [state, formAction] = useFormState(callStack, { message: null });
-
+const InputWithButton: React.FC<InputWithButtonProps> = ({
+  setBrief,
+  formAction,
+}) => {
   const handleSubmit = (e) => {
     const inputValue = e.target.elements.stack.value;
     setBrief(inputValue);
@@ -49,7 +49,6 @@ const InputWithButton: React.FC<InputWithButtonProps> = ({ setBrief }) => {
         <SubmitButton />
       </Form>
       <LuckyButton style={rainbowText}>i'm feeling lucky</LuckyButton>
-      {/* {state.message && <div>{state.message}</div>} */}
     </FormWrapper>
   );
 };

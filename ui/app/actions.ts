@@ -8,18 +8,15 @@ export const callStack = async (prevState: any, formData: FormData) => {
   return message;
 };
 
-
-
 export const parseFormData = async (prevState: any, formData: FormData) => {
-  const num1 = Number(formData.get('num1'));
-  const num2 = Number(formData.get('num2'));
+  const str = formData.get('str');
 
-  return await multiplyNumbers(num1, num2);
+  return await countChars(str);
 };
 
 /**
- * Brief: multiply two numbers
+ * Brief: count the number of chars in a string
  */
-async function multiplyNumbers(num1: number, num2: number): Promise<number> {
-    return num1 * num2;
+async function countChars(str: string): Promise<number> {
+    return str.length;
 }

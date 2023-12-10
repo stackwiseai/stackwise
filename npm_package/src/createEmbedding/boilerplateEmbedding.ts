@@ -16,7 +16,9 @@ export default async function createBoilerplateEmbedding(
   functionString: string,
   methodName: string,
   skeleton: string,
-  boilerplate: string
+  boilerplate: string,
+  inputReact: string,
+  outputReact: string
 ) {
   const index = pinecone.index('general');
 
@@ -37,6 +39,8 @@ export default async function createBoilerplateEmbedding(
       methodName,
       id: functionId,
       createdAt: new Date().toISOString(),
+      inputReact,
+      outputReact,
       // retrievedAt: [],
       // retrievedFor: [],
     };

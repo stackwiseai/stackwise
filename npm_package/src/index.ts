@@ -24,9 +24,6 @@ export async function stack(brief: string): Promise<Record<string, unknown>> {
     console.log('briefSkeleton', briefSkeleton);
     console.log('functionAndOutputSkeleton', functionAndOutputSkeleton);
 
-    let methodName = '';
-    let stackServerCode;
-    let stackClientCode;
     const { nearestBoilerplate, integration, exactMatch, embedding } =
       await chooseBoilerplate(functionAndOutputSkeleton, functionId, brief);
 
@@ -34,22 +31,23 @@ export async function stack(brief: string): Promise<Record<string, unknown>> {
     console.log('integration', integration);
     console.log('exactMatch', exactMatch);
 
+    let inputCode;
+    let outputCode;
     if (exactMatch) {
       // if it's an exact match it means that's it's a single BoilerplateMetadata (hash directly matched or >0.98 similarity)
       const boilerplate = nearestBoilerplate as BoilerplateMetadata;
-      methodName = boilerplate.methodName;
-      stackServerCode = boilerplate.functionString;
-      stackClientCode = boilerplate.component;
+      inputCode = boilerplate.inputReact;
+      outputCode = boilerplate.outputReact;
       const parseFormDataWrapper = createFormDataWrapper(
         ioData.input,
-        methodName
+        boilerplate.methodName
       );
-      await createStackFile(stackServerCode, parseFormDataWrapper);
+      await createStackFile(boilerplate.functionString, parseFormDataWrapper);
 
       // increment count of times it's been used and what it was retrieved by
       await updateEmbedding(boilerplate, functionId);
     } else {
-      await createStack(
+      const { inputContent, outputContent } = await createStack(
         ioData,
         brief,
         functionId,
@@ -59,9 +57,12 @@ export async function stack(brief: string): Promise<Record<string, unknown>> {
         integration,
         embedding
       );
+
+      inputCode = inputContent;
+      outputCode = outputContent;
     }
 
-    return { message: ioData };
+    return { input: inputCode, output: outputCode };
   } catch (error) {
     console.log(error);
     return { message: 'Error' };

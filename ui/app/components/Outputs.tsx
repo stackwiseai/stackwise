@@ -1,11 +1,17 @@
 import tw from 'tailwind-styled-components';
+import parse from 'html-react-parser';
 
 interface InputsProps {
-  state: any;
+  state: string;
+  values: any;
 }
 
-const Inputs: React.FC<InputsProps> = ({ state }) => {
-  return <Outputs>{state}</Outputs>;
+const Inputs: React.FC<InputsProps> = ({ state, values }) => {
+  return (
+    <Outputs>
+      <div>{parse(state)}</div>
+    </Outputs>
+  );
 };
 
 export default Inputs;

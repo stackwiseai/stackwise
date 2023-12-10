@@ -33,7 +33,7 @@ export default async function createStack(
   console.log('methodName', methodName);
   generatedFunction = combineSkeleton(briefSkeleton, generatedFunction);
 
-  await createComponent(ioData);
+  const { inputContent, outputContent } = createComponent(ioData);
 
   await createBoilerplateEmbedding(
     brief,
@@ -44,10 +44,17 @@ export default async function createStack(
     generatedFunction,
     methodName,
     combineSkeleton(briefSkeleton, functionAndOutputSkeleton),
-    'boilerplate_1'
+    'boilerplate_1',
+    inputContent,
+    outputContent
   );
 
   const parseFormDataWrapper = createFormDataWrapper(ioData.input, methodName);
 
   createStackFile(generatedFunction, parseFormDataWrapper);
+
+  return {
+    inputContent,
+    outputContent,
+  };
 }

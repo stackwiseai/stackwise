@@ -61,7 +61,6 @@ export function combineSkeleton(
   briefSkeleton: string,
   functionAndOutputSkeleton: string
 ): string {
-  console.log('WE ARE IN THE COMBINE SKELTON');
   // Find the index of the start of the export statement
   const exportStartIndex = functionAndOutputSkeleton.indexOf('async function');
 

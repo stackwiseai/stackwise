@@ -1,14 +1,15 @@
 import tw from 'tailwind-styled-components';
+import parse from 'html-react-parser';
 
 interface InputsProps {
   formAction: (payload: FormData) => void;
+  state: string;
 }
 
-const Inputs: React.FC<InputsProps> = ({ formAction }) => {
+const Inputs: React.FC<InputsProps> = ({ formAction, state }) => {
   return (
     <Form action={formAction}>
-      <input type="number" name="num1" placeholder="Enter num1" required />
-      <input type="number" name="num2" placeholder="Enter num2" required />
+      {parse(state)}
       <button type="submit">Submit</button>
     </Form>
   );

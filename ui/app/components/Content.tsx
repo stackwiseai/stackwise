@@ -4,21 +4,32 @@ import tw from 'tailwind-styled-components';
 import InputWithButton from './InputWithButton';
 import { parseFormData } from '../actions';
 import { useFormState } from 'react-dom';
+import { callStack } from '../actions';
 
 import Inputs from './Inputs';
 import Outputs from './Outputs';
 
 const Content: React.FC = () => {
-  const [state, formAction] = useFormState(parseFormData, 0);
+  const [outputState, functionAction] = useFormState(parseFormData, null);
+  const [stackIO, createStack] = useFormState(callStack, {
+    input: '',
+    output: '',
+  });
   const [brief, setBrief] = useState<string>('');
 
   return (
     <>
-      <InputWithButton setBrief={setBrief} />
+      <InputWithButton setBrief={setBrief} formAction={createStack} />
       <Brief>{brief ? `"${brief}"` : ''}</Brief>
       <Container>
-        <Inputs formAction={formAction} />
-        <Outputs state={state} />
+        <Inputs
+          state={stackIO.input ? stackIO.input : 'No input'}
+          formAction={functionAction}
+        />
+        <Outputs
+          state={stackIO.output ? stackIO.output : 'No output'}
+          values={outputState}
+        />
       </Container>
     </>
   );
