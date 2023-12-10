@@ -2,7 +2,15 @@
 import React, { useState } from 'react';
 import { FaClipboard, FaCheckCircle } from 'react-icons/fa'; // Importing icons
 
-const ClipboardComponent = ({ path, title }) => {
+interface ClipboardComponentProps {
+  path: string;
+  title?: any;
+}
+
+const ClipboardComponent: React.FC<ClipboardComponentProps> = ({
+  path,
+  title,
+}) => {
   const [icon, setIcon] = useState(<FaClipboard className="text-gray-500" />); // Clipboard icon in black
 
   const handleClick = async () => {
