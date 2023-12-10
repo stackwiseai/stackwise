@@ -37,14 +37,14 @@ async function copyRecursively(src: string, dest: string): Promise<void> {
 }
 
 async function main() {
-  let destinationFolder = '../public/stacks';
+  let destinationFolder = '../app/public/stacks';
 
   try {
     await removeDirectory(destinationFolder);
     console.log(`Folder ${destinationFolder} deleted`);
 
     // Usage example
-    let sourceFolder = '../app/stacks';
+    let sourceFolder = '../app/components/stacks';
     await copyRecursively(sourceFolder, destinationFolder);
     console.log('Copy completed.');
 

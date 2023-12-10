@@ -1,7 +1,7 @@
 import { IoSend } from 'react-icons/io5';
 import { useState } from 'react';
 
-const StreamOpenAI = () => {
+export const ChatWithOpenAIStreaming = () => {
   const [inputValue, setInputValue] = useState('');
   const [generatedFileContents, setGeneratedFileContents] = useState('');
   const [loading, setLoading] = useState(false);
@@ -14,7 +14,7 @@ const StreamOpenAI = () => {
       setLoading(true);
 
       try {
-        const response = await fetch('/api/chatWithOpenAIStreaming', {
+        const response = await fetch('/api/ChatWithOpenAIStreaming', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -87,4 +87,4 @@ const StreamOpenAI = () => {
   );
 };
 
-export default StreamOpenAI;
+export default ChatWithOpenAIStreaming;

@@ -1,12 +1,24 @@
 'use client';
-import StreamOpenAI from '@/app/components/StreamOpenAI';
 import ClipboardComponent from '@/app/components/clipboard';
 import tw from 'tailwind-styled-components';
 import Link from 'next/link';
 import { IoLogoGithub } from 'react-icons/io';
+import dynamic from 'next/dynamic';
+import { stackDB } from '../stackDB';
 
-// Chat component
-const Chat = () => {
+const Chat = ({ params }: { params: { slug: string } }) => {
+  const stackUuid = params.slug ?? null;
+  const stackName = stackDB[`${stackUuid}`].name;
+
+  const DynamicComponent = dynamic(
+    () => import(`@/app/components/stacks/${stackName}`),
+    {
+      ssr: false,
+      loading: () => {
+        return <div></div>;
+      },
+    }
+  );
   return (
     <Container>
       <Link
@@ -20,7 +32,7 @@ const Chat = () => {
         <div className="w-full mb-4 flex justify-center">
           <img className="w-32" src="/stackwise_logo.png" />
         </div>
-        <Subtitle>Vercel edge function for OpenAI response streaming.</Subtitle>
+        <Subtitle>stackIdToName.stackUuid.description</Subtitle>
       </TitleContainer>
       <div className="flex space-x-6">
         <ClipboardComponent
@@ -41,7 +53,7 @@ const Chat = () => {
         />
       </div>
       <MainWrapper>
-        <StreamOpenAI />
+        <DynamicComponent />
       </MainWrapper>
     </Container>
   );
