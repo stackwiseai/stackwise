@@ -56,7 +56,10 @@ const Chat = () => {
   return (
     <Container>
       <TitleContainer>
-        <Title>Stackwise</Title>
+        <div className="mb-4 flex">
+          <img className="w-32" src="/stackwise_logo.png" />
+          {/* <div>Github</div> */}
+        </div>
         <Subtitle>Vercel edge function for OpenAI response streaming.</Subtitle>
       </TitleContainer>
       <MainWrapper>
@@ -66,7 +69,17 @@ const Chat = () => {
           setInputValue={setInputValue}
           loading={loading}
         />
-        <div className="mt-4">{generatedFileContents}</div>
+        <div className="mt-4 min-h-4 p-4 w-full rounded bg-[#faf0e6]">
+          {loading ? (
+            <span className="text-sm text-gray-400">
+              Might take a minute or 2 ...{' '}
+            </span>
+          ) : generatedFileContents ? (
+            generatedFileContents
+          ) : (
+            <p className="text-gray-400 text-sm">Output here...</p>
+          )}
+        </div>
         <>
           <span className="text-sm text-gray-500 mt-2">Copy FrontEnd</span>
           <ClipboardComponent path="/stacks/chatWithOpenAIStreaming/frontend.txt" />
@@ -91,22 +104,18 @@ const Container = tw.div`
 const TitleContainer = tw.div`
   text-center
   mb-8
+  flex
+  flex-col
+  items-center
 `;
-
-const Title = tw.h1`
-  text-2xl
-  font-bold
-`;
-
 const Subtitle = tw.p`
   text-lg
 `;
 
 const MainWrapper = tw.div`
-  w-full
+  w-1/2
   flex
   flex-col
   justify-center
   items-center
-  bg-red-100
 `;
