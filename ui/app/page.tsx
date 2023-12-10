@@ -1,6 +1,5 @@
 'use server';
 import tw from 'tailwind-styled-components';
-import Image from 'next/image';
 import Content from './components/Content';
 
 export default async function Home() {

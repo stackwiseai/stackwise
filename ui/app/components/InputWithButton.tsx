@@ -38,7 +38,11 @@ const InputWithButton: React.FC<InputWithButtonProps> = ({
 
   return (
     <FormWrapper>
-      <Form onSubmit={handleSubmit} action={formAction}>
+      <Form
+        className="common-styled"
+        onSubmit={handleSubmit}
+        action={formAction}
+      >
         <input
           className="mr-4"
           placeholder="Enter something..."

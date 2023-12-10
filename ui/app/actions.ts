@@ -17,28 +17,28 @@ export const parseFormData = async (prevState: any, formData: FormData) => {
   const profilePicture = formData.get('profilePicture');
   const bio = formData.get('bio');
 
-  return await loginUser(username, email, password, profilePicture, bio);
+  // return await loginUser(username, email, password, profilePicture, bio);
 };
 
-interface OutputType {
-  image: image;
-  email: string;
-}
+// interface OutputType {
+//   image: image;
+//   email: string;
+// }
 
-/**
- * Brief: a login form with username, email, password, profilePicture, and a bio, and show the image and email chosen
- */
-async function loginUser(
-  username: string,
-  email: string,
-  password: string,
-  profilePicture: image,
-  bio: string
-): Promise<OutputType> {
-  // Add logic here to validate the user's credentials
-  // If valid, return the user's profile picture and email
-  console.log(
-    `username: ${username}, email: ${email}, password: ${password}, profilePicture: ${profilePicture}, bio: ${bio}`
-  );
-  return { image: profilePicture, email: email };
-}
+// /**
+//  * Brief: a login form with username, email, password, profilePicture, and a bio, and show the image and email chosen
+//  */
+// async function loginUser(
+//   username: string,
+//   email: string,
+//   password: string,
+//   profilePicture: image,
+//   bio: string
+// ): Promise<OutputType> {
+//   // Add logic here to validate the user's credentials
+//   // If valid, return the user's profile picture and email
+//   console.log(
+//     `username: ${username}, email: ${email}, password: ${password}, profilePicture: ${profilePicture}, bio: ${bio}`
+//   );
+//   return { image: profilePicture, email: email };
+// }

@@ -40,7 +40,7 @@ const Inputs: React.FC<InputsProps> = ({ state, value }) => {
   };
 
   return (
-    <Outputs>
+    <Outputs className="common-styled">
       <div dangerouslySetInnerHTML={{ __html: renderContent().join('') }} />
     </Outputs>
   );

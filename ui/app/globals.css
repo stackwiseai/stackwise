@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-input {
+.common-styled input {
   @apply rounded-md
   p-3
   border
@@ -14,10 +14,10 @@ input {
   w-full;
 }
 
-button,
-[type='button'],
-[type='reset'],
-[type='submit'] {
+.common-styled button,
+.common-styled [type='button'],
+.common-styled [type='reset'],
+.common-styled [type='submit'] {
   @apply bg-blue-500
   hover:bg-blue-700
   text-white

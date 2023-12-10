@@ -16,8 +16,12 @@ export default function createFormDataWrapper(
         return `const ${key} = Number(formData.get('${key}'));`;
       } else if (type === 'boolean') {
         return `const ${key} = formData.get('${key}') === 'true';`;
+      } else if (type === 'functionString') {
+        return `const ${key} = formData.get('${key}') as string;`;
+      } else if (['video', 'audio', 'image'].includes(type)) {
+        // else you should get the 'video, audio, image'
+        return `const ${key} = formData.get('${key}') as File;`;
       } else {
-        // else you should get the 'video, audio, image' and strings as default
         return `const ${key} = formData.get('${key}');`;
       }
     })
