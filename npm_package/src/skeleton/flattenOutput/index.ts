@@ -1,7 +1,15 @@
 interface OutputType {
   returnType: string;
   returnInterface: string;
-  return: string | number | boolean | Record<string, any>;
+  return:
+    | string
+    | number
+    | boolean
+    | string[]
+    | number[]
+    | boolean[]
+    | File
+    | null;
 }
 
 export default function flattenOutput(
@@ -23,7 +31,7 @@ export default function flattenOutput(
   if (keys.length === 1 && !isObject(outputJson[keys[0]])) {
     return {
       returnInterface: '',
-      returnType: `Promise<${outputJson[keys[0]]}>`,
+      returnType: `Promise<${formatType(outputJson[keys[0]])}>`,
       return: `return ${getDefaultReturnValue(outputJson[keys[0]])}`,
     };
   } else {
@@ -57,10 +65,15 @@ function getDefaultReturnValue(type) {
     case 'boolean':
       return 'false';
     case 'string[]':
+      return '[]';
     case 'number[]':
       return '[]';
-    case 'File':
-    case 'HTMLElement':
+    case 'boolean[]':
+      return '[]';
+    case 'image':
+    case 'audio':
+    case 'video':
+    case 'file':
       return 'null';
     default:
       return 'null';
@@ -76,7 +89,19 @@ function formatType(type) {
     const keys = Object.keys(type);
     return `{ ${keys.map(key => `${key}: ${type[key]}`).join('; ')}; }`;
   }
-  return type;
+  switch (type) {
+    case 'string[]':
+    case 'number[]':
+    case 'boolean[]':
+      return `${type}`;
+    case 'image':
+    case 'audio':
+    case 'video':
+    case 'file':
+      return 'File';
+    default:
+      return type;
+  }
 }
 
 function formatReturnObject(obj, isNested = false) {

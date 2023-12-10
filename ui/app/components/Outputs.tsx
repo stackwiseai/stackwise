@@ -1,5 +1,4 @@
 import tw from 'tailwind-styled-components';
-import parse from 'html-react-parser';
 
 interface InputsProps {
   state: string;

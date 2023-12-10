@@ -18,6 +18,7 @@ export default function createComponent(
   let inputContent = '';
   let outputContent = '';
 
+  // need to add ? to make it not required
   // Process input
   const input = ioData.input;
   if (input === 'null') {

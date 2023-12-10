@@ -14,7 +14,12 @@ export async function getIO(query: string): Promise<SkeletonJson> {
     messages: [
       {
         role: 'system',
-        content: `Pretend you are now the skeleton of a function. What are the input and return types that the function that does the following will need? Respond with absolutely nothing but the input and return types in a json. Only include necessary input and output types. Some examples:
+        content: `Pretend you are now the skeleton of a function. What are the input and return types that the function that does the following will need? Respond with absolutely nothing but the input and return types in a json. Only include necessary input and output types. 
+You have the following input types to work with; string, number, boolean, date, email, password, image, audio, video.
+You have the following output types to work with; string, number, boolean, string[], number[], boolean[], image, audio, video, file.
+Choose the one you think is the most accurate for each output and input that you decide.
+
+Some examples:
 Query: Multiply two numbers
 Function types: {input: { num1: 'number', num2: 'number' }, output: { result: 'number' }}
 
@@ -23,6 +28,9 @@ Function types: {input: { str: 'string' }, output: { length: 'number' }}
 
 Input: generate me an image using sdxl
 Function types: { input: { description: 'string' }, output: { image: 'image' }}
+
+Query: a login form with a username, email, password, profile picture, and bio. display the image and email
+Function types: { input: { username: 'string', email: 'string', password: 'string', profilePicture: 'image', bio: 'string' }, output: { image: 'image', email: 'string' } }
 
 Input: return a string into an array of chars
 Function types: {input: { str: 'string' }, output: { chars: 'string[]' }}
