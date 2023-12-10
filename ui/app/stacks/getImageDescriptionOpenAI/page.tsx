@@ -35,22 +35,7 @@ export default function Chat() {
           placeholder="What does the image show...(image static, see code)"
           onChange={handleInputChange}
         />
-        <div className="help-icon text-center text-3xl cursor-pointer absolute bottom-0 mb-10 mr-4 right-0">
-          ?<span className="help-text hidden">Hello World</span>
-        </div>
       </form>
-
-      <style jsx>{`
-        .help-icon:hover .help-text {
-          display: block;
-        }
-        .help-text {
-          color: black;
-          position: absolute;
-          right: 30px; /* adjust as needed */
-          bottom: 10px; /* adjust as needed */
-        }
-      `}</style>
     </div>
   );
 }
