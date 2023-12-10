@@ -66,14 +66,14 @@ const textToSpeech = async (
 export async function POST(req: Request) {
   const json = await req.json();
   console.log(json);
-  const { input } = json;
+  const { text } = json;
 
   const apiKey = process.env.ELEVEN_LABS_API_KEY;
   const voiceID = 'ErXwobaYiN019PkySvjV';
   const filePath = '/tmp/audio.mp3';
 
   try {
-    await textToSpeech(apiKey, voiceID, filePath, input).then((res) => {
+    await textToSpeech(apiKey, voiceID, filePath, text).then((res) => {
       console.log(res);
     });
     // Stream the audio file
