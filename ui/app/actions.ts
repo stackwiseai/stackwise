@@ -11,34 +11,15 @@ export const callStack = async (prevState: any, formData: FormData) => {
 };
 
 export const parseFormData = async (prevState: any, formData: FormData) => {
-  const username = formData.get('username');
-  const email = formData.get('email');
-  const password = formData.get('password');
-  const profilePicture = formData.get('profilePicture');
-  const bio = formData.get('bio');
+  const num1 = Number(formData.get('num1'));
+  const num2 = Number(formData.get('num2'));
 
-  // return await loginUser(username, email, password, profilePicture, bio);
+  return await multiplyNumbers(num1, num2);
 };
 
-// interface OutputType {
-//   image: image;
-//   email: string;
-// }
-
-// /**
-//  * Brief: a login form with username, email, password, profilePicture, and a bio, and show the image and email chosen
-//  */
-// async function loginUser(
-//   username: string,
-//   email: string,
-//   password: string,
-//   profilePicture: image,
-//   bio: string
-// ): Promise<OutputType> {
-//   // Add logic here to validate the user's credentials
-//   // If valid, return the user's profile picture and email
-//   console.log(
-//     `username: ${username}, email: ${email}, password: ${password}, profilePicture: ${profilePicture}, bio: ${bio}`
-//   );
-//   return { image: profilePicture, email: email };
-// }
+/**
+ * Brief: Multiply two numbers together
+ */
+async function multiplyNumbers(num1: number, num2: number): Promise<number> {
+  return num1 * num2;
+}

@@ -1,121 +1,90 @@
-// 'use client';
-// import SubmitForm from '@/app/components/StreamOpenAI';
-// import ClipboardComponent from '@/app/components/clipboard';
-// import React, { useState } from 'react';
-// import tw from 'tailwind-styled-components';
+import { IoSend } from 'react-icons/io5';
+import { useState } from 'react';
 
-// // Chat component
-// const Chat = () => {
-//   const [inputValue, setInputValue] = useState('');
-//   const [generatedFileContents, setGeneratedFileContents] = useState('');
-//   const [loading, setLoading] = useState(false);
+const StreamOpenAI = () => {
+  const [inputValue, setInputValue] = useState('');
+  const [generatedFileContents, setGeneratedFileContents] = useState('');
+  const [loading, setLoading] = useState(false);
 
-//   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-//     event.preventDefault();
-//     console.log('Submitting:', inputValue);
-//     if (inputValue.trim()) {
-//       setGeneratedFileContents('');
-//       setLoading(true);
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.log('Submitting:', inputValue);
+    if (inputValue.trim()) {
+      setGeneratedFileContents('');
+      setLoading(true);
 
-//       try {
-//         const response = await fetch('/api/chatWithOpenAIStreaming', {
-//           method: 'POST',
-//           headers: {
-//             'Content-Type': 'application/json',
-//           },
-//           body: JSON.stringify({ messages: inputValue }),
-//         });
-//         const data = await response.body;
+      try {
+        const response = await fetch('/api/chatWithOpenAIStreaming', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ messages: inputValue }),
+        });
+        const data = await response.body;
 
-//         if (!data) {
-//           throw new Error(`HTTP error! status: ${response.status}`);
-//         }
+        if (!data) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
-//         const reader = data.getReader();
-//         const decoder = new TextDecoder();
-//         let done = false;
-//         let fullContent = '';
+        const reader = data.getReader();
+        const decoder = new TextDecoder();
+        let done = false;
+        let fullContent = '';
 
-//         while (!done) {
-//           const { value, done: doneReading } = await reader.read();
-//           done = doneReading;
-//           const chunkValue = decoder.decode(value, { stream: !done });
-//           setGeneratedFileContents((prev) => prev + chunkValue);
-//           setLoading(false);
-//           fullContent += chunkValue;
-//         }
-//       } catch (error) {
-//         console.error('Error during fetch:', error);
-//       } finally {
-//         setInputValue(''); // Clear the input field
-//         setLoading(false);
-//       }
-//     }
-//   };
+        while (!done) {
+          const { value, done: doneReading } = await reader.read();
+          done = doneReading;
+          const chunkValue = decoder.decode(value, { stream: !done });
+          setGeneratedFileContents((prev) => prev + chunkValue);
+          setLoading(false);
+          fullContent += chunkValue;
+        }
+      } catch (error) {
+        console.error('Error during fetch:', error);
+      } finally {
+        setInputValue(''); // Clear the input field
+        setLoading(false);
+      }
+    }
+  };
+  return (
+    <>
+      <form onSubmit={handleSubmit} className="flex flex-col w-full">
+        <div className="relative w-full">
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            placeholder="Ask anything..."
+            className="rounded-full w-full py-2 pl-4 pr-10 border border-gray-400 focus:outline-none focus:shadow-outline"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter')
+                handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
+            }}
+          />
+          <button
+            type="submit"
+            className={`cursor-pointer absolute right-0 top-0 rounded-r-full h-full text-black font-bold px-4 focus:outline-none focus:shadow-outline ${
+              loading ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
+            disabled={loading}
+          >
+            <IoSend />
+          </button>
+        </div>
+      </form>
+      <div className="mt-4 min-h-4 p-4 w-full overflow-auto rounded-md bg-[#faf0e6]">
+        {loading ? (
+          <span className="text-sm text-gray-400">Generating... </span>
+        ) : generatedFileContents ? (
+          generatedFileContents
+        ) : (
+          <p className="text-gray-400 text-sm">Output here...</p>
+        )}
+      </div>
+    </>
+  );
+};
 
-//   return (
-//     <Container>
-//       <TitleContainer>
-//         <div className="mb-4 flex">
-//           <img className="w-32" src="/stackwise_logo.png" />
-//           {/* <div>Github</div> */}
-//         </div>
-//         <Subtitle>Vercel edge function for OpenAI response streaming.</Subtitle>
-//       </TitleContainer>
-//       <MainWrapper>
-//         <SubmitForm
-//           handleSubmit={handleSubmit}
-//           inputValue={inputValue}
-//           setInputValue={setInputValue}
-//           loading={loading}
-//         />
-//         <div className="mt-4 min-h-4 p-4 w-full rounded bg-[#faf0e6]">
-//           {loading ? (
-//             <span className="text-sm text-gray-400">
-//               Might take a minute or 2 ...{' '}
-//             </span>
-//           ) : generatedFileContents ? (
-//             generatedFileContents
-//           ) : (
-//             <p className="text-gray-400 text-sm">Output here...</p>
-//           )}
-//         </div>
-//         <>
-//           <span className="text-sm text-gray-500 mt-2">Copy FrontEnd</span>
-//           <ClipboardComponent path="/stacks/chatWithOpenAIStreaming/page.tsx" />
-//           <span className="text-sm text-gray-500 mt-2">Copy Backend</span>
-//           <ClipboardComponent path="/stacks/chatWithOpenAIStreaming/route.ts" />
-//         </>
-//       </MainWrapper>
-//     </Container>
-//   );
-// };
-
-// export default Chat;
-
-// const Container = tw.div`
-//   flex
-//   flex-col
-//   justify-center
-//   items-center
-//   h-screen
-// `;
-
-// const TitleContainer = tw.div`
-//   text-center
-//   mb-8
-//   flex
-//   flex-col
-//   items-center
-// `;
-// const Subtitle = tw.p`
-//   text-lg
-// `;
-
-// const MainWrapper = tw.div`
-//   w-1/2
-//   flex
-//   flex-col
-//   justify-center
-//   items-center
-// `;
+export default StreamOpenAI;

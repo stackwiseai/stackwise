@@ -30,12 +30,10 @@ const ClipboardComponent: React.FC<ClipboardComponentProps> = ({
   };
 
   return (
-    <div className="flex items-center ">
+    <button onClick={handleClick} className="flex items-center cursor-pointer">
       <span className="text-sm text-gray-500 mt-1 mr-2">{title}</span>
-      <button onClick={handleClick} className="border-none bg-none ">
-        {icon}
-      </button>
-    </div>
+      <div className="border-none bg-none">{icon}</div>
+    </button>
   );
 };
 
