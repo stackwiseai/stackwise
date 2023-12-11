@@ -3,29 +3,30 @@ import { ReactSketchCanvas, ReactSketchCanvasRef } from 'react-sketch-canvas';
 import * as fal from '@fal-ai/serverless-client';
 
 fal.config({
-  credentials: `${process.env.NEXT_PUBLIC_FAL_KEY_ID}:${process.env.NEXT_PUBLIC_FAL_KEY_SECRET}`, // or a function that returns a string
+  credentials: `${process.env.NEXT_PUBLIC_FAL_KEY_ID}:${process.env.NEXT_PUBLIC_FAL_KEY_SECRET}`,
 });
 
-interface CreateAICanvasProps {
-  // Additional props can be added here if needed
-}
-
-const CreateAICanvas: React.FC<CreateAICanvasProps> = () => {
-  const [svgImage, setSvgImage] = useState<string>('');
+const CreateAICanvas: React.FC = () => {
+  const [dataUriImage, setDataUriImage] = useState<string>('');
   const [image, setImage] = useState<string>('');
   const [imagePrompt, setImagePrompt] = useState<string>('');
   const canvasRef = useRef<ReactSketchCanvasRef>(null);
 
   const saveDrawing = () => {
     canvasRef.current?.exportImage('png').then((dataUrl) => {
-      setSvgImage(dataUrl);
+      setDataUriImage(dataUrl);
     });
   };
 
   const connection = fal.realtime.connect('110602490-lcm-sd15-i2i', {
+    connectionKey: 'fal-realtime-example',
+    clientOnly: false,
+    throttleInterval: 256,
     onResult: (result) => {
       console.log(result);
-      setImage(result);
+      if (result.images && result.images[0]) {
+        setImage(result.images[0].url);
+      }
     },
     onError: (error) => {
       console.error(error);
@@ -36,9 +37,11 @@ const CreateAICanvas: React.FC<CreateAICanvasProps> = () => {
     connection.send({
       prompt: imagePrompt,
       sync_mode: true,
-      image_url: svgImage,
+      image_url: dataUriImage,
+      strength: 0.65,
+      enable_safety_checks: false,
     });
-  }, [svgImage]);
+  }, [dataUriImage, imagePrompt]);
 
   return (
     <div className="flex flex-col items-center justify-center">
@@ -54,8 +57,8 @@ const CreateAICanvas: React.FC<CreateAICanvasProps> = () => {
           ref={canvasRef}
           className="border"
           style={{
-            width: '450px',
-            height: '450px',
+            width: '512px',
+            height: '512px',
           }}
           strokeWidth={4}
           strokeColor="black"
@@ -63,8 +66,8 @@ const CreateAICanvas: React.FC<CreateAICanvasProps> = () => {
         />
         <div
           style={{
-            width: '450px',
-            height: '450px',
+            width: '512px',
+            height: '512px',
             backgroundImage: `url(${image})`,
             backgroundSize: 'cover',
             borderLeft: 'none',
