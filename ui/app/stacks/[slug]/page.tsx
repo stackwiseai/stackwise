@@ -11,6 +11,7 @@ import { MdOutlineInput } from 'react-icons/md';
 import dynamic from 'next/dynamic';
 import { stackDB } from '../stackDB';
 import { stackDB as initialStackDB } from '../stackDB';
+import ContactStackwise from '@/app/components/ContactStackwise';
 
 const getDynamicComponent = (stackName) =>
   dynamic(() => import(`@/app/components/stacks/${stackName}`), {
@@ -71,13 +72,7 @@ const Chat = ({ params }: { params: { slug: string } }) => {
       >
         <IoLogoGithub className="w-8 h-8" />
       </Link>
-      <Link
-        className="cursor-pointer fixed bottom-4 left-4"
-        href="mailto:silen@stackwise.ai"
-      >
-        Get a similar stack for 10$ (exclusive beta) <br></br>
-        Email <b>contact@stackwise.ai</b>
-      </Link>
+      <ContactStackwise />
       <TitleContainer>
         <div className="w-full mb-4 flex justify-center">
           <img className="w-32" src="/stackwise_logo.png" />
