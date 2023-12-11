@@ -82,7 +82,7 @@ const Chat = ({ params }: { params: { slug: string } }) => {
         <div className="w-full mb-4 flex justify-center">
           <img className="w-32" src="/stackwise_logo.png" />
         </div>
-        <Subtitle>stackIdToName.stackUuid.description</Subtitle>
+        <Subtitle>{stackDescription}</Subtitle>
       </TitleContainer>
       <div className="flex items-center space-x-6">
         <button
