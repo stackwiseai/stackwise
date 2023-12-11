@@ -3,22 +3,19 @@ import React, { useState } from 'react';
 import { FaClipboard, FaCheckCircle } from 'react-icons/fa'; // Importing icons
 
 interface ClipboardComponentProps {
-  path: string;
+  code: string;
   title?: any;
 }
 
 const ClipboardComponent: React.FC<ClipboardComponentProps> = ({
-  path,
+  code,
   title,
 }) => {
   const [icon, setIcon] = useState(<FaClipboard className="text-gray-500" />); // Clipboard icon in black
 
   const handleClick = async () => {
     try {
-      const response = await fetch(path);
-      const data = await response.text();
-
-      await navigator.clipboard.writeText(data);
+      await navigator.clipboard.writeText(code);
       console.log('Text copied to clipboard');
       setIcon(<FaCheckCircle className="text-gray-500" />);
       setTimeout(() => {
