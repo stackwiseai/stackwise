@@ -49,8 +49,8 @@ export const ChatWithOpenAIStreaming = () => {
     }
   };
   return (
-    <>
-      <form onSubmit={handleSubmit} className="flex flex-col w-full">
+    <div className="w-2/3">
+      <form onSubmit={handleSubmit} className="flex flex-col">
         <div className="relative w-full">
           <input
             type="text"
@@ -83,7 +83,7 @@ export const ChatWithOpenAIStreaming = () => {
           <p className="text-gray-400 text-sm">Output here...</p>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

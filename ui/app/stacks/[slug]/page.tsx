@@ -177,9 +177,10 @@ const Subtitle = tw.p`
 `;
 
 const MainWrapper = tw.div`
-  w-1/2
+  w-3/4
   flex
   flex-col
   items-center
   h-[55%]
+  pb-4
 `;
