@@ -18,6 +18,7 @@ export const stackDB = {
   },
   cda123456739: {
     name: 'CreateAICanvas',
-    description: 'TODO',
+    description:
+      'Real time image rendering using Fal. Draw on the left canvas and/or type in a prompt to guide the image on the right.',
   },
 };

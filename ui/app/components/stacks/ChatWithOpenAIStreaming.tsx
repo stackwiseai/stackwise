@@ -74,7 +74,7 @@ export const ChatWithOpenAIStreaming = () => {
           </button>
         </div>
       </form>
-      <div className="mt-4 min-h-4 p-4 w-full overflow-auto rounded-md bg-[#faf0e6]">
+      <div className="mt-4 min-h-4 p-4 max-h-96 overflow-auto w-full rounded-md bg-[#faf0e6]">
         {loading ? (
           <span className="text-sm text-gray-400">Generating... </span>
         ) : generatedFileContents ? (
