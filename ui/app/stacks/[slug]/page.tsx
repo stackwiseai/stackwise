@@ -9,7 +9,6 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { MdOutlineInput } from 'react-icons/md';
 import dynamic from 'next/dynamic';
-import { stackDB } from '../stackDB';
 import { stackDB as initialStackDB } from '../stackDB';
 import ContactStackwise from '@/app/components/ContactStackwise';
 
@@ -34,8 +33,13 @@ const Chat = ({ params }: { params: { slug: string } }) => {
     console.log('stackUuid', stackUuid);
     const stackInfo = initialStackDB[stackUuid] || null;
     if (stackInfo) {
+      console.log('stackInfo', stackInfo);
       setStackName(stackInfo.name);
       setStackDescription(stackInfo.description);
+      const frontendPath = `/stacks/${stackInfo.name}.tsx`;
+      const backendPath = `/stacks/${stackInfo.name}/route.ts`;
+      getPathText(frontendPath).then((data) => setFrontendCode(data));
+      getPathText(backendPath).then((data) => setBackendCode(data));
     }
   }, [params.slug]);
 
@@ -55,13 +59,7 @@ const Chat = ({ params }: { params: { slug: string } }) => {
     return data;
   };
 
-  const frontendPath = `/stacks/${stackName}.tsx`;
-  const backendPath = `/stacks/${stackName}/route.ts`;
-
-  useEffect(() => {
-    getPathText(frontendPath).then((data) => setFrontendCode(data));
-    getPathText(backendPath).then((data) => setBackendCode(data));
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <Container>
@@ -97,7 +95,7 @@ const Chat = ({ params }: { params: { slug: string } }) => {
               Copy <b className="text-black">Frontend</b>
             </>
           }
-          path={frontendPath}
+          code={frontendCode}
         />
         <ClipboardComponent
           title={
@@ -105,7 +103,7 @@ const Chat = ({ params }: { params: { slug: string } }) => {
               Copy <b className="text-black">Backend</b>
             </>
           }
-          path={backendPath}
+          code={backendCode}
         />
       </div>
       <MainWrapper>
