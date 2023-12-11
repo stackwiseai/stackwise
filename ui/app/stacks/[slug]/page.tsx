@@ -12,7 +12,7 @@ import dynamic from 'next/dynamic';
 import { stackDB } from '../stackDB';
 
 const Chat = ({ params }: { params: { slug: string } }) => {
-  const [showFrontendCode, setShowFrontendCode] = useState<boolean>(false);
+  const [showFrontendCode, setShowFrontendCode] = useState<boolean>(true);
   const [backendCode, setBackendCode] = useState<string>('');
   const [frontendCode, setFrontendCode] = useState<string>('');
   const [dropdownSelection, setDropdownSelection] = useState<string>('Usage');
