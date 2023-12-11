@@ -14,7 +14,7 @@ export const ChatWithOpenAIStreaming = () => {
       setLoading(true);
 
       try {
-        const response = await fetch('/api/chatWithOpenAIStreaming', {
+        const response = await fetch('/api/ChatWithOpenAIStreaming', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

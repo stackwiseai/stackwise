@@ -55,8 +55,8 @@ const Chat = ({ params }: { params: { slug: string } }) => {
     return data;
   };
 
-  const frontendPath = '/stacks/ChatWithOpenAIStreaming.tsx';
-  const backendPath = '/stacks/ChatWithOpenAIStreaming/route.ts';
+  const frontendPath = `/stacks/${stackName}.tsx`;
+  const backendPath = `/stacks/${stackName}/route.ts`;
 
   useEffect(() => {
     getPathText(frontendPath).then((data) => setFrontendCode(data));
