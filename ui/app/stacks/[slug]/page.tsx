@@ -10,14 +10,33 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { MdOutlineInput } from 'react-icons/md';
 import dynamic from 'next/dynamic';
 import { stackDB } from '../stackDB';
+import { stackDB as initialStackDB } from '../stackDB';
+
+const getDynamicComponent = (stackName) =>
+  dynamic(() => import(`@/app/components/stacks/${stackName}`), {
+    ssr: false,
+    loading: () => <div></div>,
+  });
 
 const Chat = ({ params }: { params: { slug: string } }) => {
   const [showFrontendCode, setShowFrontendCode] = useState<boolean>(true);
   const [backendCode, setBackendCode] = useState<string>('');
   const [frontendCode, setFrontendCode] = useState<string>('');
   const [dropdownSelection, setDropdownSelection] = useState<string>('Usage');
-  const stackUuid = params.slug ?? null;
-  const stackName = stackDB[`${stackUuid}`].name;
+  const [stackName, setStackName] = useState(null);
+  const [stackDescription, setStackDescription] = useState('');
+
+  useEffect(() => {
+    const stackUuid = params.slug ?? null;
+    if (!stackUuid) return;
+
+    console.log('stackUuid', stackUuid);
+    const stackInfo = initialStackDB[stackUuid] || null;
+    if (stackInfo) {
+      setStackName(stackInfo.name);
+      setStackDescription(stackInfo.description);
+    }
+  }, [params.slug]);
 
   const DynamicComponent = dynamic(
     () => import(`@/app/components/stacks/${stackName}`),
@@ -35,8 +54,8 @@ const Chat = ({ params }: { params: { slug: string } }) => {
     return data;
   };
 
-  const frontendPath = '/stacks/chatWithOpenAIStreaming/frontend.txt';
-  const backendPath = '/stacks/chatWithOpenAIStreaming/backend.txt';
+  const frontendPath = '/stacks/ChatWithOpenAIStreaming.tsx';
+  const backendPath = '/stacks/ChatWithOpenAIStreaming/route.ts';
 
   useEffect(() => {
     getPathText(frontendPath).then((data) => setFrontendCode(data));
