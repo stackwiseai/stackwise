@@ -15,4 +15,8 @@ export const stackDB = {
     name: 'UseOpenAIAssistant',
     description: 'TODO',
   },
+  cda123456739def0123456783abc5ef0: {
+    name: 'CreateAICanvas',
+    description: 'TODO',
+  },
 };
