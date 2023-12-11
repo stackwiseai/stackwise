@@ -37,7 +37,7 @@ async function copyRecursively(src: string, dest: string): Promise<void> {
 }
 
 async function main() {
-  let destinationFolder = '../app/public/stacks';
+  let destinationFolder = '../public/stacks';
 
   try {
     await removeDirectory(destinationFolder);
