@@ -75,7 +75,7 @@ const Chat = ({ params }: { params: { slug: string } }) => {
         className="cursor-pointer fixed bottom-4 left-4"
         href="mailto:silen@stackwise.ai"
       >
-        Not happy with the code? <br></br>
+        Get a similar stack for 10$ (exclusive beta) <br></br>
         Email <b>contact@stackwise.ai</b>
       </Link>
       <TitleContainer>
