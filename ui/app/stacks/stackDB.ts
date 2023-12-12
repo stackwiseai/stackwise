@@ -26,7 +26,7 @@ export const stackDB = {
       'Vercel edge function for OpenAI response streaming with Helicone',
   },
   e4w5Wrc: {
-    name: 'MagicAnimate',
+    name: 'stableVideoDiffusion',
     description: 'Animate image backgrounds using Fal.',
   },
 };
