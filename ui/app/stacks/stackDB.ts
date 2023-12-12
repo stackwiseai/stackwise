@@ -21,4 +21,9 @@ export const stackDB = {
     description:
       'Real time image rendering using Fal. Draw on the left canvas and add a prompt.',
   },
+  ayQfLSQ: {
+    name: 'ChatWithOpenAIStreamingHelicone',
+    description:
+      'Vercel edge function for OpenAI response streaming with Helicone',
+  },
 };
