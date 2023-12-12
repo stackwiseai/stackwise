@@ -6,7 +6,7 @@ export const stackDB = {
   //base 64 like above
   aEKmWSKi395: {
     name: 'ElevenLabsTTS',
-    description: 'TODO',
+    description: 'Text to Speech using ElevenLabs and Vercel edge functions',
   },
   fedcba54321: {
     name: 'GetImageDescriptionOpenAI',

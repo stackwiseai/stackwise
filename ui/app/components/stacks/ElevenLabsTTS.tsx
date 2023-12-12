@@ -18,44 +18,36 @@ const Chat = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen justify-center items-center bg-gray-100">
-      <div className="w-full max-w-xs mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <div className="flex flex-col h-screen justify-center items-center">
+      <div className="w-2/3 mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <form onSubmit={handleSubmit} className="flex flex-col">
-          <input
-            type="text"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            placeholder="Type here..."
-            className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            onKeyDown={(e) => {
-              if (e.key === 'Enter')
-                handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
-            }}
-          />
-          <button
-            type="submit"
-            className={`mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${
-              loading ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-            disabled={loading}
-          >
-            Submit
-          </button>
-          {loading && (
-            <span className="text-sm text-gray-500 mt-2">
-              Might take a minute or 2 ...{' '}
-            </span>
-          )}
-          {/* {loading && LoadingComponent()} */}
-          <div className="mt-4">{generatedFileContents}</div>
+          <div className="relative w-full">
+            <input
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              placeholder="Type here..."
+              className="rounded-full w-full py-4 pl-4 pr-10 border border-gray-400 focus:outline-none focus:shadow-outline text-xl"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleSubmit(
+                    e as unknown as React.FormEvent<HTMLFormElement>
+                  );
+                }
+              }}
+            />
+          </div>
+          <div className="mt-4 min-h-4 p-4 w-full overflow-auto rounded-md bg-[#faf0e6]">
+            {loading ? (
+              <span className="text-sm text-gray-400">Generating... </span>
+            ) : generatedFileContents ? (
+              generatedFileContents
+            ) : (
+              <p className="text-gray-400 text-sm">Output here...</p>
+            )}
+          </div>
         </form>
       </div>
-      <>
-        <span className="text-sm text-gray-500 mt-2">Copy FrontEnd</span>
-        <ClipboardComponent code="/stacks/chatWithOpenAIStreaming/frontend.txt" />
-        <span className="text-sm text-gray-500 mt-2">Copy Backend</span>
-        <ClipboardComponent code="/stacks/chatWithOpenAIStreaming/backend.txt" />
-      </>
     </div>
   );
 };
