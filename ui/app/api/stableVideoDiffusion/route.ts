@@ -1,12 +1,5 @@
 import * as fal from '@fal-ai/serverless-client';
 
-// fal.config({
-//   credentials: `${process.env.FAL_KEY_ID}:${process.env.FAL_KEY_SECRET}`,
-//   requestMiddleware: fal.withProxy({
-//     targetUrl: '/api/fal/proxy',
-//   }),
-// });
-
 fal.config({
   credentials: `${process.env.FAL_KEY_ID}:${process.env.FAL_KEY_SECRET}`,
 });
