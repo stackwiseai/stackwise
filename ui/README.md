@@ -1,4 +1,5 @@
 ```
+fork the repo
 git clone https://github.com/stackwiseai/stackwise
 
 cd stackwise
