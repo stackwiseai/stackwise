@@ -11,5 +11,5 @@ npm run dev
 
 got to localhost:3000/stacks
 
-add a stack
 ```
+add a stack
