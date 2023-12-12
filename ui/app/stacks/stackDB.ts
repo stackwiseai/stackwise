@@ -3,7 +3,6 @@ export const stackDB = {
     name: 'ChatWithOpenAIStreaming',
     description: 'Vercel edge function for OpenAI response streaming.',
   },
-  //base 64 like above
   aEKmWSK: {
     name: 'ElevenLabsTTS',
     description: 'Text to Speech using ElevenLabs and Vercel edge functions',
@@ -25,5 +24,9 @@ export const stackDB = {
     name: 'ChatWithOpenAIStreamingHelicone',
     description:
       'Vercel edge function for OpenAI response streaming with Helicone',
+  },
+  e4w5Wrc: {
+    name: 'MagicAnimate',
+    description: 'Animate image backgrounds using Fal.',
   },
 };

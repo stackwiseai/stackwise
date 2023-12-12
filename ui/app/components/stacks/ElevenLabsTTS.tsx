@@ -19,7 +19,7 @@ const Chat = () => {
   };
 
   return (
-    <div className="w-2/3">
+    <div className="w-3/4 md:w-1/2">
       <form onSubmit={handleSubmit} className="flex flex-col">
         <div className="relative w-full">
           <input

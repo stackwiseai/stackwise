@@ -180,7 +180,7 @@ const TitleContainer = tw.div`
   flex
   flex-col
   items-center
-  h-[45%]
+  h-[40%]
   justify-end
   sm:w-1/2
   w-full
@@ -193,10 +193,10 @@ const Subtitle = tw.p`
 `;
 
 const MainWrapper = tw.div`
-  w-3/4
+  w-full
   flex
   flex-col
   items-center
-  h-[55%]
+  h-[60%]
   pb-4
 `;

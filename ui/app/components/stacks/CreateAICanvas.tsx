@@ -56,7 +56,7 @@ const CreateAICanvas: React.FC = () => {
   }, [dataUriImage, imagePrompt]);
 
   return (
-    <div className="flex flex-col items-center justify-center w-full">
+    <div className="flex flex-col items-center justify-center sm:w-5/6 md:w-3/4 lg:w-2/3">
       <input
         type="text"
         onChange={(e) => setImagePrompt(e.target.value)}
