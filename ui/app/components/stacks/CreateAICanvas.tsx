@@ -13,8 +13,20 @@ const CreateAICanvas: React.FC = () => {
   const canvasRef = useRef<ReactSketchCanvasRef>(null);
 
   const saveDrawing = () => {
-    canvasRef.current?.exportImage('png').then((dataUrl) => {
-      setDataUriImage(dataUrl);
+    canvasRef.current?.exportImage('png').then((originalDataUrl) => {
+      const image = new Image();
+      image.onload = () => {
+        const scaleCanvas = document.createElement('canvas');
+        scaleCanvas.width = 512;
+        scaleCanvas.height = 512;
+        const ctx = scaleCanvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(image, 0, 0, 512, 512); // Draw and scale the image to 512x512
+          const scaledDataUrl = scaleCanvas.toDataURL('image/png');
+          setDataUriImage(scaledDataUrl); // This is now the scaled 512x512 image
+        }
+      };
+      image.src = originalDataUrl; // Load the original exported image
     });
   };
 
@@ -44,33 +56,26 @@ const CreateAICanvas: React.FC = () => {
   }, [dataUriImage, imagePrompt]);
 
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center w-full">
       <input
         type="text"
         onChange={(e) => setImagePrompt(e.target.value)}
         value={imagePrompt}
         placeholder="Enter prompt..."
-        className="p-2 pl-4 mb-2 w-3/4 border border-gray-300 rounded-full"
+        className="p-2 pl-4 mb-2 w-full sm:w-3/4 md:w-1/2 border border-gray-300 rounded-full"
       />
-      <div className="flex">
+      <div className="sm:flex h-[90vw] w-[90vw] sm:h-auto sm:w-1/2 lg:[45%] xl:w-2/5 justify-center">
         <ReactSketchCanvas
           ref={canvasRef}
-          className="border"
-          style={{
-            width: '512px',
-            height: '512px',
-          }}
+          className="border aspect-square"
           strokeWidth={4}
           strokeColor="black"
           onChange={saveDrawing}
         />
         <div
+          className="aspect-square bg-cover border-dotted border bg-no-repeat border-l-0"
           style={{
-            width: '512px',
-            height: '512px',
             backgroundImage: `url(${image})`,
-            backgroundSize: 'cover',
-            borderLeft: 'none',
           }}
         />
       </div>

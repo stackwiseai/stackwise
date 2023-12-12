@@ -1,23 +1,24 @@
 export const stackDB = {
-  gbKm2SKi484: {
+  gbKm2SK: {
     name: 'ChatWithOpenAIStreaming',
     description: 'Vercel edge function for OpenAI response streaming.',
   },
   //base 64 like above
-  aEKmWSKi395: {
+  aEKmWSK: {
     name: 'ElevenLabsTTS',
     description: 'Text to Speech using ElevenLabs and Vercel edge functions',
   },
-  fedcba54321: {
+  fedcba5: {
     name: 'GetImageDescriptionOpenAI',
     description: 'TODO',
   },
-  abc12345678: {
+  abc1234: {
     name: 'UseOpenAIAssistant',
     description: 'TODO',
   },
-  cda123456739: {
+  blKfsSK: {
     name: 'CreateAICanvas',
-    description: 'TODO',
+    description:
+      'Real time image rendering using Fal. Draw on the left canvas and add a prompt.',
   },
 };

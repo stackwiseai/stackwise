@@ -12,12 +12,6 @@ import dynamic from 'next/dynamic';
 import { stackDB as initialStackDB } from '../stackDB';
 import ContactStackwise from '@/app/components/ContactStackwise';
 
-const getDynamicComponent = (stackName) =>
-  dynamic(() => import(`@/app/components/stacks/${stackName}`), {
-    ssr: false,
-    loading: () => <div></div>,
-  });
-
 const Chat = ({ params }: { params: { slug: string } }) => {
   const [showFrontendCode, setShowFrontendCode] = useState<boolean>(true);
   const [backendCode, setBackendCode] = useState<string>('');
@@ -55,16 +49,22 @@ const Chat = ({ params }: { params: { slug: string } }) => {
 
   const getPathText = async (path: string) => {
     const response = await fetch(path);
-    const data = await response.text();
-    return data;
-  };
 
-  useEffect(() => {}, []);
+    // Check if the fetch was successful
+    if (response.ok) {
+      // If the response status is 2xx, return the text
+      const data = await response.text();
+      return data;
+    } else {
+      // If the response status is not 2xx, return an empty string
+      return '';
+    }
+  };
 
   return (
     <Container>
       <Link
-        className="cursor-pointer fixed bottom-4 right-4"
+        className="cursor-pointer absolute sm:fixed top-4 sm:top-auto sm:bottom-4 right-4"
         href="https://github.com/stackwiseai/stackwise"
         target="_blank"
       >
@@ -77,7 +77,7 @@ const Chat = ({ params }: { params: { slug: string } }) => {
         </div>
         <Subtitle>{stackDescription}</Subtitle>
       </TitleContainer>
-      <div className="flex items-center space-x-6">
+      <div className="flex items-center justify-center flex-col sm:flex-row space-x-6">
         <button
           onClick={() => {
             setDropdownSelection(
@@ -89,50 +89,63 @@ const Chat = ({ params }: { params: { slug: string } }) => {
           <p>{dropdownSelection === 'Usage' ? 'Code' : 'Usage'}</p>
           {dropdownSelection === 'Usage' ? <FaCode /> : <MdOutlineInput />}
         </button>
-        <ClipboardComponent
-          title={
-            <>
-              Copy <b className="text-black">Frontend</b>
-            </>
-          }
-          code={frontendCode}
-        />
-        <ClipboardComponent
-          title={
-            <>
-              Copy <b className="text-black">Backend</b>
-            </>
-          }
-          code={backendCode}
-        />
+        <div className="flex pr-6 sm:pr-0 space-x-6 sm:mt-0">
+          <ClipboardComponent
+            title={
+              <>
+                Copy{' '}
+                <b className="text-black">
+                  {backendCode ? 'frontend' : 'code'}
+                </b>
+              </>
+            }
+            code={frontendCode}
+          />
+          {backendCode && (
+            <ClipboardComponent
+              title={
+                <>
+                  Copy <b className="text-black">backend</b>
+                </>
+              }
+              code={backendCode}
+            />
+          )}
+        </div>
       </div>
       <MainWrapper>
         {dropdownSelection === 'Code' ? (
           <div className="bg-[#1e1e1e] rounded-md w-full">
-            <div className="text-white flex items-center w-full">
+            <div
+              className={`text-white flex items-center w-full ${
+                !backendCode && 'hidden'
+              }`}
+            >
               <button
                 onClick={() => setShowFrontendCode(true)}
-                className={`border-r border-b p-2 ${
+                className={`text-sm sm:text-base border-r border-b p-2 ${
                   showFrontendCode && 'border-b-red-400 border-b-2'
                 }`}
               >
                 frontend code
               </button>
-              <button
-                onClick={() => setShowFrontendCode(false)}
-                className={`border-r border-b p-2 rounded-br-lg ${
-                  !showFrontendCode && 'border-b-red-400 border-b-2'
-                }`}
-              >
-                backend code
-              </button>
+              {backendCode && (
+                <button
+                  onClick={() => setShowFrontendCode(false)}
+                  className={`text-sm sm:text-base border-r border-b p-2 rounded-br-lg ${
+                    !showFrontendCode && 'border-b-red-400 border-b-2'
+                  }`}
+                >
+                  backend code
+                </button>
+              )}
             </div>
             {/* <pre className="min-h-4 p-3 max-h-96 w-full overflow-auto text-gray-200 text-sm whitespace-pre-wrap break-all">
               {showFrontendCode ? frontendCode : backendCode}
             </pre> */}
             <SyntaxHighlighter
               language="javascript"
-              className="min-h-4 p-3 max-h-96 w-full overflow-auto overflow-y-hidden text-gray-200 text-sm whitespace-pre-wrap break-all"
+              className="min-h-4 p-3 max-h-80 sm:max-h-96 md:max-h-[28rem] w-full overflow-auto overflow-y-hidden text-gray-200 text-sm whitespace-pre-wrap break-all"
               style={vscDarkPlus}
               lineProps={{
                 style: { wordBreak: 'break-all', whiteSpace: 'pre-wrap' },
@@ -159,6 +172,7 @@ const Container = tw.div`
   items-center
   h-screen
   space-y-6
+  pb-32
 `;
 
 const TitleContainer = tw.div`
@@ -168,10 +182,14 @@ const TitleContainer = tw.div`
   items-center
   h-[45%]
   justify-end
-  w-1/2
+  sm:w-1/2
+  w-full
+  px-2
 `;
 const Subtitle = tw.p`
-  text-lg
+  text-base
+  text-center
+  sm:text-lg
 `;
 
 const MainWrapper = tw.div`
