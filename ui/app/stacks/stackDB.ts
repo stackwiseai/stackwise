@@ -16,7 +16,7 @@ export const stackDB = {
     name: 'UseOpenAIAssistant',
     description: 'TODO',
   },
-  cda123456739: {
+  blKmsSKi31a: {
     name: 'CreateAICanvas',
     description:
       'Real time image rendering using Fal. Draw on the left canvas and add a prompt.',
