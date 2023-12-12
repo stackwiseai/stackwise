@@ -10,11 +10,11 @@ export const stackDB = {
   },
   fedcba5: {
     name: 'GetImageDescriptionOpenAI',
-    description: 'TODO',
+    description: 'Description of an image using OpenAI Vision',
   },
   abc1234: {
     name: 'UseOpenAIAssistant',
-    description: 'TODO',
+    description: 'Assistant using OpenAI',
   },
   blKfsSK: {
     name: 'CreateAICanvas',
