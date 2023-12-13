@@ -1,13 +1,5 @@
 import * as fal from '@fal-ai/serverless-client';
 
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: '50mb',
-    },
-  },
-};
-
 fal.config({
   credentials: `${process.env.FAL_KEY_ID}:${process.env.FAL_KEY_SECRET}`,
 });
@@ -15,14 +7,28 @@ fal.config({
 export async function POST(request: Request) {
   let resp = null;
 
-  const { img, mask } = await request.json();
+  const form = await request.formData();
+  const imgFile = form.get('img') as Blob;
+  const maskFile = form.get('mask') as Blob;
+
+  const imgBuffer = Buffer.from(await imgFile.arrayBuffer());
+  const maskBuffer = Buffer.from(await maskFile.arrayBuffer());
+
+  const imgBase64 = imgBuffer.toString('base64');
+  const maskBase64 = maskBuffer.toString('base64');
+
+  // Generate a full URI
+  const imgUri = `data:${imgFile.type};base64,${imgBase64}`;
+  const maskUri = `data:${maskFile.type};base64,${maskBase64}`;
 
   const payload = {
     subscriptionId: '110602490-svd',
     input: {
-      image_url: img,
-      mask_image_url: mask,
-      sync_mode: true,
+      image_url: imgUri,
+      mask_image_url: maskUri,
+      motion_bucket_id: 35,
+      cond_aug: 0.02,
+      steps: 100,
     },
     pollInterval: 500,
     logs: true,

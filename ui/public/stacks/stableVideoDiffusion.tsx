@@ -1,13 +1,13 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 
-const MagicAnimate = () => {
+const StableVideoDiffusion = () => {
   const draftCanvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [lastPosition, setLastPosition] = useState<{
     x: number;
     y: number;
   } | null>(null);
-  const [imgSrc, setImgSrc] = useState<string>('/boat_lake.jpg');
+  const [imgSrc, setImgSrc] = useState<string>('/boat_example.webp');
   const [loading, setLoading] = useState(false);
   const [animatedPicture, setAnimatedPicture] = useState('');
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
@@ -116,7 +116,7 @@ const MagicAnimate = () => {
   };
 
   const handleSubmit = async () => {
-    // reset
+    // Reset and setup code
     if (animatedPicture) {
       setAnimatedPicture('');
       resizeCanvas(imageRef.current);
@@ -124,37 +124,30 @@ const MagicAnimate = () => {
     }
     setLoading(true);
 
-    setAnimatedPicture(imgSrc);
-
-    // Convert the drawing on the main canvas to a PNG data URL
-    const mainCanvasDataURL = draftCanvasRef.current.toDataURL('image/png');
-    // Convert the background image to a data URL
-    const image = imageRef.current;
-
-    const canvas = document.createElement('canvas');
-    canvas.width = image.naturalWidth;
-    canvas.height = image.naturalHeight;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return '';
-
-    ctx.drawImage(image, 0, 0);
-    const backgroundImageDataURL = canvas.toDataURL('image/png');
+    // Convert the drawing on the main canvas to a Blob
+    const mainCanvasBlob = await new Promise((resolve) =>
+      draftCanvasRef.current.toBlob(resolve, 'image/png')
+    );
 
     try {
-      // Call the API
-      const response = await fetch('/api/stableVideoDiffusion', {
+      // Fetch the background image from the imgSrc URL and convert it to a Blob
+      const response = await fetch(imgSrc);
+      const backgroundImageBlob = await response.blob();
+
+      // Prepare FormData
+      const formData = new FormData();
+      formData.append('img', backgroundImageBlob, 'background.png');
+      formData.append('mask', mainCanvasBlob as Blob, 'mask.png');
+
+      // Call the API with FormData
+      const apiResponse = await fetch('/api/StableVideoDiffusion', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          img: backgroundImageDataURL,
-          mask: mainCanvasDataURL,
-        }),
+        body: formData, // FormData is used directly here
       });
 
-      const resultData = await response.json();
+      const resultData = await apiResponse.json();
 
-      if (!response.ok) throw new Error(resultData.error);
+      if (!apiResponse.ok) throw new Error(resultData.error);
 
       // Update state with the returned GIF URL
       setAnimatedPicture(resultData.image.url);
@@ -213,4 +206,4 @@ const MagicAnimate = () => {
   );
 };
 
-export default MagicAnimate;
+export default StableVideoDiffusion;
