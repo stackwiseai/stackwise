@@ -24,14 +24,18 @@ const Content: React.FC = () => {
       <InputWithButton setBrief={setBrief} formAction={createStack} />
       <Brief>{brief ? `"${brief}"` : ''}</Brief>
       <Container>
-        <Inputs
-          state={stackIO.input ? stackIO.input : 'No input'}
-          formAction={functionAction}
-        />
-        <Outputs
-          state={stackIO.output ? stackIO.output : 'No output'}
-          value={outputState}
-        />
+        {stackIO.input && (
+          <>
+            <Inputs
+              state={stackIO.input ? stackIO.input : 'No input'}
+              formAction={functionAction}
+            />
+            <Outputs
+              state={stackIO.output ? stackIO.output : 'No output'}
+              value={outputState}
+            />
+          </>
+        )}
       </Container>
     </>
   );

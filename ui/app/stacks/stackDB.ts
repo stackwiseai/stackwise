@@ -13,7 +13,7 @@ export const stackDB = {
   },
   abc1234: {
     name: 'UseOpenAIAssistant',
-    description: 'Assistant using OpenAI',
+    description: 'OpenAI assistant endpoint.',
   },
   blKfsSK: {
     name: 'CreateAICanvas',
