@@ -126,41 +126,41 @@ const MagicAnimate = () => {
 
     setAnimatedPicture(imgSrc);
 
-    // // Convert the drawing on the main canvas to a PNG data URL
-    // const mainCanvasDataURL = draftCanvasRef.current.toDataURL('image/png');
-    // // Convert the background image to a data URL
-    // const image = imageRef.current;
+    // Convert the drawing on the main canvas to a PNG data URL
+    const mainCanvasDataURL = draftCanvasRef.current.toDataURL('image/png');
+    // Convert the background image to a data URL
+    const image = imageRef.current;
 
-    // const canvas = document.createElement('canvas');
-    // canvas.width = image.naturalWidth;
-    // canvas.height = image.naturalHeight;
+    const canvas = document.createElement('canvas');
+    canvas.width = image.naturalWidth;
+    canvas.height = image.naturalHeight;
 
-    // const ctx = canvas.getContext('2d');
-    // if (!ctx) return '';
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return '';
 
-    // ctx.drawImage(image, 0, 0);
-    // const backgroundImageDataURL = canvas.toDataURL('image/png');
+    ctx.drawImage(image, 0, 0);
+    const backgroundImageDataURL = canvas.toDataURL('image/png');
 
-    // try {
-    //   // Call the API
-    //   const response = await fetch('/api/stableVideoDiffusion', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify({
-    //       img: backgroundImageDataURL,
-    //       mask: mainCanvasDataURL,
-    //     }),
-    //   });
+    try {
+      // Call the API
+      const response = await fetch('/api/stableVideoDiffusion', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          img: backgroundImageDataURL,
+          mask: mainCanvasDataURL,
+        }),
+      });
 
-    //   const resultData = await response.json();
+      const resultData = await response.json();
 
-    //   if (!response.ok) throw new Error(resultData.error);
+      if (!response.ok) throw new Error(resultData.error);
 
-    //   // Update state with the returned GIF URL
-    //   setAnimatedPicture(resultData.image.url);
-    // } catch (error) {
-    //   console.error('Error during API call:', error);
-    // }
+      // Update state with the returned GIF URL
+      setAnimatedPicture(resultData.image.url);
+    } catch (error) {
+      console.error('Error during API call:', error);
+    }
 
     setLoading(false);
   };

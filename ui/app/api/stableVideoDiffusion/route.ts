@@ -1,5 +1,13 @@
 import * as fal from '@fal-ai/serverless-client';
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '50mb',
+    },
+  },
+};
+
 fal.config({
   credentials: `${process.env.FAL_KEY_ID}:${process.env.FAL_KEY_SECRET}`,
 });
