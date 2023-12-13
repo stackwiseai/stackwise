@@ -1,7 +1,4 @@
 import * as fal from '@fal-ai/serverless-client';
-import fs from 'fs-extra';
-
-export const config = { api: { bodyParser: false } };
 
 fal.config({
   credentials: `${process.env.FAL_KEY_ID}:${process.env.FAL_KEY_SECRET}`,
@@ -29,7 +26,7 @@ export async function POST(request: Request) {
     input: {
       image_url: imgUri,
       mask_image_url: maskUri,
-      motion_bucket_id: 15,
+      motion_bucket_id: 25,
       cond_aug: 0.02,
       steps: 100,
     },
