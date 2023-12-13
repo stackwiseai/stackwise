@@ -115,7 +115,7 @@ const Chat = ({ params }: { params: { slug: string } }) => {
       </div>
       <MainWrapper>
         {dropdownSelection === 'Code' ? (
-          <div className="bg-[#1e1e1e] rounded-md w-full">
+          <div className="bg-[#1e1e1e] rounded-md w-3/4 md:w-1/2">
             <div
               className={`text-white flex items-center w-full ${
                 !backendCode && 'hidden'
