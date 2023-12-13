@@ -140,7 +140,7 @@ const StableVideoDiffusion = () => {
       formData.append('mask', mainCanvasBlob as Blob, 'mask.png');
 
       // Call the API with FormData
-      const apiResponse = await fetch('/api/stableVideoDiffusion', {
+      const apiResponse = await fetch('/api/StableVideoDiffusion', {
         method: 'POST',
         body: formData, // FormData is used directly here
       });
