@@ -47,4 +47,9 @@ export const stackDB: Record<string, StackDescription> = {
     description: 'Chat with Gemini',
     tags: ['published'],
   },
+  'rag-pdf-with-langchain': {
+    name: 'RAG PDF with Langchain',
+    description: `Ask questions about any PDF using Langchain's ConversationalRetrievalQAChain (RAG).`,
+    tags: [],
+  },
 };
