@@ -116,47 +116,51 @@ const MagicAnimate = () => {
   };
 
   const handleSubmit = async () => {
+    // reset
     if (animatedPicture) {
       setAnimatedPicture('');
+      resizeCanvas(imageRef.current);
       return;
     }
     setLoading(true);
 
-    // Convert the drawing on the main canvas to a PNG data URL
-    const mainCanvasDataURL = draftCanvasRef.current.toDataURL('image/png');
-    // Convert the background image to a data URL
-    const image = imageRef.current;
+    setAnimatedPicture(imgSrc);
 
-    const canvas = document.createElement('canvas');
-    canvas.width = image.naturalWidth;
-    canvas.height = image.naturalHeight;
+    // // Convert the drawing on the main canvas to a PNG data URL
+    // const mainCanvasDataURL = draftCanvasRef.current.toDataURL('image/png');
+    // // Convert the background image to a data URL
+    // const image = imageRef.current;
 
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return '';
+    // const canvas = document.createElement('canvas');
+    // canvas.width = image.naturalWidth;
+    // canvas.height = image.naturalHeight;
 
-    ctx.drawImage(image, 0, 0);
-    const backgroundImageDataURL = canvas.toDataURL('image/png');
+    // const ctx = canvas.getContext('2d');
+    // if (!ctx) return '';
 
-    try {
-      // Call the API
-      const response = await fetch('/api/stableVideoDiffusion', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          img: backgroundImageDataURL,
-          mask: mainCanvasDataURL,
-        }),
-      });
+    // ctx.drawImage(image, 0, 0);
+    // const backgroundImageDataURL = canvas.toDataURL('image/png');
 
-      const resultData = await response.json();
+    // try {
+    //   // Call the API
+    //   const response = await fetch('/api/stableVideoDiffusion', {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify({
+    //       img: backgroundImageDataURL,
+    //       mask: mainCanvasDataURL,
+    //     }),
+    //   });
 
-      if (!response.ok) throw new Error(resultData.error);
+    //   const resultData = await response.json();
 
-      // Update state with the returned GIF URL
-      setAnimatedPicture(resultData.image.url);
-    } catch (error) {
-      console.error('Error during API call:', error);
-    }
+    //   if (!response.ok) throw new Error(resultData.error);
+
+    //   // Update state with the returned GIF URL
+    //   setAnimatedPicture(resultData.image.url);
+    // } catch (error) {
+    //   console.error('Error during API call:', error);
+    // }
 
     setLoading(false);
   };
@@ -181,15 +185,15 @@ const MagicAnimate = () => {
           src={animatedPicture ? animatedPicture : imgSrc}
           alt="Animated image"
         />
-        {!animatedPicture && (
-          <canvas
-            ref={draftCanvasRef}
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-[65%]"
-            onMouseDown={handleMouseDown}
-            onMouseUp={handleMouseUp}
-            onMouseMove={handleMouseMove}
-          />
-        )}
+        <canvas
+          ref={draftCanvasRef}
+          className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-[65%] ${
+            animatedPicture && 'hidden'
+          }`}
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
+          onMouseMove={handleMouseMove}
+        />
       </div>
 
       <button
