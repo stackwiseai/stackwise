@@ -26,7 +26,7 @@ export async function POST(request: Request) {
     input: {
       image_url: imgUri,
       mask_image_url: maskUri,
-      motion_bucket_id: 25,
+      motion_bucket_id: 35,
       cond_aug: 0.02,
       steps: 100,
     },

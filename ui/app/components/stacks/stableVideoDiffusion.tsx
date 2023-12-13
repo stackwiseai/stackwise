@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 
-const MagicAnimate = () => {
+const StableVideoDiffusion = () => {
   const draftCanvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [lastPosition, setLastPosition] = useState<{
@@ -206,4 +206,4 @@ const MagicAnimate = () => {
   );
 };
 
-export default MagicAnimate;
+export default StableVideoDiffusion;
