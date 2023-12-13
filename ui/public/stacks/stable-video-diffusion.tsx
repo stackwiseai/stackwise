@@ -155,7 +155,7 @@ const StableVideoDiffusion = () => {
       formData.append('degreeOfMotion', ensureMotion.toString());
 
       // Call the API with FormData
-      const apiResponse = await fetch('/api/StableVideoDiffusion', {
+      const apiResponse = await fetch('/api/stable-video-diffusion', {
         method: 'POST',
         body: formData, // FormData is used directly here
       });

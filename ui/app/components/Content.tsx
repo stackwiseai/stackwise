@@ -1,13 +1,13 @@
 'use client';
 import { useState } from 'react';
 import tw from 'tailwind-styled-components';
-import InputWithButton from './InputWithButton';
+import InputWithButton from './input-with-button';
 import { parseFormData } from '../actions';
 import { useFormState } from 'react-dom';
 import { callStack } from '../actions';
 
 import Inputs from './Inputs';
-import Outputs from './Outputs';
+import Outputs from './outputs';
 
 const Content: React.FC = () => {
   const [outputState, functionAction] = useFormState(parseFormData, null);

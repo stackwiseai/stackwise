@@ -1,8 +1,8 @@
 'use server';
 import tw from 'tailwind-styled-components';
 import Link from 'next/link';
-import { stackDB } from './stackDB';
-import MainContent from '../components/MainContent';
+import { stackDB } from './stack-db';
+import MainContent from '../components/main-content';
 
 export default async function Component() {
   return (
@@ -16,7 +16,7 @@ export default async function Component() {
               <StackCard>
                 <StackCardTitle>{stack.name}</StackCardTitle>
                 <StackCardImage
-                  src={`/stack_pictures/${stack.name}.png`}
+                  src={`/stack-pictures/${stack.name}.png`}
                   alt="Stack Image"
                 />
                 <StackCardDescription>

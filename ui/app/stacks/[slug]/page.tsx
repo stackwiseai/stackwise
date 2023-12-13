@@ -9,10 +9,10 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { MdOutlineInput } from 'react-icons/md';
 import dynamic from 'next/dynamic';
-import { stackDB as initialStackDB } from '../stackDB';
-import ContactStackwise from '@/app/components/ContactStackwise';
+import { stackDB as initialStackDB } from '../stack-db';
+import ContactStackwise from '@/app/components/contact-stackwise';
 import { useSearchParams } from 'next/navigation';
-import { ChatWithStack } from './Chat';
+import { ChatWithStack } from './chat';
 
 const Chat = ({ params }: { params: { slug: string } }) => {
   const searchParams = useSearchParams();

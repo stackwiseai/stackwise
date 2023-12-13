@@ -49,7 +49,7 @@ export const ChatWithStack = () => {
 
   const postGeneratedFileContents = async (fileContent) => {
     try {
-      const response = await fetch('/api/ModifyFrontendComponent', {
+      const response = await fetch('/api/modify-frontend-component', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ export const ChatWithStack = () => {
       const responseData = await response.json(); // Assuming the response is JSON
       setStackResponse(responseData);
     } catch (error) {
-      console.error('Error in POST /api/ModifyFrontendComponent:', error);
+      console.error('Error in POST /api/modify-frontend-component:', error);
     }
   };
 
@@ -76,7 +76,7 @@ export const ChatWithStack = () => {
       setLoading(true);
 
       try {
-        const response = await fetch('/api/SuggestFrontendComponent', {
+        const response = await fetch('/api/suggest-frontend-component', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
