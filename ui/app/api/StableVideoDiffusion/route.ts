@@ -4,6 +4,8 @@ fal.config({
   credentials: `${process.env.FAL_KEY_ID}:${process.env.FAL_KEY_SECRET}`,
 });
 
+export const maxDuration = 360;
+
 export async function POST(request: Request) {
   let resp = null;
 
