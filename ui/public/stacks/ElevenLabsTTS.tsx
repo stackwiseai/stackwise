@@ -1,6 +1,7 @@
 'use client';
 import ClipboardComponent from '@/app/components/clipboard';
 import React, { useState } from 'react';
+import { IoSend } from 'react-icons/io5';
 
 // Chat component
 const Chat = () => {
@@ -18,15 +19,15 @@ const Chat = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen justify-center items-center bg-gray-100">
-      <div className="w-full max-w-xs mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-        <form onSubmit={handleSubmit} className="flex flex-col">
+    <div className="w-3/4 md:w-1/2">
+      <form onSubmit={handleSubmit} className="flex flex-col">
+        <div className="relative w-full">
           <input
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            placeholder="Type here..."
-            className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            placeholder="Ask anything..."
+            className="rounded-full w-full py-2 pl-4 pr-10 border border-gray-400 focus:outline-none focus:shadow-outline"
             onKeyDown={(e) => {
               if (e.key === 'Enter')
                 handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
@@ -34,28 +35,15 @@ const Chat = () => {
           />
           <button
             type="submit"
-            className={`mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${
+            className={`cursor-pointer absolute right-0 top-0 rounded-r-full h-full text-black font-bold px-4 focus:outline-none focus:shadow-outline ${
               loading ? 'opacity-50 cursor-not-allowed' : ''
             }`}
             disabled={loading}
           >
-            Submit
+            <IoSend />
           </button>
-          {loading && (
-            <span className="text-sm text-gray-500 mt-2">
-              Might take a minute or 2 ...{' '}
-            </span>
-          )}
-          {/* {loading && LoadingComponent()} */}
-          <div className="mt-4">{generatedFileContents}</div>
-        </form>
-      </div>
-      <>
-        <span className="text-sm text-gray-500 mt-2">Copy FrontEnd</span>
-        <ClipboardComponent code="/stacks/chatWithOpenAIStreaming/frontend.txt" />
-        <span className="text-sm text-gray-500 mt-2">Copy Backend</span>
-        <ClipboardComponent code="/stacks/chatWithOpenAIStreaming/backend.txt" />
-      </>
+        </div>
+      </form>
     </div>
   );
 };
