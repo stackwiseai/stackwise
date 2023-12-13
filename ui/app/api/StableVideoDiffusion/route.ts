@@ -12,6 +12,7 @@ export async function POST(request: Request) {
   const form = await request.formData();
   const imgFile = form.get('img') as Blob;
   const maskFile = form.get('mask') as Blob;
+  const degreeOfMotion = form.get('degreeOfMotion') as string;
 
   const imgBuffer = Buffer.from(await imgFile.arrayBuffer());
   const maskBuffer = Buffer.from(await maskFile.arrayBuffer());
@@ -28,7 +29,7 @@ export async function POST(request: Request) {
     input: {
       image_url: imgUri,
       mask_image_url: maskUri,
-      motion_bucket_id: 35,
+      motion_bucket_id: Number(degreeOfMotion),
       cond_aug: 0.02,
       steps: 100,
     },

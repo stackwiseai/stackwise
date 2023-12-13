@@ -9,6 +9,7 @@ const StableVideoDiffusion = () => {
   } | null>(null);
   const [imgSrc, setImgSrc] = useState<string>('/boat_example.webp');
   const [loading, setLoading] = useState(false);
+  const [degreeOfMotion, setDegreeOfMotion] = useState(40);
   const [animatedPicture, setAnimatedPicture] = useState('');
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
   const imageRef = useRef(new Image());
@@ -80,6 +81,9 @@ const StableVideoDiffusion = () => {
   }, []);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (animatedPicture) {
+      setAnimatedPicture('');
+    }
     if (e.target.files && e.target.files[0]) {
       const newImgSrc = URL.createObjectURL(e.target.files[0]);
       setImgSrc(newImgSrc); // Update the imgSrc state
@@ -88,6 +92,15 @@ const StableVideoDiffusion = () => {
       image.onload = () => resizeCanvas(image); // Use the ref's current image for resizing
       image.src = newImgSrc; // Update the image source in the ref
     }
+  };
+
+  const handleDegreeOfMotionChange = (e) => {
+    let value = parseInt(e.target.value, 10);
+    // Ensure the value is between 1 and 255
+    if (!isNaN(value)) {
+      value = Math.max(1, Math.min(255, value));
+    }
+    setDegreeOfMotion(value);
   };
 
   const resizeCanvas = (img) => {
@@ -138,6 +151,8 @@ const StableVideoDiffusion = () => {
       const formData = new FormData();
       formData.append('img', backgroundImageBlob, 'background.png');
       formData.append('mask', mainCanvasBlob as Blob, 'mask.png');
+      const ensureMotion = isNaN(degreeOfMotion) ? 40 : degreeOfMotion;
+      formData.append('degreeOfMotion', ensureMotion.toString());
 
       // Call the API with FormData
       const apiResponse = await fetch('/api/StableVideoDiffusion', {
@@ -160,13 +175,25 @@ const StableVideoDiffusion = () => {
 
   return (
     <div className="w-5/6 h-[125%] md:w-3/4 space-y-4 flex flex-col items-center">
-      <input
-        type="file"
-        accept="image/*"
-        onChange={handleImageUpload}
-        className="w-24 md:w-auto pt-1 pb-2 cursor-pointer border-dashed border-2 rounded-md file:border-0 file:bg-transparent file:text-sm file:font-semibold"
-      />
-
+      <div className="sm:flex items-center">
+        <input
+          type="file"
+          accept="image/*"
+          disabled={loading}
+          onChange={handleImageUpload}
+          className="w-24 md:w-auto py-1 mr-2 cursor-pointer border-dashed border-2 rounded-md file:border-0 file:bg-transparent file:text-sm file:font-semibold"
+        />
+        <label className="mr-1">Motion level (1-255):</label>
+        <input
+          placeholder="Enter motion..."
+          max={255}
+          min={1}
+          value={degreeOfMotion}
+          onChange={handleDegreeOfMotionChange}
+          type="number"
+          className="border px-1 py-1 rounded-md w-20"
+        />
+      </div>
       <div
         className={`flex relative w-full h-full canvas-img ${
           loading && 'blur pointer-events-none'
