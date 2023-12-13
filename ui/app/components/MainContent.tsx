@@ -1,8 +1,8 @@
 'use server';
 import tw from 'tailwind-styled-components';
-import Content from './components/Content';
+import Content from './Content';
 
-export default async function Home() {
+export default async function MainContent() {
   return (
     <Container>
       <TitleContainer>
@@ -19,9 +19,8 @@ export default async function Home() {
 const Container = tw.div`
   flex
   flex-col
-  justify-center
-  items-center
-  h-screen
+  justify-end
+  h-1/2
 `;
 
 const TitleContainer = tw.div`

@@ -1,5 +1,6 @@
 'use client';
 import tw from 'tailwind-styled-components';
+import { IoSend } from 'react-icons/io5';
 
 import { useFormStatus } from 'react-dom';
 
@@ -7,8 +8,14 @@ const SubmitButton = () => {
   const { pending } = useFormStatus();
 
   return (
-    <button type="submit" disabled={pending}>
-      Submit
+    <button
+      disabled={pending}
+      type="submit"
+      className={`cursor-pointer absolute right-0 top-0 rounded-r-full h-full text-black font-bold px-4 focus:outline-none focus:shadow-outline ${
+        pending ? 'opacity-50 cursor-not-allowed' : ''
+      }`}
+    >
+      <IoSend />
     </button>
   );
 };
@@ -38,19 +45,17 @@ const InputWithButton: React.FC<InputWithButtonProps> = ({
 
   return (
     <FormWrapper>
-      <Form
-        className="common-styled"
-        onSubmit={handleSubmit}
-        action={formAction}
-      >
-        <input
-          className="mr-4"
-          placeholder="Enter something..."
-          type="text"
-          name="stack"
-          required
-        />
-        <SubmitButton />
+      <Form onSubmit={handleSubmit} action={formAction}>
+        <div className="relative w-1/2">
+          <input
+            placeholder="Enter something..."
+            type="text"
+            name="stack"
+            className="rounded-full w-full py-2 pl-4 pr-10 border border-gray-400 focus:outline-none focus:shadow-outline"
+            required
+          />
+          <SubmitButton />
+        </div>
       </Form>
       <LuckyButton style={rainbowText}>i'm feeling lucky</LuckyButton>
     </FormWrapper>
@@ -58,7 +63,6 @@ const InputWithButton: React.FC<InputWithButtonProps> = ({
 };
 const FormWrapper = tw.div`
   w-1/2
-  mb-32
   flex
   flex-col
   items-center
@@ -67,6 +71,7 @@ const FormWrapper = tw.div`
 const Form = tw.form`
   flex
   items-center
+  justify-center
   w-full
   mb-2
 `;
