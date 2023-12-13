@@ -16,7 +16,16 @@ export default function Chat() {
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      setImage(URL.createObjectURL(file)); // Create a URL for the uploaded file
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result === 'string') {
+          setImage(reader.result);
+        } else {
+          // Handle the case where the result is not a string
+          console.error('File could not be converted to base64 string');
+        }
+      };
+      reader.readAsDataURL(file);
     }
   };
 
