@@ -14,9 +14,7 @@ const openai = new OpenAI({
   },
 });
 
-export const config = {
-  runtime: 'edge',
-};
+export const runtime = 'edge';
 
 export async function POST(req: Request) {
   // if (req.method !== 'POST') {
