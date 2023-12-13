@@ -5,8 +5,9 @@
 [![GitHub Repo stars](https://img.shields.io/github/stars/stackwiseai/stackwise?style=social)](https://github.com/stackwiseai/stackwise/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-### [Visit the stackwise collection](https://stackwise.ai/stacks)
+### [Visit the Stackwise collection](https://stackwise.ai/stacks)
 
+![Stackwise stacks collections](stacks_homepage.png)
 
 ### Roadmap
 

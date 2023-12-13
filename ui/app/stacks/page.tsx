@@ -32,7 +32,7 @@ export default async function Component() {
 }
 
 const StacksContainer = tw.div`
-  mt-32 pb-8 mx-auto w-3/4
+  mt-16 pb-8 mx-auto w-3/4
 `;
 const StackTitle = tw.h1`
   text-xl font-medium

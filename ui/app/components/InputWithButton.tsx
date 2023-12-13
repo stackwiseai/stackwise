@@ -1,6 +1,8 @@
 'use client';
 import tw from 'tailwind-styled-components';
 import { IoSend } from 'react-icons/io5';
+import { stackDB } from '../stacks/stackDB';
+import { useRouter } from 'next/navigation';
 
 import { useFormStatus } from 'react-dom';
 
@@ -29,6 +31,8 @@ const InputWithButton: React.FC<InputWithButtonProps> = ({
   setBrief,
   formAction,
 }) => {
+  const router = useRouter();
+
   const handleSubmit = (e) => {
     const inputValue = e.target.elements.stack.value;
     setBrief(inputValue);
@@ -43,12 +47,20 @@ const InputWithButton: React.FC<InputWithButtonProps> = ({
     WebkitTextFillColor: 'transparent',
   };
 
+  const handleLuckyClick = () => {
+    const stackEntries = Object.entries(stackDB);
+    const randomEntry =
+      stackEntries[Math.floor(Math.random() * stackEntries.length)];
+    const randomStackId = randomEntry[0];
+    router.push(`/stacks/${randomStackId}`);
+  };
+
   return (
     <FormWrapper>
       <Form onSubmit={handleSubmit} action={formAction}>
         <div className="relative w-1/2">
           <input
-            placeholder="Enter something..."
+            placeholder="I want an api that..."
             type="text"
             name="stack"
             className="rounded-full w-full py-2 pl-4 pr-10 border border-gray-400 focus:outline-none focus:shadow-outline"
@@ -57,7 +69,9 @@ const InputWithButton: React.FC<InputWithButtonProps> = ({
           <SubmitButton />
         </div>
       </Form>
-      <LuckyButton style={rainbowText}>i'm feeling lucky</LuckyButton>
+      <LuckyButton onClick={handleLuckyClick} style={rainbowText}>
+        i'm feeling lucky
+      </LuckyButton>
     </FormWrapper>
   );
 };

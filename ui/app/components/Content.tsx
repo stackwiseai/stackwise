@@ -17,7 +17,7 @@ const Content: React.FC = () => {
   });
   const [brief, setBrief] = useState<string>('');
 
-  console.log('outputState, stackIO', outputState, stackIO);
+  console.log('stackIO', stackIO);
 
   return (
     <>
@@ -37,6 +37,7 @@ const Content: React.FC = () => {
           </>
         )}
       </Container>
+      {stackIO.input && <DeployButton>Deploy</DeployButton>}
     </>
   );
 };
@@ -54,6 +55,16 @@ const Container = tw.div`
   items-center
   w-2/3
   space-x-6
+`;
+
+const DeployButton = tw.button`
+  text-white
+  bg-black
+  font-bold
+  py-3
+  px-6
+  rounded
+  mt-4
 `;
 
 export default Content;

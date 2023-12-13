@@ -20,7 +20,8 @@ const Container = tw.div`
   flex
   flex-col
   justify-end
-  h-1/2
+  pt-60
+  pb-20
 `;
 
 const TitleContainer = tw.div`
