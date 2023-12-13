@@ -2,7 +2,11 @@
 import { NextPage } from 'next';
 
 const HelloWorld: NextPage = () => {
-  return <h1>Hello, World!</h1>;
+  return (
+    <div>
+      <h1>Hello World</h1>
+    </div>
+  );
 };
 
 export default HelloWorld;
