@@ -12,8 +12,6 @@ export default async function Component() {
     return statusesToDisplay.some((status) => stack.tags.includes(status));
   });
 
-  console.log('filteredStacks', filteredStacks);
-
   const sortStacks = (
     a: [string, StackDescription],
     b: [string, StackDescription]
@@ -59,7 +57,14 @@ export default async function Component() {
           {Object.entries(sortedStacks).map(([id, stack], i) => (
             <Link key={i} className="cursor-pointer" href={`/stacks/${id}`}>
               <StackCard>
-                <StackCardTitle>{stack.name}</StackCardTitle>
+                <div className="flex items-center justify-between">
+                  <StackCardTitle>{stack.name}</StackCardTitle>
+                  <div>
+                    {stack.tags.includes('starred') && (
+                      <FaStar className="w-4 h-4 text-yellow-300" />
+                    )}
+                  </div>
+                </div>
                 <StackCardImage
                   src={`/stack-pictures/${id}.png`}
                   alt="Stack Image"
@@ -99,6 +104,7 @@ const StackCard = tw.div`
 const StackCardTitle = tw.h2`
   font-medium
   line-clamp-1
+  overflow-hidden
 `;
 
 const StackCardImage = tw.img`
@@ -108,5 +114,4 @@ const StackCardImage = tw.img`
 const StackCardDescription = tw.div`
   line-clamp-2
   h-12
-  overflow-hidden
 `;
