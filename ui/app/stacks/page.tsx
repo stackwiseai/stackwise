@@ -4,23 +4,17 @@ import Link from 'next/link';
 import { stackDB } from './stack-db';
 import MainContent from '../components/main-content';
 import { IoLogoGithub } from 'react-icons/io';
+import { FaStar } from 'react-icons/fa';
 
 export default async function Component() {
   return (
-    <div className="p-4 h-screen">
-      <Link
-        className="cursor-pointer absolute sm:fixed top-4 sm:top-auto right-4"
-        href="https://github.com/stackwiseai/stackwise"
-        target="_blank"
-      >
-        <IoLogoGithub className="w-8 h-8" />
-      </Link>
-      <Link
-        className="cursor-pointer absolute sm:fixed top-4 sm:top-auto ;eft-4"
-        href="https://github.com/stackwiseai/stackwise"
-        target="_blank"
-      >
-        <img className="w-32" src="/stackwise_logo.png" />
+    <div className="h-screen">
+      <Link href="https://github.com/stackwiseai/stackwise" target="_blank">
+        <div className="cursor-pointer h-12 flex justify-center items-center text-white bg-black">
+          <FaStar className="w-6 h-6 " />
+          <p className="mx-2">Star us on Github</p>
+          <IoLogoGithub className="w-6 h-6" />
+        </div>
       </Link>
       <MainContent />
       <StacksContainer>
