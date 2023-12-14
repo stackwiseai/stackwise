@@ -1,21 +1,24 @@
 'use client';
-import { useEffect, useMemo, useState } from 'react';
-import ClipboardComponent from '@/app/components/clipboard';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import tw from 'tailwind-styled-components';
-import Link from 'next/link';
 import { FaCode } from 'react-icons/fa6';
 import { IoLogoGithub } from 'react-icons/io';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { MdOutlineInput } from 'react-icons/md';
 import dynamic from 'next/dynamic';
 import { StackDescription, stackDB as initialStackDB } from '../stack-db';
 import { useSearchParams } from 'next/navigation';
-import { ChatWithStack } from './chat';
+
+// Lazy load ClipboardComponent
+const ClipboardComponent = lazy(() => import('@/app/components/clipboard'));
+const Link = lazy(() => import('next/link'));
+const SyntaxHighlighter = lazy(() => import('react-syntax-highlighter'));
+const vscDarkPlus = lazy(() => import('react-syntax-highlighter/dist/cjs/styles/prism/vsc-dark-plus'));
+const MdOutlineInput = lazy(() => import('react-icons/md').then((module) => ({ default: module.MdOutlineInput })));
+const ChatWithStack = lazy(() => import('./chat').then((module) => ({ default: module.ChatWithStack })));
 
 type StackDescriptionWithSlug = {
   slug: string;
 } & StackDescription;
+
 const Chat = ({ params }: { params: { slug: string } }) => {
   const searchParams = useSearchParams();
 
