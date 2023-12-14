@@ -62,6 +62,11 @@ export const stackDB: Record<string, StackDescription> = {
     description: 'Chat with Gemini Using Streaming',
     tags: ['published'],
   },
+  'instant-video-to-image': {
+    name: 'Instant Video To Image',
+    description: 'Instant video to image using Fal.',
+    tags: ['published'],
+  },
 };
 
 export const statusesToDisplay = ['verified', 'published'];
