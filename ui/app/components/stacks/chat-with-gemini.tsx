@@ -14,7 +14,7 @@ export const ChatWithOpenAIStreaming = () => {
       setLoading(true);
 
       try {
-        const response = await fetch('/api/basic-gemini-vision', {
+        const response = await fetch('/api/chat-with-gemini', {
           method: 'GET',
         });
         const data = await response.body;
