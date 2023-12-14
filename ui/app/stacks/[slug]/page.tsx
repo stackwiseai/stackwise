@@ -9,10 +9,13 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { MdOutlineInput } from 'react-icons/md';
 import dynamic from 'next/dynamic';
-import { stackDB as initialStackDB } from '../stack-db';
+import { StackDescription, stackDB as initialStackDB } from '../stack-db';
 import { useSearchParams } from 'next/navigation';
 import { ChatWithStack } from './chat';
 
+type StackDescriptionWithSlug = {
+  slug: string;
+} & StackDescription;
 const Chat = ({ params }: { params: { slug: string } }) => {
   const searchParams = useSearchParams();
 
@@ -21,28 +24,27 @@ const Chat = ({ params }: { params: { slug: string } }) => {
   const [backendCode, setBackendCode] = useState<string>('');
   const [frontendCode, setFrontendCode] = useState<string>('');
   const [dropdownSelection, setDropdownSelection] = useState<string>('Usage');
-  const [stackName, setStackName] = useState(null);
-  const [stackDescription, setStackDescription] = useState('');
+  const [stack, setStack] = useState<StackDescriptionWithSlug | null>(null);
 
   useEffect(() => {
-    const stackUuid = params.slug ?? null;
-    if (!stackUuid) return;
+    const stackSlug = params.slug ?? null;
+    if (!stackSlug) return;
 
-    console.log('stackUuid', stackUuid);
-    const stackInfo = initialStackDB[stackUuid] || null;
-    if (stackInfo) {
-      console.log('stackInfo', stackInfo);
-      setStackName(stackInfo.name);
-      setStackDescription(stackInfo.description);
-      const frontendPath = `/stacks/${stackInfo}.tsx`;
-      const backendPath = `/stacks/${stackInfo}/route.ts`;
+    console.log('stackSlug', stackSlug);
+    const initialStack = initialStackDB[stackSlug] || null;
+    const stack = { slug: stackSlug, ...initialStack };
+    if (stack) {
+      console.log('stackInfo', stack);
+      setStack(stack);
+      const frontendPath = `/stacks/${stack.slug}.tsx`;
+      const backendPath = `/stacks/${stack.slug}/route.ts`;
       getPathText(frontendPath).then((data) => setFrontendCode(data));
       getPathText(backendPath).then((data) => setBackendCode(data));
     }
   }, [params.slug]);
 
   const DynamicComponent = dynamic(
-    () => import(`@/app/components/stacks/${stackName}`),
+    () => import(`@/app/components/stacks/${stack.slug}`),
     {
       ssr: false,
       loading: () => {
@@ -79,7 +81,7 @@ const Chat = ({ params }: { params: { slug: string } }) => {
           <div className="w-full mb-4 flex justify-center">
             <img className="w-32" src="/stackwise_logo.png" />
           </div>
-          <Subtitle>{stackDescription}</Subtitle>
+          <Subtitle>{stack?.description}</Subtitle>
         </TitleContainer>
         <div className="flex items-center justify-center flex-col sm:flex-row space-x-6">
           <button
