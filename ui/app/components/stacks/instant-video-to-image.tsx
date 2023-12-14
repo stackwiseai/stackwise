@@ -108,11 +108,11 @@ const InstantVideoToImage: React.FC = () => {
   }, [videoImage, imagePrompt, strength]);
 
   const handleStrengthChange = (e) => {
-    const input = parseInt(e.target.value, 10);
-    if (!isNaN(input)) {
-      const clampedInput = Math.max(range[0], Math.min(range[1], input));
-      setStrength(clampedInput);
+    let value = parseInt(e.target.value, 10);
+    if (!isNaN(value)) {
+      value = Math.max(range[0], Math.min(range[1], value));
     }
+    setStrength(value);
   };
 
   return (
@@ -129,7 +129,6 @@ const InstantVideoToImage: React.FC = () => {
           Strength ({range[0]}-{range[1]}):
         </label>
         <input
-          placeholder="Strength..."
           max={range[1]}
           min={range[0]}
           value={strength}
