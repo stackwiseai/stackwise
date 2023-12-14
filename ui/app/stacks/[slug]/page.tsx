@@ -76,7 +76,6 @@ const Chat = ({ params }: { params: { slug: string } }) => {
         >
           <IoLogoGithub className="w-8 h-8" />
         </Link>
-        <ContactStackwise />
         <TitleContainer>
           <div className="w-full mb-4 flex justify-center">
             <img className="w-32" src="/stackwise_logo.png" />
