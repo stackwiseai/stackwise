@@ -8,9 +8,11 @@ fal.config({
 const InstantVideoToImage: React.FC = () => {
   const [image, setImage] = useState<string>('');
   const [videoImage, setVideoImage] = useState<string>('');
-  const [imagePrompt, setImagePrompt] = useState<string>('');
+  const [imagePrompt, setImagePrompt] = useState<string>(
+    'dwayne the rock johnson'
+  );
   const [videoHeight, setVideoHeight] = useState(0);
-  const [strength, setStrength] = useState<number>(4);
+  const [strength, setStrength] = useState<number>(8);
   const videoRef = useRef<HTMLVideoElement>(null);
   const intervalRef = useRef<NodeJS.Timeout>();
 
@@ -56,7 +58,7 @@ const InstantVideoToImage: React.FC = () => {
         console.error('Error accessing the camera: ', error);
       });
 
-    intervalRef.current = setInterval(captureImage, 25); // Capture image every 0.1 seconds
+    intervalRef.current = setInterval(captureImage, 75); // Capture image every 0.1 seconds
 
     const timeoutRef = setTimeout(() => {
       clearInterval(intervalRef.current);
@@ -82,7 +84,7 @@ const InstantVideoToImage: React.FC = () => {
   const connection = fal.realtime.connect('110602490-lcm-sd15-i2i', {
     connectionKey: 'fal-realtime-example',
     clientOnly: false,
-    throttleInterval: 25,
+    throttleInterval: 75,
     onResult: (result) => {
       if (result.images && result.images[0]) {
         setImage(result.images[0].url);
