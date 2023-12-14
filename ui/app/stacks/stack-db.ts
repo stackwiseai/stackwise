@@ -1,40 +1,34 @@
 export const stackDB = {
-  gbKm2SK: {
-    name: 'ChatWithOpenAIStreaming',
+  'openai-chat-with-openai-streaming': {
+    name: 'Chat With OpenAI Streaming',
     description: 'Vercel edge function for OpenAI response streaming.',
   },
-  aEKmWSK: {
-    name: 'ElevenLabsTTS',
+  'elevenlabs-text-to-speech': {
+    name: 'Text to Speech using ElevenLabs',
     description: 'Text to Speech using ElevenLabs and Vercel edge functions',
   },
-  fedcba5: {
-    name: 'GetImageDescriptionOpenAI',
+  'get-image-description-openai': {
+    name: 'Get Image Description OpenAI',
     description: 'Description of an image using OpenAI Vision',
   },
-  abc1234: {
-    name: 'UseOpenAIAssistant',
+  'use-openai-assistant': {
+    name: 'Use OpenAI Assistant',
     description: 'OpenAI assistant endpoint.',
   },
-  blKfsSK: {
-    name: 'CreateAICanvas',
-    description:
-      'Real time image rendering using Fal. Draw on the left canvas and add a prompt.',
+  'create-ai-canvas': {
+    name: 'Create AI Canvas',
+    description: 'Real time image rendering using Fal. Draw on the left canvas and add a prompt.',
   },
-  ayQfLSQ: {
-    name: 'ChatWithOpenAIStreamingHelicone',
-    description:
-      'Vercel edge function for OpenAI response streaming with Helicone',
+  'openai-chat-with-openai-streaming-helicone': {
+    name: 'Chat With OpenAI Streaming Helicone',
+    description: 'Vercel edge function for OpenAI response streaming with Helicone',
   },
-  e4w5Wrc: {
-    name: 'StableVideoDiffusion',
+  'stable-video-diffusion': {
+    name: 'Stable Video Diffusion',
     description: 'Animate image backgrounds using Fal.',
   },
-  // f2w5Orq: {
-  //   name: 'BasicGeminiVision',
-  //   description: 'TODO',
-  // },
-  // a5E5Pxq: {
-  //   name: 'GetRoasted',
-  //   description: 'Upload an image and get roasted.',
-  // },
+  'basic-gemini-vision': {
+    name: 'Basic Gemini Vision',
+    description: 'TODO',
+  },
 };
