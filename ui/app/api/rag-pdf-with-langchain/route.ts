@@ -5,12 +5,12 @@ import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { BufferMemory, ChatMessageHistory } from 'langchain/memory';
 import { ConversationalRetrievalQAChain } from 'langchain/chains';
-import { ScoreThresholdRetriever } from 'langchain/retrievers/score_threshold';
 import { AIMessage, BaseMessage, HumanMessage } from 'langchain/schema';
 
 export const runtime = 'nodejs';
 
-export const chatHistoryDelimiter = `||~||`;
+const chatHistoryDelimiter = `||~||`;
+
 // Function to create a HumanMessage or AIMessage based on the prefix
 const createMessage = (text: string): BaseMessage => {
   if (text.startsWith('Q: ')) {
