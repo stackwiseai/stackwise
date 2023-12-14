@@ -1,4 +1,5 @@
 'use client';
+import { useState, useEffect, useRef } from 'react';
 import tw from 'tailwind-styled-components';
 import { IoSend } from 'react-icons/io5';
 import { stackDB } from '../stacks/stack-db';
@@ -6,6 +7,7 @@ import { useRouter } from 'next/navigation';
 
 import { useFormStatus } from 'react-dom';
 import MailchimpSubscribe from './MailchimpSubscribe';
+import SearchStacks from './search-stacks';
 
 export const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -39,21 +41,12 @@ const InputWithButton: React.FC<InputWithButtonProps> = ({
     setBrief(inputValue);
   };
 
-  const rainbowText = {
-    background:
-      'linear-gradient(45deg, gray, red, orange, yellow, green, blue, indigo, violet)',
-    color: 'transparent',
-    backgroundClip: 'text',
-    WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent',
-  };
-
   const handleLuckyClick = () => {
-    const stackEntries = Object.entries(stackDB);
     const randomEntry =
-      stackEntries[Math.floor(Math.random() * stackEntries.length)];
-    const randomStackId = randomEntry[0];
-    router.push(`/stacks/${randomStackId}`);
+      Object.keys(stackDB)[
+        Math.floor(Math.random() * Object.keys(stackDB).length)
+      ];
+    router.push(`/stacks/${randomEntry}`);
   };
 
   return (
@@ -70,9 +63,10 @@ const InputWithButton: React.FC<InputWithButtonProps> = ({
           <SubmitButton />
         </div>
       </Form> */}
-      <MailchimpSubscribe />
-      <LuckyButton onClick={handleLuckyClick} style={rainbowText}>
-        bored button
+      {/* <MailchimpSubscribe /> */}
+      {/* <SearchStacks /> */}
+      <LuckyButton onClick={handleLuckyClick}>
+        Take me to a random stack -{'>'}
       </LuckyButton>
     </FormWrapper>
   );
@@ -96,21 +90,14 @@ export const Form = tw.form`
 `;
 
 const LuckyButton = tw.button`
-  bg-gradient-to-r
-  from-gray-400
-  to-[#FF0000]
-  hover:from-gray-500
-  hover:to-[#FF7F00]
-  text-white
+  mt-3
   font-bold
-  py-3
-  px-6
-  rounded
+  border-b
   transition
   duration-300
   ease-in-out
   transform
-  hover:scale-110
+  hover:scale-125
   text-lg
 `;
 
