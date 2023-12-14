@@ -9,7 +9,7 @@ export default async function MainContent() {
         <div className="w-full mb-4 flex justify-center">
           <img className="w-32" src="/stackwise_logo.png" />
         </div>
-        <Subtitle>Stay updated for future stacks.</Subtitle>
+        <Subtitle>The open source function collection.</Subtitle>
       </TitleContainer>
       <MainWrapper>
         <Content />

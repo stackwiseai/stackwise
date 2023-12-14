@@ -10,7 +10,7 @@ export default async function Component() {
   return (
     <div className="h-screen">
       <Link href="https://github.com/stackwiseai/stackwise" target="_blank">
-        <div className="cursor-pointer h-12 flex justify-center items-center text-white bg-black">
+        <div className="hover:underline cursor-pointer h-12 flex justify-center items-center text-white bg-black">
           <FaStar className="w-6 h-6 " />
           <p className="mx-2">Star us on Github</p>
           <IoLogoGithub className="w-6 h-6" />

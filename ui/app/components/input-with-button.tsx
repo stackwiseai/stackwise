@@ -1,4 +1,5 @@
 'use client';
+import { useState, useEffect, useRef } from 'react';
 import tw from 'tailwind-styled-components';
 import { IoSend } from 'react-icons/io5';
 import { stackDB } from '../stacks/stack-db';
@@ -6,6 +7,7 @@ import { useRouter } from 'next/navigation';
 
 import { useFormStatus } from 'react-dom';
 import MailchimpSubscribe from './MailchimpSubscribe';
+import SearchStacks from './search-stacks';
 
 export const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -49,11 +51,11 @@ const InputWithButton: React.FC<InputWithButtonProps> = ({
   };
 
   const handleLuckyClick = () => {
-    const stackEntries = Object.entries(stackDB);
     const randomEntry =
-      stackEntries[Math.floor(Math.random() * stackEntries.length)];
-    const randomStackId = randomEntry[0];
-    router.push(`/stacks/${randomStackId}`);
+      Object.keys(stackDB)[
+        Math.floor(Math.random() * Object.keys(stackDB).length)
+      ];
+    router.push(`/stacks/${randomEntry}`);
   };
 
   return (
@@ -70,7 +72,8 @@ const InputWithButton: React.FC<InputWithButtonProps> = ({
           <SubmitButton />
         </div>
       </Form> */}
-      <MailchimpSubscribe />
+      {/* <MailchimpSubscribe /> */}
+      <SearchStacks />
       <LuckyButton onClick={handleLuckyClick} style={rainbowText}>
         bored button
       </LuckyButton>
