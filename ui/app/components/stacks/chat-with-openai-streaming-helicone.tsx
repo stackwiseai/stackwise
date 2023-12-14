@@ -14,7 +14,7 @@ export const ChatWithOpenAIStreamingHelicone = () => {
       setLoading(true);
 
       try {
-        const response = await fetch('/api/ChatWithOpenAIStreamingHelicone', {
+        const response = await fetch('/api/chat-openai-streaming-helicone', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

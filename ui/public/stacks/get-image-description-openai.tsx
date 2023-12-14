@@ -10,7 +10,7 @@ export default function Chat() {
   );
 
   const { messages, input, handleInputChange, handleSubmit } = useChat({
-    api: '/api/getImageDescriptionOpenAI',
+    api: '/api/get-image-description-openai',
   });
 
   const handleImageChange = (e) => {

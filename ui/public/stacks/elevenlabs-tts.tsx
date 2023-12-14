@@ -26,7 +26,7 @@ const Chat = () => {
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            placeholder="Ask anything..."
+            placeholder="Type anything..."
             className="rounded-full w-full py-2 pl-4 pr-10 border border-gray-400 focus:outline-none focus:shadow-outline"
             onKeyDown={(e) => {
               if (e.key === 'Enter')
@@ -49,7 +49,7 @@ const Chat = () => {
 };
 
 async function playText(text: string) {
-  const response = await fetch('/api/elevenLabsTTS', {
+  const response = await fetch('/api/elevenlabs-tts', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

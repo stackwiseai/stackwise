@@ -1,4 +1,4 @@
-import { stackDB } from '@/app/stacks/stackDB';
+import { stackDB } from '@/app/stacks/stack-db';
 import { Octokit } from '@octokit/rest';
 const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 import axios from 'axios';
@@ -32,7 +32,7 @@ export async function POST(req) {
 async function pushToBranch(newContent, branch, stackName) {
   const generatedUuid = uuidv4();
   const randomChars = generatedUuid.replace(/-/g, '').substring(0, 7);
-  const stackNameWithUuid = `${stackName}${randomChars}`;
+  const stackNameWithUuid = `${stackName}-${randomChars}`;
   const path = `ui/app/components/stacks/${stackNameWithUuid}.tsx`;
   const message = `Building ${stackNameWithUuid}`;
 

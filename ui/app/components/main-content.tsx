@@ -1,6 +1,6 @@
 'use server';
 import tw from 'tailwind-styled-components';
-import Content from './Content';
+import Content from './content';
 
 export default async function MainContent() {
   return (
