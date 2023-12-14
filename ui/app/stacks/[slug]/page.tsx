@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import ClipboardComponent from '@/app/components/clipboard';
 import tw from 'tailwind-styled-components';
 import Link from 'next/link';
@@ -32,26 +32,29 @@ const Chat = ({ params }: { params: { slug: string } }) => {
 
     console.log('stackSlug', stackSlug);
     const initialStack = initialStackDB[stackSlug] || null;
-    const stack = { slug: stackSlug, ...initialStack };
-    if (stack) {
-      console.log('stackInfo', stack);
-      setStack(stack);
-      const frontendPath = `/stacks/${stack.slug}.tsx`;
-      const backendPath = `/stacks/${stack.slug}/route.ts`;
+    if (initialStack) {
+      const stackWithSlug = { slug: stackSlug, ...initialStack };
+      console.log('stackInfo', stackWithSlug);
+      setStack(stackWithSlug);
+      const frontendPath = `/stacks/${stackSlug}.tsx`;
+      const backendPath = `/stacks/${stackSlug}/route.ts`;
       getPathText(frontendPath).then((data) => setFrontendCode(data));
       getPathText(backendPath).then((data) => setBackendCode(data));
     }
   }, [params.slug]);
 
-  const DynamicComponent = dynamic(
-    () => import(`@/app/components/stacks/${stack.slug}`),
-    {
-      ssr: false,
-      loading: () => {
-        return <div></div>;
-      },
-    }
-  );
+  const DynamicComponent = useMemo(() => {
+    if (!stack) return null; // FIXME: redirect or show an error, change DynamicComponent usage below as well
+    return dynamic(
+      () => import(`@/app/components/stacks/${stack.slug}`),
+      {
+        ssr: false,
+        loading: () => {
+          return <div></div>;
+        },
+      }
+    );
+  }, [stack?.slug]);
 
   const getPathText = async (path: string) => {
     const response = await fetch(path);
@@ -162,7 +165,7 @@ const Chat = ({ params }: { params: { slug: string } }) => {
               </SyntaxHighlighter>
             </div>
           ) : (
-            <DynamicComponent />
+            DynamicComponent ? (<DynamicComponent />) : <></>
           )}
         </MainWrapper>
       </Container>
