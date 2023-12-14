@@ -47,4 +47,9 @@ export const stackDB: Record<string, StackDescription> = {
     description: 'Chat with Gemini',
     tags: ['published'],
   },
+  'chat-with-gemini-langchain': {
+    name: 'Chat Gemini Langchain',
+    description: 'Chat with Gemini Using Langchain',
+    tags: ['published'],
+  },
 };
