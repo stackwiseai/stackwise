@@ -18,7 +18,7 @@ export default async function Component() {
       </Link>
       <MainContent />
       <StacksContainer>
-        <StackTitle>Existing stacks</StackTitle>
+        {/* <StackTitle>Existing stacks</StackTitle> */}
         <Stacks>
           {Object.entries(stackDB).map(([id, stack], i) => (
             <Link key={i} className="cursor-pointer" href={`/stacks/${id}`}>
@@ -41,7 +41,7 @@ export default async function Component() {
 }
 
 const StacksContainer = tw.div`
-  //mt-16 pb-8 mx-auto w-3/4
+  //mt-16 pb-8 mx-auto w-3/4 mt-14
 `;
 const StackTitle = tw.h1`
   text-xl font-medium

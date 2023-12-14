@@ -97,7 +97,7 @@ const LuckyButton = tw.button`
   duration-300
   ease-in-out
   transform
-  hover:scale-125
+  hover:scale-110
   text-lg
 `;
 
