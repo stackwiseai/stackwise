@@ -72,7 +72,7 @@ async function* streamable(response: {
   }
 }
 
-export function GoogleGeminiStream(
+function GoogleGeminiStream(
   response: {
     stream: AsyncGenerator<GenerateContentResponse>;
   },
