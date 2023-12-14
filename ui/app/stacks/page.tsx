@@ -1,12 +1,19 @@
 'use server';
 import tw from 'tailwind-styled-components';
 import Link from 'next/link';
-import { stackDB } from './stack-db';
+import { stackDB, statusesToDisplay } from './stack-db';
 import MainContent from '../components/main-content';
 import { IoLogoGithub } from 'react-icons/io';
 import { FaStar } from 'react-icons/fa';
 
 export default async function Component() {
+  // filter out the stacks that are not ready for display
+  const stackDBToDisplay = Object.fromEntries(
+    Object.entries(stackDB).filter(([id, stack]) => {
+      return statusesToDisplay.some((status) => stack.tags.includes(status));
+    })
+  );
+
   return (
     <div className="h-screen">
       <Link href="https://github.com/stackwiseai/stackwise" target="_blank">
@@ -20,7 +27,7 @@ export default async function Component() {
       <StacksContainer>
         {/* <StackTitle>Existing stacks</StackTitle> */}
         <Stacks>
-          {Object.entries(stackDB).map(([id, stack], i) => (
+          {Object.entries(stackDBToDisplay).map(([id, stack], i) => (
             <Link key={i} className="cursor-pointer" href={`/stacks/${id}`}>
               <StackCard>
                 <StackCardTitle>{stack.name}</StackCardTitle>

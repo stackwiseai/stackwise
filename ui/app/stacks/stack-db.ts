@@ -55,6 +55,13 @@ export const stackDB: Record<string, StackDescription> = {
   'chat-with-gemini-langchain': {
     name: 'Chat Gemini Langchain',
     description: 'Chat with Gemini Using Langchain',
-    tags: ['published'],
+    tags: ['draft'],
+  },
+  'chat-with-gemini-streaming': {
+    name: 'Chat Gemini Langchain',
+    description: 'Chat with Gemini Using Langchain',
+    tags: ['draft'],
   },
 };
+
+export const statusesToDisplay = ['verified', 'published'];
