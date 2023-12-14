@@ -8,7 +8,7 @@ export const stackDB: Record<string, StackDescription> = {
     name: 'Chat With OpenAI Streaming',
     description: 'Vercel edge function for OpenAI response streaming.',
   },
-  'elevenlabs-text-to-speech': {
+  'elevenlabs-tts': {
     name: 'Text to Speech using ElevenLabs',
     description: 'Text to Speech using ElevenLabs and Vercel edge functions',
   },

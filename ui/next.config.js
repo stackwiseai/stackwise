@@ -16,7 +16,7 @@ const nextConfig = {
       },
       {
         source: '/stacks/aekmwsk',
-        destination: '/stacks/elevenlabs-text-to-speech',
+        destination: '/stacks/elevenlabs-tts',
         permanent: true,
       },
       {
