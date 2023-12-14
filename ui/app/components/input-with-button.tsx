@@ -66,7 +66,7 @@ const InputWithButton: React.FC<InputWithButtonProps> = ({
       {/* <MailchimpSubscribe /> */}
       {/* <SearchStacks /> */}
       <LuckyButton onClick={handleLuckyClick}>
-        Take me to a random stack ->
+        Take me to a random stack -{'>'}
       </LuckyButton>
     </FormWrapper>
   );
