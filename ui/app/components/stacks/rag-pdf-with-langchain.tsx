@@ -192,7 +192,7 @@ const RAGPDFWithLangchain = () => {
           </button>
         </div>
         <ChatHistory chatHistory={chatHistory} handleCancel={handleCancel} />
-        <div className={`flex items-center gap-2 mb-4 ${!pdfUploaded ? 'hidden' : ''}`}>
+        <div className={`relative w-full mb-4 ${!pdfUploaded ? 'hidden' : ''}`}>
           <input
             ref={questionInputRef}
             id="questionInput"
@@ -201,12 +201,14 @@ const RAGPDFWithLangchain = () => {
             disabled={loading}
             onChange={(e) => setQuestion(e.target.value)}
             placeholder="What would you like to ask?"
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-violet-500 focus:border-violet-500 flex-grow disabled:bg-gray-100 disabled:text-gray-300 disabled:border-gray-200"
+            className="rounded-full w-full py-2 pl-4 pr-10 border border-gray-400 focus:outline-none focus:shadow-outline"
           />
           <button
             type="submit"
             disabled={!pdfUploaded || !question || loading}
-            className="border rounded-md px-4 py-2 bg-violet-600 text-white font-bold disabled:bg-violet-300"
+            className={`cursor-pointer absolute right-0 top-0 rounded-r-full h-full text-black font-bold px-4 focus:outline-none focus:shadow-outline ${
+              loading ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
           >
             <IoSend />
           </button>
