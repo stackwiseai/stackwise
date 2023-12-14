@@ -49,7 +49,7 @@ const Chat = () => {
 };
 
 async function playText(text: string) {
-  const response = await fetch('/api/eleven-labs-tts', {
+  const response = await fetch('/api/elevenlabs-tts', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
