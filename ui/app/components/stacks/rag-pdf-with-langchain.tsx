@@ -140,7 +140,7 @@ const RAGPDFWithLangchain = () => {
     setChatHistory((prev) => [...prev, `Q: ${question}`, placeholderAnswering]);
 
     try {
-      const response = await fetch('/api/ragPDFWithLangchain', {
+      const response = await fetch('/api/rag-pdf-with-langchain', {
         method: 'POST',
         body: formData,
         signal: signal,
