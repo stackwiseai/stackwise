@@ -62,6 +62,7 @@ const RAGPDFWithLangchain = () => {
   const abortControllerRef = useRef<AbortController | null>(null);
   const questionInputRef = useRef<HTMLInputElement>(null);
   const prevQuestionRef = useRef(question);
+  const pdfRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     return () => {
@@ -121,6 +122,7 @@ const RAGPDFWithLangchain = () => {
     }
     // Focus the file input after reset
     questionInputRef.current?.focus();
+    pdfRef.current.value = null;
   };
 
   const handleClearQuestion = () => {
