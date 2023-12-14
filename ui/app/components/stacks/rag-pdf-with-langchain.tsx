@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { IoSend } from 'react-icons/io5';
 
-export const chatHistoryDelimiter = `||~||`;
+const chatHistoryDelimiter = `||~||`;
 
 type ChatHistoryProps = {
   chatHistory: string[];
