@@ -10,7 +10,6 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { MdOutlineInput } from 'react-icons/md';
 import dynamic from 'next/dynamic';
 import { stackDB as initialStackDB } from '../stack-db';
-import ContactStackwise from '@/app/components/contact-stackwise';
 import { useSearchParams } from 'next/navigation';
 import { ChatWithStack } from './chat';
 
