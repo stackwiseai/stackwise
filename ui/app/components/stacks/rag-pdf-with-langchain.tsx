@@ -14,7 +14,6 @@ const placeholderAnswering = 'A: Answering…'
 
 const ChatHistory: React.FC<ChatHistoryProps> = ({ chatHistory, handleCancel }) => (
   <div className="chat-history mt-4 p-4 border-t border-gray-200">
-    {chatHistory.length > 0 && <h3 className="text-lg font-semibold">Chat History:</h3>}
     <ul className="mt-2">
       {chatHistory.map((entry, index) => (
         <li key={index} className={`mt-1 ${index % 2 !== 0 ? 'text-left' : 'text-right'}`}>
@@ -47,6 +46,7 @@ const RAGPDFWithLangchain = () => {
   const abortControllerRef = useRef<AbortController | null>(null);
   const questionInputRef = useRef<HTMLInputElement>(null);
   const prevQuestionRef = useRef(question);
+  const pdfRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     return () => {
@@ -105,6 +105,7 @@ const RAGPDFWithLangchain = () => {
     }
     // Focus the file input after reset
     questionInputRef.current?.focus();
+    pdfRef.current.value = null
   };
 
   const handleClearQuestion = () => {
@@ -171,22 +172,22 @@ const RAGPDFWithLangchain = () => {
     <div className="p-4 max-w-md mx-auto flex flex-col h-full justify-between">
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-4">
         <div className="flex justify-end items-end align-middle gap-2">
-          <label className="flex flex-col border rounded-lg p-1">
-            <span id='pdfLabel'>PDF:</span>
-              <input
-                type="file"
-                aria-labelledby="pdfLabel"
-                accept="application/pdf"
-                onChange={handlePDFUpload}
-                disabled={loading}
-                className="disabled:file:bg-gray-300 disabled:file:text-gray-500 mx-auto"
-              />
+          <label className="flex flex-col rounded-lg p-1">
+            <input
+              ref={pdfRef}
+              type="file"
+              aria-label='Upload PDF'
+              accept="application/pdf"
+              onChange={handlePDFUpload}
+              disabled={loading}
+              className="w-full md:w-auto py-1 mr-2 cursor-pointer border-dashed border-2 rounded-md file:border-0 file:bg-transparent file:text-sm file:font-semibold"
+            />
           </label>
           <button
             type="button"
             disabled={!pdfUploaded && !question && !loading}
             onClick={handleTotalReset}
-            className="border rounded-md h-full flex items-center disabled:bg-gray-100 disabled:text-gray-300 disabled:border-gray-200 background-color: #f5f5f5; px-2 py-1 pr-2 space-x-2 bg-red-600 text-white font-bold"
+            className="border rounded-md mb-1.5 flex items-center disabled:bg-gray-100 disabled:text-gray-300 disabled:border-gray-200 background-color: #f5f5f5; px-2 py-1 pr-2 space-x-2 bg-red-600 text-white font-bold"
           >
             Reset
           </button>
