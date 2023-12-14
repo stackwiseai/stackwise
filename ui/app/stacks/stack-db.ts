@@ -6,7 +6,7 @@ export type StackDescription = {
 
 export const stackDB: Record<string, StackDescription> = {
   'chat-with-openai-streaming': {
-    name: 'Chat With OpenAI Streaming',
+    name: 'Chat With GPT-3.5 Streaming',
     description: 'Vercel edge function for OpenAI response streaming.',
     tags: ['verified'],
   },
@@ -32,7 +32,7 @@ export const stackDB: Record<string, StackDescription> = {
     tags: ['verified'],
   },
   'chat-with-openai-streaming-helicone': {
-    name: 'Chat With OpenAI Streaming Helicone',
+    name: 'Chat With GPT-3.5 Streaming Helicone',
     description:
       'Vercel edge function for OpenAI response streaming with Helicone',
     tags: ['published'],
