@@ -3,10 +3,25 @@ import tw from 'tailwind-styled-components';
 import Link from 'next/link';
 import { stackDB } from './stack-db';
 import MainContent from '../components/main-content';
+import { IoLogoGithub } from 'react-icons/io';
 
 export default async function Component() {
   return (
     <div className="p-4 h-screen">
+      <Link
+        className="cursor-pointer absolute sm:fixed top-4 sm:top-auto right-4"
+        href="https://github.com/stackwiseai/stackwise"
+        target="_blank"
+      >
+        <IoLogoGithub className="w-8 h-8" />
+      </Link>
+      <Link
+        className="cursor-pointer absolute sm:fixed top-4 sm:top-auto ;eft-4"
+        href="https://github.com/stackwiseai/stackwise"
+        target="_blank"
+      >
+        <img className="w-32" src="/stackwise_logo.png" />
+      </Link>
       <MainContent />
       <StacksContainer>
         <StackTitle>Existing stacks</StackTitle>

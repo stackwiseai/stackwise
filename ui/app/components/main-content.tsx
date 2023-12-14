@@ -6,7 +6,6 @@ export default async function MainContent() {
   return (
     <Container>
       <TitleContainer>
-        <Title>Stackwise</Title>
         <Subtitle>Stay updated for future stacks.</Subtitle>
       </TitleContainer>
       <MainWrapper>
