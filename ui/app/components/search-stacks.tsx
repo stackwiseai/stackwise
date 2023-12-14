@@ -6,7 +6,7 @@ import { Form } from './input-with-button';
 import { useRouter } from 'next/navigation';
 
 const SearchStacks = () => {
-  const [inputValue, setInputValue] = useState('hi');
+  const [inputValue, setInputValue] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const router = useRouter();
   const searchRef = useRef(null);
