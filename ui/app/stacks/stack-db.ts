@@ -42,8 +42,9 @@ export const stackDB: Record<string, StackDescription> = {
     description: 'Animate image backgrounds using Fal.',
     tags: ['verified'],
   },
-  // 'basic-gemini-vision': {
-  //   name: 'Basic Gemini Vision',
-  //   description: 'TODO',
-  // },
+  'chat-with-gemini': {
+    name: 'Chat with Gemini',
+    description: 'Chat with Gemini',
+    tags: ['published'],
+  },
 };
