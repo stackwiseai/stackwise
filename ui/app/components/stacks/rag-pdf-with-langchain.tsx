@@ -1,6 +1,7 @@
 // File path: ui/app/components/RAGPDFWithLangchain.tsx
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { IoSend } from 'react-icons/io5';
 
 export const chatHistoryDelimiter = `||~||`;
 
@@ -207,7 +208,7 @@ const RAGPDFWithLangchain = () => {
             disabled={!pdfUploaded || !question || loading}
             className="border rounded-md px-4 py-2 bg-violet-600 text-white font-bold disabled:bg-violet-300"
           >
-            Send
+            <IoSend />
           </button>
         </div>
       </form>
@@ -215,6 +216,5 @@ const RAGPDFWithLangchain = () => {
     </div>
   );
 };
-
 
 export default RAGPDFWithLangchain;
