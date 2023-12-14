@@ -29,4 +29,8 @@ export const stackDB = {
     name: 'StableVideoDiffusion',
     description: 'Animate image backgrounds using Fal.',
   },
+  f2w5Orq: {
+    name: 'BasicGeminiVision',
+    description: 'TODO',
+  },
 };
