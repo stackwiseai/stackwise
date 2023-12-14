@@ -16,7 +16,7 @@ export default async function Component() {
               <StackCard>
                 <StackCardTitle>{stack.name}</StackCardTitle>
                 <StackCardImage
-                  src={`/stack-pictures/${stack.name}.png`}
+                  src={`/stack-pictures/${id}.png`}
                   alt="Stack Image"
                 />
                 <StackCardDescription>

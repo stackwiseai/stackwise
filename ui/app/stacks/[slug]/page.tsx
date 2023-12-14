@@ -35,8 +35,8 @@ const Chat = ({ params }: { params: { slug: string } }) => {
       console.log('stackInfo', stackInfo);
       setStackName(stackInfo.name);
       setStackDescription(stackInfo.description);
-      const frontendPath = `/stacks/${stackInfo.name}.tsx`;
-      const backendPath = `/stacks/${stackInfo.name}/route.ts`;
+      const frontendPath = `/stacks/${stackInfo}.tsx`;
+      const backendPath = `/stacks/${stackInfo}/route.ts`;
       getPathText(frontendPath).then((data) => setFrontendCode(data));
       getPathText(backendPath).then((data) => setBackendCode(data));
     }
