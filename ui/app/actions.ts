@@ -1,6 +1,39 @@
 'use server';
-import fs from 'fs';
-import path from 'path';
+
+const MAILCHIMP_URL =
+  'https://us17.api.mailchimp.com/3.0/lists/77b1abf780/members/';
+const MAILCHIMP_API_KEY = process.env.MAILCHIMP_API_KEY;
+
+export const subscribeEmail = async (prevState, formData) => {
+  console.log(prevState, formData);
+  const email = formData.get('email') as string;
+
+  const data = {
+    email_address: email,
+    status: 'subscribed', // or 'pending' for double opt-in
+  };
+
+  try {
+    const response = await fetch(MAILCHIMP_URL, {
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${btoa(`anystring:${MAILCHIMP_API_KEY}`)}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    if (response.ok) {
+      console.log('Subscription successful');
+      return { status: 'success' };
+    } else {
+      const errorData = await response.json();
+      console.error('Subscription error:', errorData);
+      return { status: 'error', error: errorData };
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
 
 // import { stack } from 'stackwise';
 

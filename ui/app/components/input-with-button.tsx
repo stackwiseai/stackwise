@@ -5,8 +5,9 @@ import { stackDB } from '../stacks/stack-db';
 import { useRouter } from 'next/navigation';
 
 import { useFormStatus } from 'react-dom';
+import MailchimpSubscribe from './MailchimpSubscribe';
 
-const SubmitButton = () => {
+export const SubmitButton = () => {
   const { pending } = useFormStatus();
 
   return (
@@ -57,8 +58,8 @@ const InputWithButton: React.FC<InputWithButtonProps> = ({
 
   return (
     <FormWrapper>
-      <Form onSubmit={handleSubmit} action={formAction}>
-        <div className="relative w-1/2">
+      {/* <Form onSubmit={handleSubmit} action={formAction}>
+        <div className="relative w-full sm:w-3/4">
           <input
             placeholder="I want an api that..."
             type="text"
@@ -68,24 +69,28 @@ const InputWithButton: React.FC<InputWithButtonProps> = ({
           />
           <SubmitButton />
         </div>
-      </Form>
+      </Form> */}
+      <MailchimpSubscribe />
       <LuckyButton onClick={handleLuckyClick} style={rainbowText}>
-        i'm feeling lucky
+        bored button
       </LuckyButton>
     </FormWrapper>
   );
 };
 const FormWrapper = tw.div`
-  w-1/2
+  md:w-3/4
+  w-full
   flex
   flex-col
   items-center
 `;
 
-const Form = tw.form`
+export const Form = tw.form`
   flex
   items-center
   justify-center
+  lg:w-1/2
+  md:w-3/4
   w-full
   mb-2
 `;
@@ -106,7 +111,7 @@ const LuckyButton = tw.button`
   ease-in-out
   transform
   hover:scale-110
-  
+  text-lg
 `;
 
 export default InputWithButton;

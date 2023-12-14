@@ -7,7 +7,7 @@ export default async function MainContent() {
     <Container>
       <TitleContainer>
         <Title>Stackwise</Title>
-        <Subtitle>Explain what you want to do.</Subtitle>
+        <Subtitle>Stay updated for future stacks.</Subtitle>
       </TitleContainer>
       <MainWrapper>
         <Content />
@@ -26,7 +26,7 @@ const Container = tw.div`
 
 const TitleContainer = tw.div`
   text-center
-  mb-8
+  mb-4
 `;
 
 const Title = tw.h1`
