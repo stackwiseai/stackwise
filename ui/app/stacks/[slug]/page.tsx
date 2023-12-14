@@ -6,14 +6,20 @@ import { IoLogoGithub } from 'react-icons/io';
 import dynamic from 'next/dynamic';
 import { StackDescription, stackDB as initialStackDB } from '../stack-db';
 import { useSearchParams } from 'next/navigation';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 // Lazy load ClipboardComponent
 const ClipboardComponent = lazy(() => import('@/app/components/clipboard'));
 const Link = lazy(() => import('next/link'));
-const SyntaxHighlighter = lazy(() => import('react-syntax-highlighter'));
-const vscDarkPlus = lazy(() => import('react-syntax-highlighter/dist/cjs/styles/prism/vsc-dark-plus'));
-const MdOutlineInput = lazy(() => import('react-icons/md').then((module) => ({ default: module.MdOutlineInput })));
-const ChatWithStack = lazy(() => import('./chat').then((module) => ({ default: module.ChatWithStack })));
+const MdOutlineInput = lazy(() =>
+  import('react-icons/md').then((module) => ({
+    default: module.MdOutlineInput,
+  }))
+);
+const ChatWithStack = lazy(() =>
+  import('./chat').then((module) => ({ default: module.ChatWithStack }))
+);
 
 type StackDescriptionWithSlug = {
   slug: string;
@@ -48,15 +54,12 @@ const Chat = ({ params }: { params: { slug: string } }) => {
 
   const DynamicComponent = useMemo(() => {
     if (!stack) return null; // FIXME: redirect or show an error, change DynamicComponent usage below as well
-    return dynamic(
-      () => import(`@/app/components/stacks/${stack.slug}`),
-      {
-        ssr: false,
-        loading: () => {
-          return <div></div>;
-        },
-      }
-    );
+    return dynamic(() => import(`@/app/components/stacks/${stack.slug}`), {
+      ssr: false,
+      loading: () => {
+        return <div></div>;
+      },
+    });
   }, [stack?.slug]);
 
   const getPathText = async (path: string) => {
@@ -84,9 +87,11 @@ const Chat = ({ params }: { params: { slug: string } }) => {
           <IoLogoGithub className="w-8 h-8" />
         </Link>
         <TitleContainer>
-          <div className="w-full mb-4 flex justify-center">
-            <img className="w-32" src="/stackwise_logo.png" />
-          </div>
+          <Link href="https://stackwise.ai/stacks">
+            <div className="w-full mb-4 flex justify-center">
+              <img className="w-32" src="/stackwise_logo.png" />
+            </div>
+          </Link>
           <Subtitle>{stack?.description}</Subtitle>
         </TitleContainer>
         <div className="flex items-center justify-center flex-col sm:flex-row space-x-6">
@@ -167,8 +172,10 @@ const Chat = ({ params }: { params: { slug: string } }) => {
                 {showFrontendCode ? frontendCode : backendCode}
               </SyntaxHighlighter>
             </div>
+          ) : DynamicComponent ? (
+            <DynamicComponent />
           ) : (
-            DynamicComponent ? (<DynamicComponent />) : <></>
+            <></>
           )}
         </MainWrapper>
       </Container>
