@@ -1,5 +1,6 @@
 import { IoSend } from 'react-icons/io5';
 import { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 
 export const ChatWithOpenAIStreaming = () => {
   const [inputValue, setInputValue] = useState('');
@@ -14,7 +15,7 @@ export const ChatWithOpenAIStreaming = () => {
       setLoading(true);
 
       try {
-        const response = await fetch('/api/chat-with-gemini', {
+        const response = await fetch('/api/chat-with-gemini-streaming', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -78,7 +79,7 @@ export const ChatWithOpenAIStreaming = () => {
         {loading ? (
           <span className="text-sm text-gray-400">Generating... </span>
         ) : generatedFileContents ? (
-          generatedFileContents
+          <ReactMarkdown>{generatedFileContents}</ReactMarkdown>
         ) : (
           <p className="text-gray-400 text-sm">Output here...</p>
         )}

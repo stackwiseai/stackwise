@@ -55,12 +55,12 @@ export const stackDB: Record<string, StackDescription> = {
   'chat-with-gemini-langchain': {
     name: 'Chat Gemini Langchain',
     description: 'Chat with Gemini Using Langchain',
-    tags: ['draft'],
+    tags: ['published'],
   },
   'chat-with-gemini-streaming': {
-    name: 'Chat Gemini Langchain',
-    description: 'Chat with Gemini Using Langchain',
-    tags: ['draft'],
+    name: 'Chat Gemini Streaming',
+    description: 'Chat with Gemini Using Streaming',
+    tags: ['published'],
   },
 };
 
