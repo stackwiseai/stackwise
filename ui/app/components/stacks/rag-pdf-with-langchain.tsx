@@ -122,7 +122,9 @@ const RAGPDFWithLangchain = () => {
     }
     // Focus the file input after reset
     questionInputRef.current?.focus();
-    pdfRef.current.value = null;
+    if (pdfRef.current) {
+      pdfRef.current.value = null;
+    }
   };
 
   const handleClearQuestion = () => {
