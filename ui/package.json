@@ -13,6 +13,7 @@
     "@fal-ai/serverless-proxy": "^0.6.0",
     "@google/generative-ai": "^0.1.1",
     "@octokit/rest": "^20.0.2",
+    "@vercel/analytics": "^1.1.1",
     "ai": "^2.2.28",
     "elevenlabs-node": "^2.0.1",
     "html-react-parser": "^5.0.7",
