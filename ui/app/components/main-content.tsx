@@ -22,18 +22,14 @@ const Container = tw.div`
   flex
   flex-col
   justify-end
-  pt-60
-  pb-20
+  //pt-60
+  pt-24
+  pb-5
+  //pb-10
 `;
 
 const TitleContainer = tw.div`
   text-center
-  mb-4
-`;
-
-const Title = tw.h1`
-  text-2xl
-  font-bold
 `;
 
 const Subtitle = tw.p`
