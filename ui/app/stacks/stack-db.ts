@@ -1,7 +1,7 @@
 export type StackDescription = {
   name: string;
   description: string;
-  tags: string[];
+  tags: Array<'verified' | 'starred' | 'expansion'>;
 };
 
 export const stackDB: Record<string, StackDescription> = {
@@ -29,43 +29,43 @@ export const stackDB: Record<string, StackDescription> = {
     name: 'Create AI Canvas',
     description:
       'Real time image rendering using Fal. Draw on the left canvas and add a prompt.',
-    tags: ['verified'],
+    tags: ['verified', 'starred'],
   },
   'chat-with-openai-streaming-helicone': {
     name: 'Chat With GPT-3.5 Streaming Helicone',
     description:
       'Vercel edge function for OpenAI response streaming with Helicone',
-    tags: ['published'],
+    tags: ['verified', 'expansion'],
   },
   'stable-video-diffusion': {
     name: 'Stable Video Diffusion',
     description: 'Animate image backgrounds using Fal.',
-    tags: ['verified'],
+    tags: ['verified', 'starred'],
   },
   'chat-with-gemini': {
     name: 'Chat with Gemini',
     description: 'Chat with Gemini',
-    tags: ['published'],
+    tags: ['verified', 'expansion'],
   },
   'rag-pdf-with-langchain': {
     name: 'RAG PDF with Langchain',
     description: `Ask questions about any PDF using Langchain's ConversationalRetrievalQAChain (RAG).`,
-    tags: [],
+    tags: ['verified', 'starred'],
   },
   'chat-with-gemini-langchain': {
     name: 'Chat Gemini Langchain',
     description: 'Chat with Gemini Using Langchain',
-    tags: ['published'],
+    tags: ['verified', 'expansion'],
   },
   'chat-with-gemini-streaming': {
     name: 'Chat Gemini Streaming',
     description: 'Chat with Gemini Using Streaming',
-    tags: ['published'],
+    tags: ['verified', 'starred'],
   },
   'instant-video-to-image': {
     name: 'Instant Video To Image',
     description: 'Instant video to image using Fal.',
-    tags: ['published'],
+    tags: ['verified', 'starred'],
   },
 };
 
