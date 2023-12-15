@@ -74,6 +74,11 @@ export const stackDB: Record<string, StackDescription> = {
   //   description: 'Chat with Gemini Using Streaming',
   //   tags: ['published'],
   // },
+  'image-to-music': {
+    name: 'Image to Music',
+    description: 'Image to musical expression with Llava and Musicgen.',
+    tags: ['published', 'starred'],
+  },
 };
 
 export const statusesToDisplay: Status[] = ['published'];
