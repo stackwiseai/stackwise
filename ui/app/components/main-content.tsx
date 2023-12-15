@@ -2,7 +2,7 @@
 import tw from 'tailwind-styled-components';
 import Content from './content';
 
-export default async function MainContent() {
+export default async function MainContent({ stackDB }) {
   return (
     <Container>
       <TitleContainer>
@@ -12,7 +12,7 @@ export default async function MainContent() {
         <Subtitle>The open source function collection.</Subtitle>
       </TitleContainer>
       <MainWrapper>
-        <Content />
+        <Content stackDB={stackDB} />
       </MainWrapper>
     </Container>
   );

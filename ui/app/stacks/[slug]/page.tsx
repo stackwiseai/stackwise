@@ -5,7 +5,11 @@ import { FaCode } from 'react-icons/fa6';
 import { IoLogoGithub } from 'react-icons/io';
 import { FaStar } from 'react-icons/fa';
 import dynamic from 'next/dynamic';
-import { StackDescription, stackDB as initialStackDB } from '../stack-db';
+import {
+  getStackDB,
+  StackDescription as initialStackDB,
+  StackDescription,
+} from '../stack-db';
 import { useSearchParams } from 'next/navigation';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -37,19 +41,25 @@ const Chat = ({ params }: { params: { slug: string } }) => {
   const [stack, setStack] = useState<StackDescriptionWithSlug | null>(null);
 
   useEffect(() => {
-    const stackSlug = params.slug ?? null;
-    if (!stackSlug) return;
+    const fetchPosts = async () => {
+      const initialStackDB = await getStackDB();
+      const stackSlug = params.slug ?? null;
+      if (!stackSlug) return;
 
-    console.log('stackSlug', stackSlug);
-    const initialStack = initialStackDB[stackSlug] || null;
-    if (initialStack) {
-      const stackWithSlug = { slug: stackSlug, ...initialStack };
-      setStack(stackWithSlug);
-      const frontendPath = `/stacks/${stackSlug}.tsx`;
-      const backendPath = `/stacks/${stackSlug}/route.ts`;
-      getPathText(frontendPath).then((data) => setFrontendCode(data));
-      getPathText(backendPath).then((data) => setBackendCode(data));
-    }
+      const initialStack = initialStackDB[stackSlug] || null;
+      console.log('initialStack', initialStack);
+      console.log('stackSlug', stackSlug);
+      if (initialStack) {
+        const stackWithSlug = { slug: stackSlug, ...initialStack };
+        setStack(stackWithSlug);
+        const frontendPath = `/stacks/${stackSlug}.tsx`;
+        const backendPath = `/stacks/${stackSlug}/route.ts`;
+        getPathText(frontendPath).then((data) => setFrontendCode(data));
+        getPathText(backendPath).then((data) => setBackendCode(data));
+      }
+    };
+
+    fetchPosts();
   }, [params.slug]);
 
   const DynamicComponent = useMemo(() => {

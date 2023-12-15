@@ -2,12 +2,12 @@
 import { useState, useEffect, useRef } from 'react';
 import tw from 'tailwind-styled-components';
 import { IoSend } from 'react-icons/io5';
-import { stackDB } from '../stacks/stack-db';
 import { useRouter } from 'next/navigation';
 
 import { useFormStatus } from 'react-dom';
 import MailchimpSubscribe from './MailchimpSubscribe';
-import SearchStacks from './search-stacks';
+// import SearchStacks from './search-stacks';
+import { StackDescription } from '../stacks/stack-db';
 
 export const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -28,11 +28,13 @@ export const SubmitButton = () => {
 interface InputWithButtonProps {
   setBrief: React.Dispatch<React.SetStateAction<string>>;
   formAction: (payload: FormData) => void;
+  stackDB: Record<string, StackDescription>;
 }
 
 const InputWithButton: React.FC<InputWithButtonProps> = ({
   setBrief,
   formAction,
+  stackDB,
 }) => {
   const router = useRouter();
 

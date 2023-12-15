@@ -9,7 +9,7 @@ import { callStack } from '../actions';
 import Inputs from './Inputs';
 import Outputs from './outputs';
 
-const Content: React.FC = () => {
+const Content = ({ stackDB }) => {
   const [outputState, functionAction] = useFormState(parseFormData, null);
   const [stackIO, createStack] = useFormState(callStack, {
     input: '',
@@ -19,7 +19,11 @@ const Content: React.FC = () => {
 
   return (
     <>
-      <InputWithButton setBrief={setBrief} formAction={createStack} />
+      <InputWithButton
+        setBrief={setBrief}
+        formAction={createStack}
+        stackDB={stackDB}
+      />
       <Brief>{brief ? `"${brief}"` : ''}</Brief>
       <Container>
         {stackIO.input && (
