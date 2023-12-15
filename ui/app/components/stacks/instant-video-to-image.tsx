@@ -12,7 +12,7 @@ const InstantVideoToImage: React.FC = () => {
     'dwayne the rock johnson'
   );
   const [videoHeight, setVideoHeight] = useState(0);
-  const [strength, setStrength] = useState<number>(8);
+  const [strength, setStrength] = useState<number>(4);
   const videoRef = useRef<HTMLVideoElement>(null);
   const intervalRef = useRef<NodeJS.Timeout>();
 
