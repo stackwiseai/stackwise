@@ -1,18 +1,45 @@
 'use server';
 import tw from 'tailwind-styled-components';
 import Link from 'next/link';
-import { stackDB, statusesToDisplay } from './stack-db';
+import { stackDB, statusesToDisplay, StackDescription } from './stack-db';
 import MainContent from '../components/main-content';
 import { IoLogoGithub } from 'react-icons/io';
 import { FaStar } from 'react-icons/fa';
 
 export default async function Component() {
   // filter out the stacks that are not ready for display
-  const stackDBToDisplay = Object.fromEntries(
-    Object.entries(stackDB).filter(([id, stack]) => {
-      return statusesToDisplay.some((status) => stack.tags.includes(status));
-    })
-  );
+  const filteredStacks = Object.entries(stackDB).filter(([id, stack]) => {
+    return statusesToDisplay.some((status) => stack.tags.includes(status));
+  });
+
+  const sortStacks = (
+    a: [string, StackDescription],
+    b: [string, StackDescription]
+  ): number => {
+    const [, stackA] = a;
+    const [, stackB] = b;
+
+    const isAStarred = stackA.tags.includes('starred');
+    const isBStarred = stackB.tags.includes('starred');
+    const isAPublishedNonExpansion =
+      stackA.tags.includes('published') && !stackA.tags.includes('expansion');
+    const isBPublishedNonExpansion =
+      stackB.tags.includes('published') && !stackB.tags.includes('expansion');
+    const isAExpansion = stackA.tags.includes('expansion');
+    const isBExpansion = stackB.tags.includes('expansion');
+
+    // Sorting logic
+    if (isAStarred && !isBStarred) return -1;
+    if (!isAStarred && isBStarred) return 1;
+    if (isAPublishedNonExpansion && !isBPublishedNonExpansion) return -1;
+    if (!isAPublishedNonExpansion && isBPublishedNonExpansion) return 1;
+    if (isAExpansion && !isBExpansion) return -1;
+    if (!isAExpansion && isBExpansion) return 1;
+    return 0;
+  };
+
+  // // Assuming filteredStacks is defined correctly as an array of [string, StackDescription] tuples
+  const sortedStacks = Object.fromEntries(filteredStacks.sort(sortStacks));
 
   return (
     <div className="h-screen">
@@ -27,10 +54,17 @@ export default async function Component() {
       <StacksContainer>
         {/* <StackTitle>Existing stacks</StackTitle> */}
         <Stacks>
-          {Object.entries(stackDBToDisplay).map(([id, stack], i) => (
+          {Object.entries(sortedStacks).map(([id, stack], i) => (
             <Link key={i} className="cursor-pointer" href={`/stacks/${id}`}>
               <StackCard>
-                <StackCardTitle>{stack.name}</StackCardTitle>
+                <div className="flex items-center justify-between">
+                  <StackCardTitle>{stack.name}</StackCardTitle>
+                  <div>
+                    {stack.tags.includes('starred') && (
+                      <FaStar className="w-4 h-4 text-yellow-300" />
+                    )}
+                  </div>
+                </div>
                 <StackCardImage
                   src={`/stack-pictures/${id}.png`}
                   alt="Stack Image"
@@ -70,6 +104,7 @@ const StackCard = tw.div`
 const StackCardTitle = tw.h2`
   font-medium
   line-clamp-1
+  overflow-hidden
 `;
 
 const StackCardImage = tw.img`
@@ -79,5 +114,4 @@ const StackCardImage = tw.img`
 const StackCardDescription = tw.div`
   line-clamp-2
   h-12
-  overflow-hidden
 `;

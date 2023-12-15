@@ -3,6 +3,7 @@ import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import tw from 'tailwind-styled-components';
 import { FaCode } from 'react-icons/fa6';
 import { IoLogoGithub } from 'react-icons/io';
+import { FaStar } from 'react-icons/fa';
 import dynamic from 'next/dynamic';
 import { StackDescription, stackDB as initialStackDB } from '../stack-db';
 import { useSearchParams } from 'next/navigation';
@@ -43,7 +44,6 @@ const Chat = ({ params }: { params: { slug: string } }) => {
     const initialStack = initialStackDB[stackSlug] || null;
     if (initialStack) {
       const stackWithSlug = { slug: stackSlug, ...initialStack };
-      console.log('stackInfo', stackWithSlug);
       setStack(stackWithSlug);
       const frontendPath = `/stacks/${stackSlug}.tsx`;
       const backendPath = `/stacks/${stackSlug}/route.ts`;
@@ -77,110 +77,113 @@ const Chat = ({ params }: { params: { slug: string } }) => {
   };
 
   return (
-    <div className="flex">
-      <Container style={{ width: chatWithComponent ? '50%' : '100%' }}>
-        <Link
-          className="cursor-pointer absolute sm:fixed top-4 sm:top-auto sm:bottom-4 right-4"
-          href="https://github.com/stackwiseai/stackwise"
-          target="_blank"
-        >
-          <IoLogoGithub className="w-8 h-8" />
-        </Link>
-        <TitleContainer>
-          <Link href="https://stackwise.ai/stacks">
-            <div className="w-full mb-4 flex justify-center">
-              <img className="w-32" src="/stackwise_logo.png" />
-            </div>
-          </Link>
-          <Subtitle>{stack?.description}</Subtitle>
-        </TitleContainer>
-        <div className="flex items-center justify-center flex-col sm:flex-row space-x-6">
-          <button
-            onClick={() => {
-              setDropdownSelection(
-                dropdownSelection === 'Usage' ? 'Code' : 'Usage'
-              );
-            }}
-            className="border rounded-md px-2 py-1 pr-2 flex items-center space-x-2"
-          >
-            <p>{dropdownSelection === 'Usage' ? 'Code' : 'Usage'}</p>
-            {dropdownSelection === 'Usage' ? <FaCode /> : <MdOutlineInput />}
-          </button>
-          <div className="flex pr-6 sm:pr-0 space-x-6 sm:mt-0">
-            <ClipboardComponent
-              title={
-                <>
-                  Copy{' '}
-                  <b className="text-black">
-                    {backendCode ? 'frontend' : 'code'}
-                  </b>
-                </>
-              }
-              code={frontendCode}
-            />
-            {backendCode && (
+    <>
+      <Link href="https://github.com/stackwiseai/stackwise" target="_blank">
+        <div className="hover:underline cursor-pointer h-12 flex justify-center items-center text-white bg-black">
+          <FaStar className="w-6 h-6 " />
+          <p className="mx-2">Star us on Github</p>
+          <IoLogoGithub className="w-6 h-6" />
+        </div>
+      </Link>
+
+      <div className="flex">
+        <Container style={{ width: chatWithComponent ? '50%' : '100%' }}>
+          <TitleContainer>
+            <Link href="https://stackwise.ai/stacks">
+              <div className="w-full mb-4 flex justify-center">
+                <img className="w-32" src="/stackwise_logo.png" />
+              </div>
+            </Link>
+            <Subtitle>{stack?.description}</Subtitle>
+          </TitleContainer>
+          <div className="flex items-center justify-center flex-col sm:flex-row space-x-6">
+            <button
+              onClick={() => {
+                setDropdownSelection(
+                  dropdownSelection === 'Usage' ? 'Code' : 'Usage'
+                );
+              }}
+              className="border rounded-md px-2 py-1 pr-2 flex items-center space-x-2"
+            >
+              <p>{dropdownSelection === 'Usage' ? 'Code' : 'Usage'}</p>
+              {dropdownSelection === 'Usage' ? <FaCode /> : <MdOutlineInput />}
+            </button>
+            <div className="flex pr-6 sm:pr-0 space-x-6 sm:mt-0">
               <ClipboardComponent
                 title={
                   <>
-                    Copy <b className="text-black">backend</b>
+                    Copy{' '}
+                    <b className="text-black">
+                      {backendCode ? 'frontend' : 'code'}
+                    </b>
                   </>
                 }
-                code={backendCode}
+                code={frontendCode}
               />
-            )}
+              {backendCode && (
+                <ClipboardComponent
+                  title={
+                    <>
+                      Copy <b className="text-black">backend</b>
+                    </>
+                  }
+                  code={backendCode}
+                />
+              )}
+            </div>
           </div>
-        </div>
-        <MainWrapper>
-          {dropdownSelection === 'Code' ? (
-            <div className="bg-[#1e1e1e] rounded-md w-3/4 md:w-1/2">
-              <div
-                className={`text-white flex items-center w-full ${
-                  !backendCode && 'hidden'
-                }`}
-              >
-                <button
-                  onClick={() => setShowFrontendCode(true)}
-                  className={`text-sm sm:text-base border-r border-b p-2 ${
-                    showFrontendCode && 'border-b-red-400 border-b-2'
+          <MainWrapper>
+            {dropdownSelection === 'Code' ? (
+              <div className="bg-[#1e1e1e] rounded-md w-3/4 md:w-1/2">
+                <div
+                  className={`text-white flex items-center w-full ${
+                    !backendCode && 'hidden'
                   }`}
                 >
-                  frontend code
-                </button>
-                {backendCode && (
                   <button
-                    onClick={() => setShowFrontendCode(false)}
-                    className={`text-sm sm:text-base border-r border-b p-2 rounded-br-lg ${
-                      !showFrontendCode && 'border-b-red-400 border-b-2'
+                    onClick={() => setShowFrontendCode(true)}
+                    className={`text-sm sm:text-base border-r border-b p-2 ${
+                      showFrontendCode && 'border-b-red-400 border-b-2'
                     }`}
                   >
-                    backend code
+                    frontend code
                   </button>
-                )}
-              </div>
-              {/* <pre className="min-h-4 p-3 max-h-96 w-full overflow-auto text-gray-200 text-sm whitespace-pre-wrap break-all">
+                  {backendCode && (
+                    <button
+                      onClick={() => setShowFrontendCode(false)}
+                      className={`text-sm sm:text-base border-r border-b p-2 rounded-br-lg ${
+                        !showFrontendCode && 'border-b-red-400 border-b-2'
+                      }`}
+                    >
+                      backend code
+                    </button>
+                  )}
+                </div>
+                {/* <pre className="min-h-4 p-3 max-h-96 w-full overflow-auto text-gray-200 text-sm whitespace-pre-wrap break-all">
               {showFrontendCode ? frontendCode : backendCode}
             </pre> */}
-              <SyntaxHighlighter
-                language="javascript"
-                className="min-h-4 p-3 max-h-80 sm:max-h-96 md:max-h-[28rem] w-full overflow-auto overflow-y-hidden text-gray-200 text-sm whitespace-pre-wrap break-all"
-                style={vscDarkPlus}
-                lineProps={{
-                  style: { wordBreak: 'break-all', whiteSpace: 'pre-wrap' },
-                }}
-                wrapLines={true}
-              >
-                {showFrontendCode ? frontendCode : backendCode}
-              </SyntaxHighlighter>
-            </div>
-          ) : DynamicComponent ? (
-            <DynamicComponent />
-          ) : (
-            <></>
-          )}
-        </MainWrapper>
-      </Container>
-      {chatWithComponent && <ChatWithStack />}
-    </div>
+                <SyntaxHighlighter
+                  language="javascript"
+                  className="min-h-4 p-3 max-h-80 sm:max-h-96 md:max-h-[28rem] w-full overflow-auto overflow-y-hidden text-gray-200 text-sm whitespace-pre-wrap break-all"
+                  style={vscDarkPlus}
+                  lineProps={{
+                    style: { wordBreak: 'break-all', whiteSpace: 'pre-wrap' },
+                  }}
+                  wrapLines={true}
+                >
+                  {showFrontendCode ? frontendCode : backendCode}
+                </SyntaxHighlighter>
+              </div>
+            ) : DynamicComponent ? (
+              <DynamicComponent />
+            ) : (
+              <></>
+            )}
+          </MainWrapper>
+        </Container>
+        {chatWithComponent && <ChatWithStack />}
+      </div>
+    </>
   );
 };
 
