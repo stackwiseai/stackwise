@@ -6,6 +6,7 @@ import MainContent from '../components/main-content';
 import { IoLogoGithub } from 'react-icons/io';
 import { FaStar } from 'react-icons/fa';
 import { createClient } from '@supabase/supabase-js';
+import { SignOutButton } from '@clerk/nextjs';
 
 export default async function Component() {
   // filter out the stacks that are not ready for display
@@ -51,6 +52,7 @@ export default async function Component() {
           <FaStar className="w-6 h-6 " />
           <p className="mx-2">Star us on Github</p>
           <IoLogoGithub className="w-6 h-6" />
+          <SignOutButton />
         </div>
       </Link>
       <MainContent stackDB={stackDB} />
