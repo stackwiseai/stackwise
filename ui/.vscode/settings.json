@@ -1,0 +1,28 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+    "source.fixAll": "always",
+    "source.organizeImports": true
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": false,
+  "tailwindCSS.experimental.configFile": "./packages/config/tailwind/index.ts",
+  "eslint.rules.customizations": [
+    {
+      "rule": "*",
+      "severity": "warn"
+    }
+  ],
+  "eslint.workingDirectories": ["./", { "pattern": "tooling/*/" }],
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "eslint.enable": true,
+  "eslint.format.enable": true,
+  "eslint.lintTask.enable": true
+}
