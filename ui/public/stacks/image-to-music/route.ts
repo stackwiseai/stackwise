@@ -65,7 +65,7 @@ Music: An electronic dance music (EDM) anthem in B major, with a catchy hook, up
 
     return new Response(
       JSON.stringify({
-        llavaResponse: { description: match[0], prompt: match[1] },
+        llavaResponse: { description: match[1], prompt: match[2] },
         audio: musicGen,
       }),
       {

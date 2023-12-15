@@ -143,7 +143,7 @@ export default function ImageToMusic() {
         {audio
           ? 'Reset'
           : loading
-          ? 'Loading, 10 secs...'
+          ? 'Loading, 10-30 secs...'
           : 'Create theme music'}
       </button>
     </div>
