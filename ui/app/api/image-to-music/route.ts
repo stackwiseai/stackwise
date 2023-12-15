@@ -59,8 +59,9 @@ Music: An electronic dance music (EDM) anthem in B major, with a catchy hook, up
       'meta/musicgen:b05b1dff1d8c6dc63d14b0cdb42135378dcb87f6373b0d3d341ede46e59e2b38';
     const musicGen = await replicate.run(musicGenVersion, {
       input: {
+        classifier_free_guidance: 10,
         model_version: 'stereo-melody-large',
-        prompt: match[1],
+        prompt: match[2],
         duration: musicLength,
       },
     });
