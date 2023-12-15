@@ -4,6 +4,8 @@ const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN as string,
 });
 
+export const maxDuration = 300;
+
 export async function POST(request: Request) {
   const form = await request.formData();
   const musicLength = Number(form.get('length'));
