@@ -76,7 +76,7 @@ export default function ImageToMusic() {
   };
 
   return (
-    <div className="flex-col mx-auto stretch flex justify-center items-center space-y-4 w-5/6 md:w-3/4 lg:w-2/3">
+    <div className="flex-col mx-auto stretch flex justify-center items-center space-y-4 w-5/6 md:w-3/4 lg:w-2/3 pb-10">
       <div className="flex justify-center items-center">
         <label
           htmlFor="customFileUpload"
