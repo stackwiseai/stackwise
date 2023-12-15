@@ -62,6 +62,11 @@ export const stackDB: Record<string, StackDescription> = {
     description: 'Chat with Gemini Using Streaming',
     tags: ['published'],
   },
+  // 'load-ts-react-component': {
+  //   name: 'Load a react component',
+  //   description: 'Chat with Gemini Using Streaming',
+  //   tags: ['published'],
+  // },
 };
 
 export const statusesToDisplay = ['verified', 'published'];
