@@ -8,7 +8,9 @@ fal.config({
 const InstantVideoToImage: React.FC = () => {
   const [image, setImage] = useState<string>('');
   const [videoImage, setVideoImage] = useState<string>('');
-  const [imagePrompt, setImagePrompt] = useState<string>('ryan reynolds');
+  const [imagePrompt, setImagePrompt] = useState<string>(
+    'dwayne the rock johnson'
+  );
   const [videoHeight, setVideoHeight] = useState(0);
   const [strength, setStrength] = useState<number>(4);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -66,7 +68,7 @@ const InstantVideoToImage: React.FC = () => {
         // Apply a blur effect to the video
         videoRef.current.style.filter = 'blur(6px)';
       }
-    }, 100000);
+    }, 10000);
 
     return () => {
       clearInterval(intervalRef.current);
