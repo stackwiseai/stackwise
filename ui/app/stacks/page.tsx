@@ -1,13 +1,16 @@
 'use server';
 import tw from 'tailwind-styled-components';
 import Link from 'next/link';
-import { stackDB, statusesToDisplay, StackDescription } from './stack-db';
+import { statusesToDisplay, StackDescription, getStackDB } from './stack-db';
 import MainContent from '../components/main-content';
 import { IoLogoGithub } from 'react-icons/io';
 import { FaStar } from 'react-icons/fa';
+import { createClient } from '@supabase/supabase-js';
 
 export default async function Component() {
   // filter out the stacks that are not ready for display
+
+  const stackDB = await getStackDB();
   const filteredStacks = Object.entries(stackDB).filter(([id, stack]) => {
     return statusesToDisplay.some((status) => stack.tags.includes(status));
   });
@@ -50,7 +53,7 @@ export default async function Component() {
           <IoLogoGithub className="w-6 h-6" />
         </div>
       </Link>
-      <MainContent />
+      <MainContent stackDB={stackDB} />
       <StacksContainer>
         {/* <StackTitle>Existing stacks</StackTitle> */}
         <Stacks>

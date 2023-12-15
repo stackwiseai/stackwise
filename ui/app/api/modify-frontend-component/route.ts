@@ -1,4 +1,4 @@
-import { stackDB } from '@/app/stacks/stack-db';
+// import { stackDB } from '@/app/stacks/stack-db';
 import { Octokit } from '@octokit/rest';
 const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 import axios from 'axios';
@@ -96,8 +96,8 @@ async function pushToBranch(newContent, branch, stackName) {
       ref: `heads/${branch}`,
       sha: newCommitData.sha,
     });
-    const jsonData = stackDB;
-    const stackDBFileContent = formatSortedJSON(jsonData);
+    // const jsonData = stackDB;
+    // const stackDBFileContent = formatSortedJSON(jsonData);
 
     console.log('Successfully pushed to branch:', branch);
     const gitDiffLink = `https://github.com/${owner}/${repo}/compare/${sourceBranch}...${branch}`;
