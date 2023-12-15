@@ -16,7 +16,7 @@ export default function ImageToMusic() {
   useEffect(() => {
     const fetchImage = async () => {
       try {
-        const response = await fetch('/boat_example.webp');
+        const response = await fetch('/apocalyptic_car.png');
         const blob = await response.blob();
         const file = new File([blob], 'default_image.webp', {
           type: 'image/webp',
