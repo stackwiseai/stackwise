@@ -60,9 +60,9 @@ const RAGPDFWithLangchain = () => {
   const [pdfUploaded, setPdfUploaded] = useState<boolean>(false);
   const [chatHistory, setChatHistory] = useState<string[]>([]);
   const abortControllerRef = useRef<AbortController | null>(null);
-  const questionInputRef = useRef<HTMLInputElement>(null);
+  const questionInputRef = useRef<HTMLInputElement | null>(null);
+  const pdfInputRef = useRef<HTMLInputElement | null>(null);
   const prevQuestionRef = useRef(question);
-  const pdfRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     return () => {
@@ -117,13 +117,13 @@ const RAGPDFWithLangchain = () => {
     handleCancel();
     setChatHistory([]);
     // Clear the file input if needed
-    if (questionInputRef.current) {
+    if (questionInputRef?.current) {
       questionInputRef.current.value = '';
     }
     // Focus the file input after reset
     questionInputRef.current?.focus();
-    if (pdfRef.current) {
-      pdfRef.current.value = '';
+    if (pdfInputRef.current) {
+      pdfInputRef.current.value = '';
     }
   };
 
@@ -202,6 +202,7 @@ const RAGPDFWithLangchain = () => {
               Upload PDF
             </span>
             <input
+              ref={pdfInputRef}
               type="file"
               onChange={handlePDFUpload}
               disabled={loading}
