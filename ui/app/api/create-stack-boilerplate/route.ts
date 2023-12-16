@@ -6,7 +6,9 @@ export async function POST(req: Request) {
     const token = req.headers.get('Authorization').split(' ')[1];
 
     const supabase = await getSupabaseClient(token);
+    // add a field to data
     const data = await req.json();
+    data.tags = ['draft'];
 
     const { data: insertedData, error } = await supabase
       .from('stack')

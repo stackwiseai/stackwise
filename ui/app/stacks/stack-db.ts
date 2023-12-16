@@ -25,8 +25,11 @@ export async function getSupabaseClient(token) {
   );
 }
 
-export async function getStackDB(token) {
-  const supabase = await getSupabaseClient(token);
+export async function getStackDB() {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  );
   let { data: projectsArray, error } = await supabase
     .from('stack') // Replace with your actual table name
     .select('*');

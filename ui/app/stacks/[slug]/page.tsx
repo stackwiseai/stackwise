@@ -40,15 +40,10 @@ const Chat = ({ params }: { params: { slug: string } }) => {
   const [frontendCode, setFrontendCode] = useState<string>('');
   const [dropdownSelection, setDropdownSelection] = useState<string>('Usage');
   const [stack, setStack] = useState<StackDescriptionWithSlug | null>(null);
-  const { getToken } = useAuth();
 
   useEffect(() => {
     const fetchPosts = async () => {
-      console.log('ok');
-      const token = await getToken({ template: 'supabase' });
-      console.log('test', 'ok');
-
-      const initialStackDB = await getStackDB(token);
+      const initialStackDB = await getStackDB();
       console.log('initialStackDB', initialStackDB);
       const stackSlug = params.slug ?? null;
       if (!stackSlug) return;

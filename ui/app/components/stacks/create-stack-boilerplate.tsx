@@ -1,5 +1,5 @@
-import { useAuth } from '@clerk/nextjs';
 import React, { useState } from 'react';
+import { useAuth } from '@clerk/nextjs';
 
 export const BasicForm = () => {
   const [formData, setFormData] = useState({
@@ -8,18 +8,18 @@ export const BasicForm = () => {
     id: '',
   });
   const [formErrors, setFormErrors] = useState({ id: '' });
+  const [Message, setMessage] = useState('');
   const { getToken } = useAuth();
-  // Function to validate kebab case
+
   const isKebabCase = (str) => /^[a-z0-9]+(-[a-z0-9]+)*$/.test(str);
 
-  const handleChange = async (e) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
     });
 
-    // Validate ID for kebab case
     if (name === 'id' && value && !isKebabCase(value)) {
       setFormErrors({ ...formErrors, id: 'ID must be in kebab-case.' });
     } else {
@@ -28,22 +28,15 @@ export const BasicForm = () => {
   };
 
   const handleSubmit = async (event) => {
-    const token = await getToken({ template: 'supabase' });
-
     event.preventDefault();
+    const token = await getToken({ template: 'supabase' });
 
     if (!isKebabCase(formData.id)) {
       setFormErrors({ ...formErrors, id: 'ID must be in kebab-case.' });
       return;
     }
 
-    console.log('Form Data Submitted:', formData);
-
     try {
-      if (!isKebabCase(formData.id)) {
-        setFormErrors({ ...formErrors, id: 'ID must be in kebab-case.' });
-        return;
-      }
       const response = await fetch('/api/create-stack-boilerplate', {
         method: 'POST',
         headers: {
@@ -53,16 +46,16 @@ export const BasicForm = () => {
         body: JSON.stringify(formData),
       });
 
-      if (!response.ok) {
+      if (response.ok) {
+        setMessage('Form submitted successfully!');
+        const responseData = await response.json();
+        console.log('Response:', responseData);
+      } else {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-
-      const responseData = await response.json();
-      console.log('Response:', responseData);
-      // Handle success here
     } catch (error) {
       console.error('Error during fetch:', error);
-      // Handle errors here
+      setMessage('Error on form submission');
     }
   };
 
@@ -101,6 +94,7 @@ export const BasicForm = () => {
         >
           Submit
         </button>
+        {Message && <div className="text-green-500 mt-2">{Message}</div>}
       </form>
     </div>
   );

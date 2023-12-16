@@ -5,16 +5,16 @@ import { statusesToDisplay, StackDescription, getStackDB } from './stack-db';
 import MainContent from '../components/main-content';
 import { IoLogoGithub } from 'react-icons/io';
 import { FaStar } from 'react-icons/fa';
-import { SignOutButton, SignedIn, useAuth } from '@clerk/nextjs';
+import { SignOutButton, SignedIn, clerkClient, useAuth } from '@clerk/nextjs';
 
 export default async function Component() {
-  // filter out the stacks that are not ready for display
-  const { getToken } = useAuth();
-  const token = await getToken({ template: 'supabase' });
-
-  const stackDB = await getStackDB(token);
+  // console.log('statusesToDisplay', statusesToDisplay);
+  const stackDB = await getStackDB();
+  console.log('stackDB', stackDB);
   const filteredStacks = Object.entries(stackDB).filter(([id, stack]) => {
-    return statusesToDisplay.some((status) => stack.tags.includes(status));
+    return statusesToDisplay.some((status) =>
+      stack.tags ? stack.tags.includes(status) : false
+    );
   });
 
   const sortStacks = (
@@ -55,12 +55,9 @@ export default async function Component() {
           <IoLogoGithub className="w-6 h-6" />
         </div>
       </Link>
-      <SignedIn>
-        <SignOutButton />
-      </SignedIn>
+
       <MainContent stackDB={stackDB} />
       <StacksContainer>
-        {/* <StackTitle>Existing stacks</StackTitle> */}
         <Stacks>
           {Object.entries(sortedStacks).map(([id, stack], i) => (
             <Link key={i} className="cursor-pointer" href={`/stacks/${id}`}>
@@ -85,6 +82,10 @@ export default async function Component() {
           ))}
         </Stacks>
       </StacksContainer>
+
+      <SignedIn>
+        <SignOutButton />
+      </SignedIn>
     </div>
   );
 }
