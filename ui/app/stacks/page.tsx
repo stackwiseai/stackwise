@@ -10,6 +10,8 @@ import MainContent from "../components/main-content";
 import type { StackDescription } from "./stack-db";
 import { getStackDB, statusesToDisplay } from "./stack-db";
 
+export const fetchCache = "default-no-store"; // TODO: remove this line to enable caching but without making the app completely static
+
 export default async function Component() {
   // console.log('statusesToDisplay', statusesToDisplay);
   const stackDB = await getStackDB();
