@@ -1,5 +1,3 @@
-"use server";
-
 import Link from "next/link";
 import { SignedIn, SignOutButton } from "@clerk/nextjs";
 import { FaStar } from "react-icons/fa";
