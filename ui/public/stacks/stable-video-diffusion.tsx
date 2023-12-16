@@ -141,6 +141,8 @@ const StableVideoDiffusion = () => {
     const mainCanvasBlob = await new Promise((resolve) => {
       if (draftCanvasRef.current) {
         draftCanvasRef.current.toBlob(resolve, "image/png");
+      } else {
+        resolve(null);
       }
     });
 

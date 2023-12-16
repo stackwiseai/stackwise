@@ -1,7 +1,7 @@
 import Replicate from "replicate";
 
 const replicate = new Replicate({
-  auth: process.env.REPLICATE_API_TOKEN as string,
+  auth: process.env.REPLICATE_API_TOKEN!,
 });
 
 export const maxDuration = 300;
@@ -54,21 +54,11 @@ Music: An electronic dance music (EDM) anthem in B major, with a catchy hook, up
 
     const regex = /Description:\s*(.*?)\s*Music:\s*(.*)/s;
     const match = llavaPrediction.match(regex);
-
+    if (!match) {
+      throw new Error("No match");
+    }
     const musicGenVersion =
       "meta/musicgen:b05b1dff1d8c6dc63d14b0cdb42135378dcb87f6373b0d3d341ede46e59e2b38";
-    if (!match) {
-      return new Response(
-        JSON.stringify({
-          error: "No match found",
-          llavaResponse: llavaPrediction,
-        }),
-        {
-          status: 500,
-          headers: { "Content-Type": "application/json" },
-        },
-      );
-    }
     const musicGen = await replicate.run(musicGenVersion, {
       input: {
         classifier_free_guidance: 10,

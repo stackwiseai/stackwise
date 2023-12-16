@@ -7,7 +7,7 @@ export default function ImageToMusic() {
   const [llavaResponse, setLlavaResponse] = useState<{
     description: string;
     prompt: string;
-  }>({ description: "", prompt: "" }); // Provide initial value here
+  }>({ description: "", prompt: "" }); // Provide initial values here
   const [audio, setAudio] = useState<string>("");
   const [musicLength, setMusicLength] = useState<string>("10");
   const [loading, setLoading] = useState(false);
