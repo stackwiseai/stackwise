@@ -15,6 +15,19 @@ export async function POST(req) {
   const json = await req.json();
   console.log(json);
   const { fileContent, stackName } = json;
+  const responseJson = await modifyFrontEndComponent(
+    fileContent,
+    stackName,
+    true
+  );
+  return Response.json(responseJson);
+}
+
+export async function modifyFrontEndComponent(
+  fileContent: any,
+  stackName: any,
+  hasUuid
+) {
   if (!fileContent) {
     throw new Error('No tsx code found in the response');
   }
@@ -22,19 +35,30 @@ export async function POST(req) {
   console.log(extractedContent);
   const branch = sourceBranch;
 
-  const gitDiffUrl = await pushToBranch(extractedContent, branch, stackName);
+  const gitDiffUrl = await pushToBranch(
+    extractedContent,
+    branch,
+    stackName,
+    hasUuid
+  );
   console.log('gitDiffUrl', gitDiffUrl);
-  const vercelLink = await deployToVercel(branch);
+  // const vercelLink = await deployToVercel(branch);
+  const vercelLink = '';
   const responseJson = { gitDiffUrl, vercelLink };
-  return Response.json(responseJson);
+  return responseJson;
 }
 
-async function pushToBranch(newContent, branch, stackName) {
-  const generatedUuid = uuidv4();
-  const randomChars = generatedUuid.replace(/-/g, '').substring(0, 7);
-  const stackNameWithUuid = `${stackName}-${randomChars}`;
-  const path = `ui/app/components/stacks/${stackNameWithUuid}.tsx`;
-  const message = `Building ${stackNameWithUuid}`;
+async function pushToBranch(newContent, branch, stackName, hasUuid) {
+  let actualStackName = stackName;
+  if (hasUuid) {
+    throw new Error('No tsx code found in the response');
+    const generatedUuid = uuidv4();
+    const randomChars = generatedUuid.replace(/-/g, '').substring(0, 7);
+    actualStackName = `${stackName}-${randomChars}`;
+  }
+
+  const path = `ui/app/components/stacks/${actualStackName}.tsx`;
+  const message = `Building ${actualStackName}`;
 
   try {
     // Get the SHA of the latest commit on the branch
@@ -46,7 +70,7 @@ async function pushToBranch(newContent, branch, stackName) {
       branch: sourceBranch,
     });
     parentSha = sourceBranchData.commit.sha;
-
+    console.log('parentSha', parentSha);
     // Create a new branch
     console.log('Creating ref for :', branch);
     // await octokit.git.createRef({
@@ -88,6 +112,8 @@ async function pushToBranch(newContent, branch, stackName) {
       tree: treeData.sha,
       parents: [parentSha],
     });
+
+    console.log('Created commit:', newCommitData.sha);
 
     // Update the branch reference to point to the new commit
     await octokit.git.updateRef({

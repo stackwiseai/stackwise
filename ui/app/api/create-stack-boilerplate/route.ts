@@ -1,4 +1,5 @@
 import { getSupabaseClient } from '@/app/stacks/stack-db';
+import { modifyFrontEndComponent } from '../modify-frontend-component/route';
 
 export async function POST(req: Request) {
   try {
@@ -14,6 +15,8 @@ export async function POST(req: Request) {
       .from('stack')
       .insert([data])
       .single();
+
+    const responseJson = await modifyFrontEndComponent('test', data.id, false);
 
     if (error) {
       throw error;
