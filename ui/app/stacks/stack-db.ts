@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 
 type Status = "published" | "starred" | "expansion";
+export const fetchCache = "default-no-store"; // TODO: remove this line to enable caching but without making the app completely static
 
 export async function getSupabaseClient(token) {
   return createClient(
