@@ -1,5 +1,3 @@
-"use server";
-
 import Link from "next/link";
 import { SignedIn, SignOutButton } from "@clerk/nextjs";
 import { FaStar } from "react-icons/fa";
@@ -9,6 +7,9 @@ import tw from "tailwind-styled-components";
 import MainContent from "../components/main-content";
 import type { StackDescription } from "./stack-db";
 import { getStackDB, statusesToDisplay } from "./stack-db";
+
+export const fetchCache = "force-no-store"; // TODO: remove this line to enable caching but without making the app completely static
+export const revalidate = 0;
 
 export default async function Component() {
   // console.log('statusesToDisplay', statusesToDisplay);
