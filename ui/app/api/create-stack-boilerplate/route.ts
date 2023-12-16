@@ -1,6 +1,6 @@
 import { getSupabaseClient } from '@/app/stacks/stack-db';
-import { modifyFrontEndComponent } from '../modify-frontend-component/route';
 import { readFileSync } from 'fs';
+import { pushStackToGithub } from '../modify-frontend-component/push-stack-to-github';
 
 export async function POST(req: Request) {
   try {
@@ -17,10 +17,13 @@ export async function POST(req: Request) {
       .from('stack')
       .insert([data])
       .single();
-    const responseJson = await modifyFrontEndComponent(
+    const path = `ui/app/components/stacks/${data.id}.tsx`;
+    const message = `Stack ${data.id} created`;
+
+    const responseJson = await pushStackToGithub(
       frontEndFileContent,
-      data.id,
-      false
+      path,
+      message
     );
     if (error) {
       throw error;
