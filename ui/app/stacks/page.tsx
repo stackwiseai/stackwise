@@ -10,7 +10,6 @@ import { SignOutButton, SignedIn, clerkClient, useAuth } from '@clerk/nextjs';
 export default async function Component() {
   // console.log('statusesToDisplay', statusesToDisplay);
   const stackDB = await getStackDB();
-  console.log('stackDB', stackDB);
   const filteredStacks = Object.entries(stackDB).filter(([id, stack]) => {
     return statusesToDisplay.some((status) =>
       stack.tags ? stack.tags.includes(status) : false
