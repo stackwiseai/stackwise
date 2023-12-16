@@ -1,60 +1,60 @@
-import { createClient } from '@supabase/supabase-js';
-type Status = 'published' | 'starred' | 'expansion';
-import { useAuth } from '@clerk/nextjs';
+import { createClient } from "@supabase/supabase-js";
+
+type Status = "published" | "starred" | "expansion";
 
 export async function getSupabaseClient(token) {
   return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "",
     {
       db: {
-        schema: 'public',
+        schema: "public",
       },
       auth: {
         persistSession: false,
         autoRefreshToken: false,
       },
       global: {
-        headers: token
-          ? {
-              Authorization: `Bearer ${token}`,
-            }
-          : null,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-    }
+    },
   );
 }
 
 export async function getStackDB() {
   const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "",
   );
-  let { data: projectsArray, error } = await supabase
-    .from('stack') // Replace with your actual table name
-    .select('*');
+  const { data: projectsArray, error } = await supabase
+    .from("stack") // Replace with your actual table name
+    .select("*");
 
   if (error) {
-    console.error('Error fetching data:', error);
+    console.error("Error fetching data:", error);
     return null;
   }
 
   const projectsObject: Record<string, StackDescription> = {};
-  projectsArray.forEach((project) => {
-    projectsObject[project.id] = {
-      name: project.name,
-      description: project.description,
-      tags: project.tags,
-    };
-  });
+  if (projectsArray) {
+    projectsArray.forEach((project) => {
+      projectsObject[project.id] = {
+        name: project.name,
+        description: project.description,
+        tags: project.tags,
+      };
+    });
+  }
 
   return projectsObject;
 }
 
-export type StackDescription = {
+export interface StackDescription {
   name: string;
   description: string;
   tags: Status[];
-};
+}
 
-export const statusesToDisplay: Status[] = ['published'];
+export const statusesToDisplay: Status[] = ["published"];

@@ -1,20 +1,32 @@
-import { getSupabaseClient } from '@/app/stacks/stack-db';
-import { readFileSync } from 'fs';
-import { pushStackToGithub } from '../modify-frontend-component/push-stack-to-github';
+import { readFileSync } from "fs";
+import { getSupabaseClient } from "@/app/stacks/stack-db";
+
+import { pushStackToGithub } from "../modify-frontend-component/push-stack-to-github";
 
 export async function POST(req: Request) {
   try {
     const frontEndFileContent = readFileSync(
       `app/components/stacks/boilerplate-basic.tsx`,
-      'utf8'
+      "utf8",
     );
-    const token = req.headers.get('Authorization').split(' ')[1];
+    const authorizationHeaders = req.headers.get("Authorization");
+
+    if (!authorizationHeaders) {
+      throw new Error("No token provided");
+    }
+    const authorizationHeadersSplit = authorizationHeaders.split(" ");
+    if (!authorizationHeadersSplit) {
+      throw new Error("Invalid token provided");
+    }
+
+    const token = authorizationHeadersSplit;
+
     const supabase = await getSupabaseClient(token);
     // add a field to data
     const data = await req.json();
-    data.tags = ['draft'];
+    data.tags = ["draft"];
     const { data: insertedData, error } = await supabase
-      .from('stack')
+      .from("stack")
       .insert([data])
       .single();
     const path = `ui/app/components/stacks/${data.id}.tsx`;
@@ -23,17 +35,17 @@ export async function POST(req: Request) {
     const responseJson = await pushStackToGithub(
       frontEndFileContent,
       path,
-      message
+      message,
     );
     if (error) {
       throw error;
     }
-    await supabase.rpc('commit');
+    await supabase.rpc("commit");
     // Return a success response
     return new Response(JSON.stringify({}), {
       status: 200,
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
   } catch (error) {
@@ -42,7 +54,7 @@ export async function POST(req: Request) {
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
   }

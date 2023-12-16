@@ -1,36 +1,39 @@
-'use server';
-import tw from 'tailwind-styled-components';
-import Link from 'next/link';
-import { statusesToDisplay, StackDescription, getStackDB } from './stack-db';
-import MainContent from '../components/main-content';
-import { IoLogoGithub } from 'react-icons/io';
-import { FaStar } from 'react-icons/fa';
-import { SignOutButton, SignedIn, clerkClient, useAuth } from '@clerk/nextjs';
+"use server";
+
+import Link from "next/link";
+import { SignedIn, SignOutButton } from "@clerk/nextjs";
+import { FaStar } from "react-icons/fa";
+import { IoLogoGithub } from "react-icons/io";
+import tw from "tailwind-styled-components";
+
+import MainContent from "../components/main-content";
+import type { StackDescription } from "./stack-db";
+import { getStackDB, statusesToDisplay } from "./stack-db";
 
 export default async function Component() {
   // console.log('statusesToDisplay', statusesToDisplay);
   const stackDB = await getStackDB();
-  const filteredStacks = Object.entries(stackDB).filter(([id, stack]) => {
+  const filteredStacks = Object.entries(stackDB || {}).filter(([id, stack]) => {
     return statusesToDisplay.some((status) =>
-      stack.tags ? stack.tags.includes(status) : false
+      stack.tags ? stack.tags.includes(status) : false,
     );
   });
 
   const sortStacks = (
     a: [string, StackDescription],
-    b: [string, StackDescription]
+    b: [string, StackDescription],
   ): number => {
     const [, stackA] = a;
     const [, stackB] = b;
 
-    const isAStarred = stackA.tags.includes('starred');
-    const isBStarred = stackB.tags.includes('starred');
+    const isAStarred = stackA.tags.includes("starred");
+    const isBStarred = stackB.tags.includes("starred");
     const isAPublishedNonExpansion =
-      stackA.tags.includes('published') && !stackA.tags.includes('expansion');
+      stackA.tags.includes("published") && !stackA.tags.includes("expansion");
     const isBPublishedNonExpansion =
-      stackB.tags.includes('published') && !stackB.tags.includes('expansion');
-    const isAExpansion = stackA.tags.includes('expansion');
-    const isBExpansion = stackB.tags.includes('expansion');
+      stackB.tags.includes("published") && !stackB.tags.includes("expansion");
+    const isAExpansion = stackA.tags.includes("expansion");
+    const isBExpansion = stackB.tags.includes("expansion");
 
     // Sorting logic
     if (isAStarred && !isBStarred) return -1;
@@ -48,10 +51,10 @@ export default async function Component() {
   return (
     <div className="h-screen">
       <Link href="https://github.com/stackwiseai/stackwise" target="_blank">
-        <div className="hover:underline cursor-pointer h-12 flex justify-center items-center text-white bg-black">
-          <FaStar className="w-6 h-6 " />
+        <div className="flex h-12 cursor-pointer items-center justify-center bg-black text-white hover:underline">
+          <FaStar className="h-6 w-6 " />
           <p className="mx-2">Star us on Github</p>
-          <IoLogoGithub className="w-6 h-6" />
+          <IoLogoGithub className="h-6 w-6" />
         </div>
       </Link>
 
@@ -64,8 +67,8 @@ export default async function Component() {
                 <div className="flex items-center justify-between">
                   <StackCardTitle>{stack.name}</StackCardTitle>
                   <div>
-                    {stack.tags.includes('starred') && (
-                      <FaStar className="w-4 h-4 text-yellow-300" />
+                    {stack.tags.includes("starred") && (
+                      <FaStar className="h-4 w-4 text-yellow-300" />
                     )}
                   </div>
                 </div>
