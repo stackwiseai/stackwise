@@ -4,49 +4,25 @@ import ReactMarkdown from 'react-markdown';
 
 export const ChatWithOpenAIStreaming = () => {
   const [inputValue, setInputValue] = useState('');
-  const [generatedFileContents, setGeneratedFileContents] = useState('');
+  const [output, setOutput] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     console.log('Submitting:', inputValue);
     if (inputValue.trim()) {
-      setGeneratedFileContents('');
+      setOutput('');
       setLoading(true);
 
-      try {
-        const response = await fetch('/api/chat-with-gemini-streaming', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ messages: inputValue }),
-        });
-        const data = await response.body;
-
-        if (!data) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const reader = data.getReader();
-        const decoder = new TextDecoder();
-        let done = false;
-        let fullContent = '';
-
-        while (!done) {
-          const { value, done: doneReading } = await reader.read();
-          done = doneReading;
-          const chunkValue = decoder.decode(value, { stream: !done });
-          setGeneratedFileContents((prev) => prev + chunkValue);
-          setLoading(false);
-          fullContent += chunkValue;
-        }
-      } catch (error) {
-        console.error('Error during fetch:', error);
-      } finally {
-        setInputValue(''); // Clear the input field
-        setLoading(false);
-      }
+      const response = await fetch('/api/chat-with-gemini-streaming', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ messages: inputValue }),
+      });
+      const data = await response.json();
+      setOutput(data.output);
     }
   };
   return (
@@ -78,8 +54,8 @@ export const ChatWithOpenAIStreaming = () => {
       <div className="mt-4 min-h-4 p-4 max-h-96 md:max-h-[28rem] overflow-auto w-full rounded-md bg-[#faf0e6]">
         {loading ? (
           <span className="text-sm text-gray-400">Generating... </span>
-        ) : generatedFileContents ? (
-          <ReactMarkdown>{generatedFileContents}</ReactMarkdown>
+        ) : output ? (
+          <ReactMarkdown>{output}</ReactMarkdown>
         ) : (
           <p className="text-gray-400 text-sm">Output here...</p>
         )}
