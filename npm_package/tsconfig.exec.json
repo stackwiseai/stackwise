@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./cmd",
+    "module": "ESNext"
+  },
+  "include": ["exec/**/*.ts"],
+  "exclude": ["src/**/*.ts", "test/**/*.spec.ts"]
+}

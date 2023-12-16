@@ -117,3 +117,4 @@ dist
 
 # Compiled code
 lib/
+cmd/

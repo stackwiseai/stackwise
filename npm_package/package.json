@@ -3,15 +3,20 @@
   "version": "0.0.0-development",
   "description": "Explain what you want to do, and AI builds it.",
   "main": "./lib/index.js",
+  "type": "module",
+  "bin": {
+    "stackwise": "./cmd/index.js"
+  },
   "files": [
     "lib/**/*"
   ],
   "types": "./lib/index.d.ts",
   "scripts": {
-    "build": "tsc --project tsconfig.build.json",
-    "clean": "rm -rf ./lib/",
+    "build": "tsc --project tsconfig.src.json && tsc --project tsconfig.exec.json",
+    "clean": "rm -rf ./lib/ && rm -rf ./cmd/",
+    "postbuild": "chmod +x ./cmd/index.js",
     "cm": "cz",
-    "lint": "eslint ./src/ --fix",
+    "lint": "eslint ./src/ --fix && eslint ./cmd/ --fix",
     "semantic-release": "semantic-release",
     "test:watch": "jest --watch",
     "test": "jest --coverage",
@@ -64,7 +69,11 @@
     "semantic-release": "^21.0.1",
     "ts-jest": "^27.0.5",
     "ts-node": "^10.2.1",
-    "typescript": "^4.2.4"
+    "typescript": "^4.2.4",
+    "archiver": "^6.0.1",
+    "crypto-js": "^4.2.0",
+    "memfs": "^4.6.0",
+    "replicate": "^0.24.0"
   },
   "lint-staged": {
     "*.ts": "eslint --cache --cache-location .eslintcache --fix"
@@ -113,9 +122,5 @@
       "@semantic-release/npm",
       "@semantic-release/github"
     ]
-  },
-  "dependencies": {
-    "crypto-js": "^4.2.0",
-    "replicate": "^0.24.0"
   }
 }
