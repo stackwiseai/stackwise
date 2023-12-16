@@ -33,6 +33,7 @@
     "react-markdown": "^9.0.1",
     "react-sketch-canvas": "^6.2.0",
     "react-syntax-highlighter": "^15.5.0",
+    "replicate": "^0.18.1",
     "supabase": "^1.123.4",
     "tailwind-styled-components": "^2.2.0",
     "use-image": "^1.1.1",

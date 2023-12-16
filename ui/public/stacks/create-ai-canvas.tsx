@@ -51,7 +51,7 @@ const CreateAICanvas: React.FC = () => {
       sync_mode: true,
       image_url: dataUriImage,
       strength: 0.65,
-      enable_safety_checks: false,
+      enable_safety_checks: true,
     });
   }, [dataUriImage, imagePrompt]);
 

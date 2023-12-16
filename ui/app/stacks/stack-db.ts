@@ -1,11 +1,33 @@
 import { createClient } from '@supabase/supabase-js';
 type Status = 'published' | 'starred' | 'expansion';
-const supabaseclient = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
-export async function getStackDB() {
-  let { data: projectsArray, error } = await supabaseclient
+import { useAuth } from '@clerk/nextjs';
+
+export async function getSupabaseClient(token) {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    {
+      db: {
+        schema: 'public',
+      },
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+      },
+      global: {
+        headers: token
+          ? {
+              Authorization: `Bearer ${token}`,
+            }
+          : null,
+      },
+    }
+  );
+}
+
+export async function getStackDB(token) {
+  const supabase = await getSupabaseClient(token);
+  let { data: projectsArray, error } = await supabase
     .from('stack') // Replace with your actual table name
     .select('*');
 

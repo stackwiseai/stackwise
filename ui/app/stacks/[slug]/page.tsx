@@ -13,6 +13,7 @@ import {
 import { useSearchParams } from 'next/navigation';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { useAuth } from '@clerk/nextjs';
 
 // Lazy load ClipboardComponent
 const ClipboardComponent = lazy(() => import('@/app/components/clipboard'));
@@ -39,10 +40,16 @@ const Chat = ({ params }: { params: { slug: string } }) => {
   const [frontendCode, setFrontendCode] = useState<string>('');
   const [dropdownSelection, setDropdownSelection] = useState<string>('Usage');
   const [stack, setStack] = useState<StackDescriptionWithSlug | null>(null);
+  const { getToken } = useAuth();
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const initialStackDB = await getStackDB();
+      console.log('ok');
+      const token = await getToken({ template: 'supabase' });
+      console.log('test', 'ok');
+
+      const initialStackDB = await getStackDB(token);
+      console.log('initialStackDB', initialStackDB);
       const stackSlug = params.slug ?? null;
       if (!stackSlug) return;
 
