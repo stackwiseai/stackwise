@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 const StableVideoDiffusion = () => {
   const draftCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -7,10 +7,10 @@ const StableVideoDiffusion = () => {
     x: number;
     y: number;
   } | null>(null);
-  const [imgSrc, setImgSrc] = useState<string>('/boat_example.webp');
+  const [imgSrc, setImgSrc] = useState<string>("/boat_example.webp");
   const [loading, setLoading] = useState(false);
   const [degreeOfMotion, setDegreeOfMotion] = useState(40);
-  const [animatedPicture, setAnimatedPicture] = useState('');
+  const [animatedPicture, setAnimatedPicture] = useState("");
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
   const imageRef = useRef(new Image());
 
@@ -24,10 +24,10 @@ const StableVideoDiffusion = () => {
     loadImage();
 
     // Add a throttled resize event listener
-    window.addEventListener('resize', loadImage);
+    window.addEventListener("resize", loadImage);
 
     // Cleanup the event listener on component unmount
-    return () => window.removeEventListener('resize', loadImage);
+    return () => window.removeEventListener("resize", loadImage);
   }, [imgSrc]);
 
   const draw = useCallback(
@@ -36,16 +36,16 @@ const StableVideoDiffusion = () => {
       if (!draftCanvas) return;
 
       const rect = draftCanvas.getBoundingClientRect();
-      const ctx = draftCanvas.getContext('2d');
+      const ctx = draftCanvas.getContext("2d");
       if (!ctx) return;
 
       const x = clientX - rect.left;
       const y = clientY - rect.top;
 
       if (lastPosition) {
-        ctx.strokeStyle = 'rgb(0,0,0)'; // Set stroke color
+        ctx.strokeStyle = "rgb(0,0,0)"; // Set stroke color
         ctx.lineWidth = 40; // Set stroke width
-        ctx.lineCap = 'round'; // Smooth line endings
+        ctx.lineCap = "round"; // Smooth line endings
 
         ctx.beginPath();
         ctx.moveTo(lastPosition.x, lastPosition.y);
@@ -55,7 +55,7 @@ const StableVideoDiffusion = () => {
 
       setLastPosition({ x, y });
     },
-    [lastPosition]
+    [lastPosition],
   );
 
   const handleMouseMove = useCallback(
@@ -63,7 +63,7 @@ const StableVideoDiffusion = () => {
       if (!isDrawing) return;
       draw(e.clientX, e.clientY);
     },
-    [draw, isDrawing]
+    [draw, isDrawing],
   );
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
@@ -82,7 +82,7 @@ const StableVideoDiffusion = () => {
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (animatedPicture) {
-      setAnimatedPicture('');
+      setAnimatedPicture("");
     }
     if (e.target.files && e.target.files[0]) {
       const newImgSrc = URL.createObjectURL(e.target.files[0]);
@@ -104,7 +104,7 @@ const StableVideoDiffusion = () => {
   };
 
   const resizeCanvas = (img) => {
-    const parentDiv = document.querySelector('.canvas-img');
+    const parentDiv = document.querySelector(".canvas-img");
     if (!parentDiv || !draftCanvasRef.current) return;
 
     const parentWidth = parentDiv.clientWidth;
@@ -131,16 +131,18 @@ const StableVideoDiffusion = () => {
   const handleSubmit = async () => {
     // Reset and setup code
     if (animatedPicture) {
-      setAnimatedPicture('');
+      setAnimatedPicture("");
       resizeCanvas(imageRef.current);
       return;
     }
     setLoading(true);
 
     // Convert the drawing on the main canvas to a Blob
-    const mainCanvasBlob = await new Promise((resolve) =>
-      draftCanvasRef.current.toBlob(resolve, 'image/png')
-    );
+    const mainCanvasBlob = await new Promise((resolve) => {
+      if (draftCanvasRef.current) {
+        draftCanvasRef.current.toBlob(resolve, "image/png");
+      }
+    });
 
     try {
       // Fetch the background image from the imgSrc URL and convert it to a Blob
@@ -149,14 +151,14 @@ const StableVideoDiffusion = () => {
 
       // Prepare FormData
       const formData = new FormData();
-      formData.append('img', backgroundImageBlob, 'background.png');
-      formData.append('mask', mainCanvasBlob as Blob, 'mask.png');
+      formData.append("img", backgroundImageBlob, "background.png");
+      formData.append("mask", mainCanvasBlob as Blob, "mask.png");
       const ensureMotion = isNaN(degreeOfMotion) ? 40 : degreeOfMotion;
-      formData.append('degreeOfMotion', ensureMotion.toString());
+      formData.append("degreeOfMotion", ensureMotion.toString());
 
       // Call the API with FormData
-      const apiResponse = await fetch('/api/stable-video-diffusion', {
-        method: 'POST',
+      const apiResponse = await fetch("/api/stable-video-diffusion", {
+        method: "POST",
         body: formData, // FormData is used directly here
       });
 
@@ -167,21 +169,21 @@ const StableVideoDiffusion = () => {
       // Update state with the returned GIF URL
       setAnimatedPicture(resultData.image.url);
     } catch (error) {
-      console.error('Error during API call:', error);
+      console.error("Error during API call:", error);
     }
 
     setLoading(false);
   };
 
   return (
-    <div className="w-5/6 h-[125%] md:w-3/4 space-y-4 flex flex-col items-center">
-      <div className="sm:flex items-center">
+    <div className="flex h-[125%] w-5/6 flex-col items-center space-y-4 md:w-3/4">
+      <div className="items-center sm:flex">
         <input
           type="file"
           accept="image/*"
           disabled={loading}
           onChange={handleImageUpload}
-          className="w-24 md:w-auto py-1 mr-2 cursor-pointer border-dashed border-2 rounded-md file:border-0 file:bg-transparent file:text-sm file:font-semibold"
+          className="mr-2 w-24 cursor-pointer rounded-md border-2 border-dashed py-1 file:border-0 file:bg-transparent file:text-sm file:font-semibold md:w-auto"
         />
         <label className="mr-1">Motion level (1-255):</label>
         <input
@@ -191,24 +193,24 @@ const StableVideoDiffusion = () => {
           value={degreeOfMotion}
           onChange={handleDegreeOfMotionChange}
           type="number"
-          className="border px-1 py-1 rounded-md w-20"
+          className="w-20 rounded-md border px-1 py-1"
         />
       </div>
       <div
-        className={`flex relative w-full h-full canvas-img ${
-          loading && 'blur pointer-events-none'
+        className={`canvas-img relative flex h-full w-full ${
+          loading && "pointer-events-none blur"
         }`}
       >
         <img
           style={{ width: canvasSize.width, height: canvasSize.height }}
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform"
           src={animatedPicture ? animatedPicture : imgSrc}
           alt="Animated image"
         />
         <canvas
           ref={draftCanvasRef}
-          className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-[65%] ${
-            animatedPicture && 'hidden'
+          className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform opacity-[65%] ${
+            animatedPicture && "hidden"
           }`}
           onMouseDown={handleMouseDown}
           onMouseUp={handleMouseUp}
@@ -220,14 +222,14 @@ const StableVideoDiffusion = () => {
         onClick={handleSubmit}
         disabled={loading}
         className={`${
-          loading && 'bg-black text-white'
-        } border-black border rounded-md py-1 px-3 font-medium`}
+          loading && "bg-black text-white"
+        } rounded-md border border-black px-3 py-1 font-medium`}
       >
         {animatedPicture
-          ? 'Reset'
+          ? "Reset"
           : loading
-          ? 'Loading, up to 2 minutes...'
-          : 'Animate'}
+            ? "Loading, up to 2 minutes..."
+            : "Animate"}
       </button>
     </div>
   );

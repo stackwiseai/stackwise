@@ -1,4 +1,4 @@
-import Replicate from 'replicate';
+import Replicate from "replicate";
 
 const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN as string,
@@ -8,15 +8,15 @@ export const maxDuration = 300;
 
 export async function POST(request: Request) {
   const form = await request.formData();
-  const musicLength = Number(form.get('length'));
-  const imgFile = form.get('img') as Blob;
+  const musicLength = Number(form.get("length"));
+  const imgFile = form.get("img") as Blob;
   const imgBuffer = Buffer.from(await imgFile.arrayBuffer());
-  const imgBase64 = imgBuffer.toString('base64');
+  const imgBase64 = imgBuffer.toString("base64");
   const imgUri = `data:${imgFile.type};base64,${imgBase64}`;
 
   try {
     const llavaVersion =
-      'yorickvp/llava-13b:e272157381e2a3bf12df3a8edd1f38d1dbd736bbb7437277c8b34175f8fce358';
+      "yorickvp/llava-13b:e272157381e2a3bf12df3a8edd1f38d1dbd736bbb7437277c8b34175f8fce358";
     const llava: string[] = (await replicate.run(llavaVersion, {
       input: {
         image: imgUri,
@@ -48,7 +48,7 @@ Music: An electronic dance music (EDM) anthem in B major, with a catchy hook, up
       },
     })) as string[];
 
-    const llavaPrediction: string = llava.join('');
+    const llavaPrediction: string = llava.join("");
 
     console.log(llavaPrediction);
 
@@ -56,11 +56,23 @@ Music: An electronic dance music (EDM) anthem in B major, with a catchy hook, up
     const match = llavaPrediction.match(regex);
 
     const musicGenVersion =
-      'meta/musicgen:b05b1dff1d8c6dc63d14b0cdb42135378dcb87f6373b0d3d341ede46e59e2b38';
+      "meta/musicgen:b05b1dff1d8c6dc63d14b0cdb42135378dcb87f6373b0d3d341ede46e59e2b38";
+    if (!match) {
+      return new Response(
+        JSON.stringify({
+          error: "No match found",
+          llavaResponse: llavaPrediction,
+        }),
+        {
+          status: 500,
+          headers: { "Content-Type": "application/json" },
+        },
+      );
+    }
     const musicGen = await replicate.run(musicGenVersion, {
       input: {
         classifier_free_guidance: 10,
-        model_version: 'stereo-melody-large',
+        model_version: "stereo-melody-large",
         prompt: match[2],
         duration: musicLength,
       },
@@ -73,8 +85,8 @@ Music: An electronic dance music (EDM) anthem in B major, with a catchy hook, up
       }),
       {
         status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      }
+        headers: { "Content-Type": "application/json" },
+      },
     );
   } catch (error) {
     console.log(error);

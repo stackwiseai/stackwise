@@ -12,6 +12,11 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "strict": false,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "noImplicitThis": false,
+    "alwaysStrict": false,
     "plugins": [
       {
         "name": "next"
@@ -19,8 +24,7 @@
     ],
     "paths": {
       "@/*": ["./*"]
-    },
-    "strict": false
+    }
   },
   "include": [
     "next-env.d.ts",
