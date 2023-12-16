@@ -9,6 +9,7 @@ import type { StackDescription } from "./stack-db";
 import { getStackDB, statusesToDisplay } from "./stack-db";
 
 export const fetchCache = "force-no-store"; // TODO: remove this line to enable caching but without making the app completely static
+export const revalidate = 0;
 
 export default async function Component() {
   // console.log('statusesToDisplay', statusesToDisplay);
