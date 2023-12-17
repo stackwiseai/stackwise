@@ -28,7 +28,7 @@ export async function POST(req: Request) {
     .insert([data])
     .single();
   if (error) {
-    throw error;
+    return new Response(JSON.stringify({ error: error.message }));
   }
 
   let path = `ui/app/components/stacks/${data.id}.tsx`;
