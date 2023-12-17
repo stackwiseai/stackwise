@@ -7,18 +7,6 @@ const repo = "stackwise";
 const sourceBranch = process.env.VERCEL_GIT_COMMIT_REF ?? ""; // or 'master', depending on your repository
 
 export async function POST(req: Request) {
-  // const authorizationHeaders = req.headers.get("Authorization");
-
-  // if (!authorizationHeaders) {
-  //   throw new Error("No token provided");
-  // }
-  // const authorizationHeadersSplit = authorizationHeaders.split(" ");
-  // if (!authorizationHeadersSplit) {
-  //   throw new Error("Invalid token provided");
-  // }
-
-  // const token = authorizationHeadersSplit[1];
-  // console.log(token, "token");
   const supabase = await getSupabaseClient();
   // add a field to data
   const data = await req.json();
