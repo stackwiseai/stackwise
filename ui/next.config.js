@@ -4,9 +4,10 @@ const nextConfig = {
     return [
       {
         source: "/",
-        destination: "/stackwise",
-        permanent: true,
+        destination: "/stacks",
       },
+      // these are the old uuid-slugged links which were published
+      // these redirects keep the old links working and we can still use the new slugs
       {
         source: "/stacks/gbkm2sk",
         destination: "/stacks/chat-with-openai-streaming",
