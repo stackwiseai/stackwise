@@ -30,6 +30,7 @@
     "@stackwise-tooling/tsconfig": "*",
     "@types/eslint": "^8.44.8",
     "eslint": "^8.55.0",
+    "eslint-plugin-only-warn": "^1.1.0",
     "typescript": "^5.3.2"
   },
   "eslintConfig": {
