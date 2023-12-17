@@ -56,7 +56,7 @@ export async function POST(req: Request) {
   ];
 
   await new Promise((resolve) => setTimeout(resolve, 1000));
-  path = `ui/api/${data.id}/route.ts`;
+  path = `ui/app/api/${data.id}/route.ts`;
   message = `Backend For Stack ${data.id} created`;
   response = await getFileFromGithub(
     "ui/public/stacks/boilerplate-basic/route.ts",
