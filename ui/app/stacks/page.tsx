@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { SignedIn, SignOutButton } from "@clerk/nextjs";
 import { FaStar } from "react-icons/fa";
 import { IoLogoGithub } from "react-icons/io";
 import tw from "tailwind-styled-components";
@@ -85,10 +84,6 @@ export default async function Component() {
           ))}
         </Stacks>
       </StacksContainer>
-
-      <SignedIn>
-        <SignOutButton />
-      </SignedIn>
     </div>
   );
 }

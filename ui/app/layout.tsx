@@ -1,14 +1,14 @@
-import { ClerkProvider, SignedIn } from '@clerk/nextjs';
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import './globals.css';
-import { Analytics } from '@vercel/analytics/react';
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 
-const inter = Inter({ subsets: ['latin'] });
+import "./globals.css";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Stackwise UI',
-  description: 'Explain what you want to do you, and AI builds it.',
+  title: "Stackwise UI",
+  description: "Explain what you want to do you, and AI builds it.",
 };
 
 export default function RootLayout({
@@ -17,12 +17,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body className={inter.className}>
-          {children} <Analytics />
-        </body>
-      </html>
-    </ClerkProvider>
+    // <ClerkProvider>
+    <html lang="en">
+      <body className={inter.className}>
+        {children} <Analytics />
+      </body>
+    </html>
+    // </ClerkProvider>
   );
 }
