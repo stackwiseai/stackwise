@@ -2,24 +2,10 @@ import { createClient } from "@supabase/supabase-js";
 
 type Status = "published" | "starred" | "expansion";
 
-export async function getSupabaseClient(token) {
+export async function getSupabaseClient() {
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL || "",
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "",
-    {
-      db: {
-        schema: "public",
-      },
-      auth: {
-        persistSession: false,
-        autoRefreshToken: false,
-      },
-      global: {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    },
   );
 }
 

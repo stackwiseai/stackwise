@@ -10,23 +10,25 @@ const repoId = process.env.REPO_ID;
 const owner = "stackwiseai";
 const repo = "stackwise";
 const sourceBranch = process.env.VERCEL_GIT_COMMIT_REF ?? ""; // or 'master', depending on your repository
-
+export const fetchCache = "force-no-store"; // TODO: remove this line to enable caching but without making the app completely static
+export const revalidate = 0;
 export async function POST(req: Request) {
-  const authorizationHeaders = req.headers.get("Authorization");
+  // const authorizationHeaders = req.headers.get("Authorization");
 
-  if (!authorizationHeaders) {
-    throw new Error("No token provided");
-  }
-  const authorizationHeadersSplit = authorizationHeaders.split(" ");
-  if (!authorizationHeadersSplit) {
-    throw new Error("Invalid token provided");
-  }
+  // if (!authorizationHeaders) {
+  //   throw new Error("No token provided");
+  // }
+  // const authorizationHeadersSplit = authorizationHeaders.split(" ");
+  // if (!authorizationHeadersSplit) {
+  //   throw new Error("Invalid token provided");
+  // }
 
-  const token = authorizationHeadersSplit[1];
-  console.log(token, "token");
-  const supabase = await getSupabaseClient(token);
+  // const token = authorizationHeadersSplit[1];
+  // console.log(token, "token");
+  // const supabase = await getSupabaseClient(token);
   // add a field to data
   const data = await req.json();
+  const supabase = await getSupabaseClient();
   data.tags = ["draft"];
   const { data: insertedData, error } = await supabase
     .from("stack")
