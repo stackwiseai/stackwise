@@ -68,7 +68,7 @@ export async function POST(req: Request) {
   });
 
   path = `ui/public/stack-pictures/${data.id}.png`;
-  message = `Image For Stack ${data.id} created`;
+  message = `Stack ${data.id} created`;
 
   response = await getFileFromGithub(
     "ui/public/stack-pictures/boilerplate-basic.png",
