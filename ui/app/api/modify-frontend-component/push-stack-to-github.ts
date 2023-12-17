@@ -41,40 +41,13 @@ async function pushToBranch(newContent, branch, path, message, isBinary) {
       branch: sourceBranch,
     });
     parentSha = sourceBranchData.commit.sha;
-    console.log("parentSha", parentSha);
-    // Create a new branch
-    console.log("Creating ref for :", branch);
-    // await octokit.git.createRef({
-    //   owner,
-    //   repo,
-    //   ref: `refs/heads/${branch}`,
-    //   sha: parentSha,
-    // });
-    // console.log('Created ref for :', branch);
 
-    // Get the SHA of the tree from the latest commit
     const { data: commitData } = await octokit.git.getCommit({
       owner,
       repo,
       commit_sha: parentSha,
     });
     const treeSha = commitData.tree.sha;
-
-    // Create a new tree with the changes // Implement this function based on your needs
-
-    let blobSha;
-
-    // if (isBinary) {
-    //   console.log("newContent", newContent);
-    //   // Create a new blob for the binary content
-    //   const { data: blobData } = await octokit.git.createBlob({
-    //     owner,
-    //     repo,
-    //     content: newContent,
-    //     encoding: "base64",
-    //   });
-    //   blobSha = blobData.sha;
-    // }
 
     const { data: treeData } = await octokit.git.createTree({
       owner,
@@ -115,8 +88,6 @@ async function pushToBranch(newContent, branch, path, message, isBinary) {
       ref: `heads/${branch}`,
       sha: newCommitData.sha,
     });
-    // const jsonData = stackDB;
-    // const stackDBFileContent = formatSortedJSON(jsonData);
 
     console.log("Successfully pushed to branch:", branch);
     const gitDiffLink = `https://github.com/${owner}/${repo}/compare/${sourceBranch}...${branch}`;
