@@ -34,7 +34,7 @@ export async function POST(req: Request) {
   let path = `ui/app/components/stacks/${data.id}.tsx`;
   let message = `Frontend For Stack ${data.id} created`;
   let response = await getFileFromGithub(
-    "ui/public/stacks/create-stack-boilerplate.tsx",
+    "ui/public/stacks/boilerplate-basic.tsx",
   );
   await pushStackToGithub(response.sha, path, message, true);
 
@@ -42,7 +42,7 @@ export async function POST(req: Request) {
   path = `ui/api/${data.id}/route.ts`;
   message = `Backend For Stack ${data.id} created`;
   response = await getFileFromGithub(
-    "ui/public/stacks/create-stack-boilerplate/route.ts",
+    "ui/public/stacks/boilerplate-basic/route.ts",
   );
   // content = readFileSync(`app/api/boilerplate-basic/route.ts`, "utf8");
   await pushStackToGithub(response.sha, path, message, true);
