@@ -42,6 +42,7 @@ const config = {
     "pnpm-lock.yaml",
   ],
   reportUnusedDisableDirectives: true,
+  strictNullChecks: true,
 };
 
 module.exports = config;

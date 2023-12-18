@@ -10,8 +10,7 @@
         "name": "next"
       }
     ],
-    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
-    "strictNullChecks": true
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
   },
   "include": [".", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]

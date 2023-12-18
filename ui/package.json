@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "format": "prettier --write ."
   },
   "workspaces": [
     "tooling/*"
@@ -43,10 +44,11 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
+    "@google-cloud/vertexai": "^0.1.3",
+    "@ianvs/prettier-plugin-sort-imports": "^4.1.1",
     "@stackwise-tooling/eslint-config": "*",
     "@stackwise-tooling/prettier-config": "*",
     "@stackwise-tooling/tsconfig": "*",
-    "@google-cloud/vertexai": "^0.1.3",
     "@types/node": "^20.10.4",
     "@types/react": "^18",
     "@types/react-dom": "^18",
