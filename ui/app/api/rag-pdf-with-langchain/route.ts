@@ -1,10 +1,12 @@
 // app/api/ragPDFWithLangchain/route.ts
+import { LangChainStream, StreamingTextResponse } from 'ai';
 import { ConversationalRetrievalQAChain } from 'langchain/chains';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { WebPDFLoader } from 'langchain/document_loaders/web/pdf';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { BufferMemory, ChatMessageHistory } from 'langchain/memory';
-import { AIMessage, BaseMessage, HumanMessage } from 'langchain/schema';
+import type { BaseMessage } from 'langchain/schema';
+import { AIMessage, HumanMessage } from 'langchain/schema';
 import { MemoryVectorStore } from 'langchain/vectorstores/memory';
 
 export const runtime = 'nodejs';
@@ -33,7 +35,7 @@ const transformToChatMessageHistory = (
     const trimmedMessage = messagePart.trim();
     if (trimmedMessage) {
       const message = createMessage(trimmedMessage);
-      messageHistory.addMessage(message);
+      void messageHistory.addMessage(message);
     }
   });
 
@@ -71,7 +73,9 @@ export async function POST(req: Request) {
       allDocs,
       new OpenAIEmbeddings({ modelName: 'text-embedding-ada-002' }),
     );
-    const llm = new ChatOpenAI({});
+    const { stream, handlers } = LangChainStream();
+
+    const llm = new ChatOpenAI({ streaming: true });
     const chatHistory = chatHistoryValue
       ? transformToChatMessageHistory(chatHistoryValue)
       : new ChatMessageHistory();
@@ -92,12 +96,15 @@ export async function POST(req: Request) {
       },
     );
 
-    const answer = (await chain.invoke({ question })).text;
+    void (async () => {
+      try {
+        await chain.invoke({ question }, { callbacks: [handlers] });
+      } catch (error) {
+        console.error(error);
+      }
+    })();
 
-    // Return the result as a JSON response
-    return new Response(JSON.stringify({ answer }), {
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return new StreamingTextResponse(stream);
   } catch (error) {
     console.error(error);
     return new Response(
