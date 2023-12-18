@@ -27,10 +27,7 @@ const config = {
       'warn',
       { prefer: 'type-imports', fixStyle: 'separate-type-imports' },
     ],
-    '@typescript-eslint/no-misused-promises': [
-      2,
-      { checksVoidReturn: { attributes: false } },
-    ],
+    '@typescript-eslint/no-misused-promises': [2, { checksVoidReturn: { attributes: false } }],
     'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
   },
   ignorePatterns: [
@@ -42,7 +39,6 @@ const config = {
     'pnpm-lock.yaml',
   ],
   reportUnusedDisableDirectives: true,
-  strictNullChecks: true,
 };
 
 module.exports = config;
