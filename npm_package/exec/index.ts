@@ -4,6 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import { execSync } from 'child_process';
 import transformRoute from './transformRoute.js';
+import { loadEnvVariables } from './handleEnv.js';
 
 // Define __dirname in ES module
 const __dirname = new URL('.', import.meta.url).pathname;
@@ -77,13 +78,19 @@ async function packageAndDeployLambda(routePath: string): Promise<void> {
   execSync(`zip -r ${zipFilePath} .`, { cwd: lambdaDir, stdio: 'inherit' });
 
   const terraformDir = path.join(lambdaDir, '.terraform');
+  // Ensure the script is executable
   if (fs.existsSync(terraformDir)) {
-    fs.unlinkSync(terraformDir);
-    fs.rmdirSync(terraformDir, { recursive: true });
+    fs.rmSync(terraformDir, { recursive: true });
   }
-  // Execute Terraform commands within the 'lambda' subdirectory
-  execSync('terraform init', { cwd: lambdaDir, stdio: 'inherit' });
-  execSync('terraform apply -auto-approve', {
+
+  // Find the project root directory
+  await loadEnvVariables();
+
+  execSync(`terraform init`, {
+    cwd: lambdaDir,
+    stdio: 'inherit',
+  });
+  execSync(`terraform apply -auto-approve`, {
     cwd: lambdaDir,
     stdio: 'inherit',
   });
