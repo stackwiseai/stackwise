@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ReactCompareSlider,
   ReactCompareSliderImage,
@@ -16,7 +16,7 @@ export default function ImageToMusic() {
       try {
         const response = await fetch('/caesar.jpeg');
         const blob = await response.blob();
-        const file = new File([blob], 'default_image.webp', {
+        const file = new File([blob], 'caesar.jpeg', {
           type: 'image/webp',
         });
         setImg(file);
