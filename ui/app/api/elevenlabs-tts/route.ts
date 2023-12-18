@@ -15,7 +15,7 @@ const textToSpeech = async (
   textInput: string,
   stability?: number,
   similarityBoost?: number,
-  modelId?: string
+  modelId?: string,
 ) => {
   try {
     if (!apiKey || !voiceID || !fileName || !textInput) {
@@ -24,7 +24,7 @@ const textToSpeech = async (
         apiKey,
         voiceID,
         fileName,
-        textInput
+        textInput,
       );
     }
 

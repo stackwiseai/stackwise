@@ -1,5 +1,5 @@
-import { IoSend } from 'react-icons/io5';
 import { useState } from 'react';
+import { IoSend } from 'react-icons/io5';
 import ReactMarkdown from 'react-markdown';
 
 export const ChatWithOpenAIStreaming = () => {
@@ -34,7 +34,7 @@ export const ChatWithOpenAIStreaming = () => {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             placeholder="Ask anything..."
-            className="rounded-full w-full py-2 pl-4 pr-10 border border-gray-400 focus:outline-none focus:shadow-outline"
+            className="focus:shadow-outline w-full rounded-full border border-gray-400 py-2 pl-4 pr-10 focus:outline-none"
             onKeyDown={(e) => {
               if (e.key === 'Enter')
                 handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
@@ -42,8 +42,8 @@ export const ChatWithOpenAIStreaming = () => {
           />
           <button
             type="submit"
-            className={`cursor-pointer absolute right-0 top-0 rounded-r-full h-full text-black font-bold px-4 focus:outline-none focus:shadow-outline ${
-              loading ? 'opacity-50 cursor-not-allowed' : ''
+            className={`focus:shadow-outline absolute right-0 top-0 h-full cursor-pointer rounded-r-full px-4 font-bold text-black focus:outline-none ${
+              loading ? 'cursor-not-allowed opacity-50' : ''
             }`}
             disabled={loading}
           >
@@ -51,13 +51,13 @@ export const ChatWithOpenAIStreaming = () => {
           </button>
         </div>
       </form>
-      <div className="mt-4 min-h-4 p-4 max-h-96 md:max-h-[28rem] overflow-auto w-full rounded-md bg-[#faf0e6]">
+      <div className="min-h-4 mt-4 max-h-96 w-full overflow-auto rounded-md bg-[#faf0e6] p-4 md:max-h-[28rem]">
         {loading ? (
           <span className="text-sm text-gray-400">Generating... </span>
         ) : output ? (
           <ReactMarkdown>{output}</ReactMarkdown>
         ) : (
-          <p className="text-gray-400 text-sm">Output here...</p>
+          <p className="text-sm text-gray-400">Output here...</p>
         )}
       </div>
     </div>

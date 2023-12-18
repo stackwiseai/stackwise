@@ -1,5 +1,6 @@
 import { OpenAIStream, StreamingTextResponse } from 'ai';
 import OpenAI from 'openai';
+
 const openAIAPIKey = process.env.OPENAI_API_KEY;
 const heliconeAPIKey = process.env.HELICONE_API_KEY;
 const owner = 'stackwiseai';
@@ -71,7 +72,7 @@ async function getCurrentCode() {
         headers: {
           Authorization: `token ${process.env.GITHUB_TOKEN}`,
         },
-      }
+      },
     );
 
     if (!response.ok) {
@@ -83,7 +84,7 @@ async function getCurrentCode() {
     console.log(fileContentBase64);
 
     const fileContent = Buffer.from(fileContentBase64, 'base64').toString(
-      'utf-8'
+      'utf-8',
     );
     console.log(fileContent);
 

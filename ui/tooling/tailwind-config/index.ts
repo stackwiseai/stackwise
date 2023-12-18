@@ -1,14 +1,14 @@
-import type { Config } from "tailwindcss";
+import type { Config } from 'tailwindcss';
 
 const config: Config = {
-  content: [""],
+  content: [''],
   theme: {
     extend: {},
   },
   plugins: [],
   variants: {
     extend: {
-      backgroundColor: ["disabled"],
+      backgroundColor: ['disabled'],
     },
   },
 };

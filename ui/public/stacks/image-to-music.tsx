@@ -1,29 +1,29 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from 'react';
 
 export default function ImageToMusic() {
   const [img, setImg] = useState<File | null>(null);
   const [llavaResponse, setLlavaResponse] = useState<{
     description: string;
     prompt: string;
-  }>({ description: "", prompt: "" }); // Provide initial values here
-  const [audio, setAudio] = useState<string>("");
-  const [musicLength, setMusicLength] = useState<string>("10");
+  }>({ description: '', prompt: '' }); // Provide initial values here
+  const [audio, setAudio] = useState<string>('');
+  const [musicLength, setMusicLength] = useState<string>('10');
   const [loading, setLoading] = useState(false);
   const audioRef = useRef(null);
 
   useEffect(() => {
     const fetchImage = async () => {
       try {
-        const response = await fetch("/apocalyptic_car.png");
+        const response = await fetch('/apocalyptic_car.png');
         const blob = await response.blob();
-        const file = new File([blob], "default_image.webp", {
-          type: "image/webp",
+        const file = new File([blob], 'default_image.webp', {
+          type: 'image/webp',
         });
         setImg(file);
       } catch (error) {
-        console.error("Error fetching default image:", error);
+        console.error('Error fetching default image:', error);
       }
     };
 
@@ -32,7 +32,7 @@ export default function ImageToMusic() {
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (audio) {
-      setAudio("");
+      setAudio('');
     }
     if (e.target.files && e.target.files[0]) {
       setImg(e.target.files[0]);
@@ -42,18 +42,18 @@ export default function ImageToMusic() {
   const createMusic = async () => {
     if (loading) return;
     if (audio) {
-      setAudio("");
+      setAudio('');
       return;
     }
 
     setLoading(true);
     const formData = new FormData();
     if (img) {
-      formData.append("img", img);
+      formData.append('img', img);
     }
-    formData.append("length", musicLength.toString());
-    const response = await fetch("/api/image-to-music", {
-      method: "POST",
+    formData.append('length', musicLength.toString());
+    const response = await fetch('/api/image-to-music', {
+      method: 'POST',
       body: formData,
     });
     const data = await response.json();
@@ -118,7 +118,7 @@ export default function ImageToMusic() {
           <img
             src={URL.createObjectURL(img)}
             alt="Preview"
-            className={`mx-auto w-1/2 ${loading && "blur-sm"}`}
+            className={`mx-auto w-1/2 ${loading && 'blur-sm'}`}
           />
         )}
         {audio && (
@@ -139,14 +139,14 @@ export default function ImageToMusic() {
         onClick={createMusic}
         disabled={loading}
         className={`${
-          loading && "bg-black text-white"
+          loading && 'bg-black text-white'
         } rounded-md border border-black px-3 py-1 font-medium`}
       >
         {audio
-          ? "Reset"
+          ? 'Reset'
           : loading
-            ? "Loading, 10-30 secs..."
-            : "Create theme music"}
+            ? 'Loading, 10-30 secs...'
+            : 'Create theme music'}
       </button>
     </div>
   );

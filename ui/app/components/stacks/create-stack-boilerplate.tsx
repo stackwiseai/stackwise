@@ -1,13 +1,13 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 export const BasicForm = () => {
   const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    id: "",
+    name: '',
+    description: '',
+    id: '',
   });
-  const [formErrors, setFormErrors] = useState({ id: "" });
-  const [Message, setMessage] = useState("");
+  const [formErrors, setFormErrors] = useState({ id: '' });
+  const [Message, setMessage] = useState('');
   // const { getToken } = useAuth();
 
   const isKebabCase = (str) => /^[a-z0-9]+(-[a-z0-9]+)*$/.test(str);
@@ -19,10 +19,10 @@ export const BasicForm = () => {
       [name]: value,
     });
 
-    if (name === "id" && value && !isKebabCase(value)) {
-      setFormErrors({ ...formErrors, id: "ID must be in kebab-case." });
+    if (name === 'id' && value && !isKebabCase(value)) {
+      setFormErrors({ ...formErrors, id: 'ID must be in kebab-case.' });
     } else {
-      setFormErrors({ ...formErrors, id: "" });
+      setFormErrors({ ...formErrors, id: '' });
     }
   };
 
@@ -31,29 +31,29 @@ export const BasicForm = () => {
     // const token = await getToken({ template: "supabase" });
 
     if (!isKebabCase(formData.id)) {
-      setFormErrors({ ...formErrors, id: "ID must be in kebab-case." });
+      setFormErrors({ ...formErrors, id: 'ID must be in kebab-case.' });
       return;
     }
 
     try {
-      const response = await fetch("/api/create-stack-boilerplate", {
-        method: "POST",
+      const response = await fetch('/api/create-stack-boilerplate', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
       });
 
       if (response.ok) {
-        setMessage("Form submitted successfully!");
+        setMessage('Form submitted successfully!');
         const responseData = await response.json();
-        console.log("Response:", responseData);
+        console.log('Response:', responseData);
       } else {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
     } catch (error) {
-      console.error("Error during fetch:", error);
-      setMessage("Error on form submission");
+      console.error('Error during fetch:', error);
+      setMessage('Error on form submission');
     }
   };
 

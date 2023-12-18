@@ -1,9 +1,9 @@
 import {
   AIStreamCallbacksAndOptions,
-  StreamingTextResponse,
   createCallbacksTransformer,
   createStreamDataTransformer,
   readableFromAsyncIterable,
+  StreamingTextResponse,
 } from 'ai';
 
 export async function POST(req: Request) {
@@ -76,7 +76,7 @@ function GoogleGeminiStream(
   response: {
     stream: AsyncGenerator<GenerateContentResponse>;
   },
-  cb?: AIStreamCallbacksAndOptions
+  cb?: AIStreamCallbacksAndOptions,
 ): ReadableStream {
   return readableFromAsyncIterable(streamable(response))
     .pipeThrough(createCallbacksTransformer(cb))

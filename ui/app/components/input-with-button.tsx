@@ -1,13 +1,14 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
-import tw from 'tailwind-styled-components';
-import { IoSend } from 'react-icons/io5';
-import { useRouter } from 'next/navigation';
 
+import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useFormStatus } from 'react-dom';
-import MailchimpSubscribe from './MailchimpSubscribe';
+import { IoSend } from 'react-icons/io5';
+import tw from 'tailwind-styled-components';
+
 // import SearchStacks from './search-stacks';
 import { StackDescription } from '../stacks/stack-db';
+import MailchimpSubscribe from './MailchimpSubscribe';
 
 export const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -16,8 +17,8 @@ export const SubmitButton = () => {
     <button
       disabled={pending}
       type="submit"
-      className={`cursor-pointer absolute right-0 top-0 rounded-r-full h-full text-black font-bold px-4 focus:outline-none focus:shadow-outline ${
-        pending ? 'opacity-50 cursor-not-allowed' : ''
+      className={`focus:shadow-outline absolute right-0 top-0 h-full cursor-pointer rounded-r-full px-4 font-bold text-black focus:outline-none ${
+        pending ? 'cursor-not-allowed opacity-50' : ''
       }`}
     >
       <IoSend />

@@ -1,7 +1,7 @@
-import { subscribeEmail } from '../actions';
-import { SubmitButton } from './input-with-button';
-import { Form } from './input-with-button';
 import { useFormState } from 'react-dom';
+
+import { subscribeEmail } from '../actions';
+import { Form, SubmitButton } from './input-with-button';
 
 const MailchimpSubscribe = () => {
   const [outputState, functionAction] = useFormState(subscribeEmail, {
@@ -13,7 +13,7 @@ const MailchimpSubscribe = () => {
         <div className="text-center text-green-500">
           Thanks for subscribing! Join our{' '}
           <a
-            className="text-blue-400 font-medium"
+            className="font-medium text-blue-400"
             href="https://discord.gg/KfUxa8h3s6"
           >
             Discord
@@ -27,7 +27,7 @@ const MailchimpSubscribe = () => {
                 placeholder="Enter your email"
                 type="email"
                 name="email"
-                className="rounded-full w-full py-2 pl-4 pr-10 border border-gray-400 focus:outline-none focus:shadow-outline"
+                className="focus:shadow-outline w-full rounded-full border border-gray-400 py-2 pl-4 pr-10 focus:outline-none"
                 required
               />
               <SubmitButton />

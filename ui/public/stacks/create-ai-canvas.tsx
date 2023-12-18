@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
-import { ReactSketchCanvas, ReactSketchCanvasRef } from 'react-sketch-canvas';
+import { useEffect, useRef, useState } from 'react';
 import * as fal from '@fal-ai/serverless-client';
+import { ReactSketchCanvas, ReactSketchCanvasRef } from 'react-sketch-canvas';
 
 fal.config({
   credentials: `${process.env.NEXT_PUBLIC_FAL_KEY_ID}:${process.env.NEXT_PUBLIC_FAL_KEY_SECRET}`,
@@ -62,18 +62,18 @@ const CreateAICanvas: React.FC = () => {
         onChange={(e) => setImagePrompt(e.target.value)}
         value={imagePrompt}
         placeholder="Enter prompt..."
-        className="p-2 pl-4 mb-2 w-full sm:w-3/4 md:w-1/2 border border-gray-300 rounded-full"
+        className="mb-2 w-full rounded-full border border-gray-300 p-2 pl-4 sm:w-3/4 md:w-1/2"
       />
-      <div className="sm:flex h-[90vw] w-[90vw] sm:h-auto sm:w-1/2 lg:[45%] xl:w-2/5 justify-center">
+      <div className="lg:[45%] h-[90vw] w-[90vw] justify-center sm:flex sm:h-auto sm:w-1/2 xl:w-2/5">
         <ReactSketchCanvas
           ref={canvasRef}
-          className="border aspect-square"
+          className="aspect-square border"
           strokeWidth={4}
           strokeColor="black"
           onChange={saveDrawing}
         />
         <div
-          className="aspect-square bg-cover border-dotted border bg-no-repeat border-l-0"
+          className="aspect-square border border-l-0 border-dotted bg-cover bg-no-repeat"
           style={{
             backgroundImage: `url(${image})`,
           }}

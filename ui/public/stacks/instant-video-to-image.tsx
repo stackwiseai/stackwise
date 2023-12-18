@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as fal from '@fal-ai/serverless-client';
 
 fal.config({
@@ -117,13 +117,13 @@ const InstantVideoToImage: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center justify-center sm:w-5/6 md:w-3/4 lg:w-2/3">
-      <div className="flex items-center justify-center gap-4 w-full">
+      <div className="flex w-full items-center justify-center gap-4">
         <input
           type="text"
           onChange={(e) => setImagePrompt(e.target.value)}
           value={imagePrompt}
           placeholder="Enter prompt..."
-          className="p-2 pl-4 mb-2 w-full sm:w-3/4 md:w-1/2 border border-gray-300 rounded-full"
+          className="mb-2 w-full rounded-full border border-gray-300 p-2 pl-4 sm:w-3/4 md:w-1/2"
         />
         <label>
           Strength ({range[0]}-{range[1]}):
@@ -134,13 +134,13 @@ const InstantVideoToImage: React.FC = () => {
           value={strength}
           onChange={handleStrengthChange}
           type="number"
-          className="border rounded h-8 -ml-2 pl-1 -pr-1"
+          className="-pr-1 -ml-2 h-8 rounded border pl-1"
         />
       </div>
-      <p className="text-sm text-gray-400 mb-3 mt-1">
+      <p className="mb-3 mt-1 text-sm text-gray-400">
         For cost reasons this will only run for 10 seconds
       </p>
-      <div className="flex flex-col sm:flex-row h-[90vw] w-[90vw] sm:h-auto sm:justify-center items-center">
+      <div className="flex h-[90vw] w-[90vw] flex-col items-center sm:h-auto sm:flex-row sm:justify-center">
         <video ref={videoRef} autoPlay className="w-5/6 sm:w-1/2" />
         <img
           className="w-5/6 sm:w-1/2"

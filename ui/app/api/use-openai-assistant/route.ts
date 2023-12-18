@@ -112,16 +112,16 @@ export async function POST(req: Request) {
 
                     default:
                       throw new Error(
-                        `Unknown tool call function: ${toolCall.function.name}`
+                        `Unknown tool call function: ${toolCall.function.name}`,
                       );
                   }
-                }
+                },
               );
 
             run = await openai.beta.threads.runs.submitToolOutputs(
               threadId!,
               run.id,
-              { tool_outputs }
+              { tool_outputs },
             );
 
             await waitForRun(run);
@@ -145,10 +145,10 @@ export async function POST(req: Request) {
           id: message.id,
           role: 'assistant',
           content: message.content.filter(
-            (content) => content.type === 'text'
+            (content) => content.type === 'text',
           ) as Array<MessageContentText>,
         });
       }
-    }
+    },
   );
 }

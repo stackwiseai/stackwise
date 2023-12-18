@@ -1,24 +1,24 @@
-import { useState } from "react";
-import { IoSend } from "react-icons/io5";
-import ReactMarkdown from "react-markdown";
+import { useState } from 'react';
+import { IoSend } from 'react-icons/io5';
+import ReactMarkdown from 'react-markdown';
 
 export const ChatWithOpenAIStreaming = () => {
-  const [inputValue, setInputValue] = useState("");
-  const [generatedFileContents, setGeneratedFileContents] = useState("");
+  const [inputValue, setInputValue] = useState('');
+  const [generatedFileContents, setGeneratedFileContents] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("Submitting:", inputValue);
+    console.log('Submitting:', inputValue);
     if (inputValue.trim()) {
-      setGeneratedFileContents("");
+      setGeneratedFileContents('');
       setLoading(true);
 
       try {
-        const response = await fetch("/api/chat-gemini-streaming-langchain", {
-          method: "POST",
+        const response = await fetch('/api/chat-gemini-streaming-langchain', {
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({ messages: inputValue }),
         });
@@ -31,7 +31,7 @@ export const ChatWithOpenAIStreaming = () => {
         const reader = data.getReader();
         const decoder = new TextDecoder();
         let done = false;
-        let fullContent = "";
+        let fullContent = '';
 
         while (!done) {
           const { value, done: doneReading } = await reader.read();
@@ -42,9 +42,9 @@ export const ChatWithOpenAIStreaming = () => {
           fullContent += chunkValue;
         }
       } catch (error) {
-        console.error("Error during fetch:", error);
+        console.error('Error during fetch:', error);
       } finally {
-        setInputValue(""); // Clear the input field
+        setInputValue(''); // Clear the input field
         setLoading(false);
       }
     }
@@ -60,14 +60,14 @@ export const ChatWithOpenAIStreaming = () => {
             placeholder="Ask anything..."
             className="focus:shadow-outline w-full rounded-full border border-gray-400 py-2 pl-4 pr-10 focus:outline-none"
             onKeyDown={(e) => {
-              if (e.key === "Enter")
+              if (e.key === 'Enter')
                 handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
             }}
           />
           <button
             type="submit"
             className={`focus:shadow-outline absolute right-0 top-0 h-full cursor-pointer rounded-r-full px-4 font-bold text-black focus:outline-none ${
-              loading ? "cursor-not-allowed opacity-50" : ""
+              loading ? 'cursor-not-allowed opacity-50' : ''
             }`}
             disabled={loading}
           >

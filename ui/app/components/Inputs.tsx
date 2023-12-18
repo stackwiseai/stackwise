@@ -1,5 +1,5 @@
-import tw from 'tailwind-styled-components';
 import parse from 'html-react-parser';
+import tw from 'tailwind-styled-components';
 
 interface InputsProps {
   formAction: (payload: FormData) => void;

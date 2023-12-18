@@ -1,6 +1,7 @@
 'use client';
+
 import React, { useState } from 'react';
-import { FaClipboard, FaCheckCircle } from 'react-icons/fa'; // Importing icons
+import { FaCheckCircle, FaClipboard } from 'react-icons/fa'; // Importing icons
 
 interface ClipboardComponentProps {
   code: string;
@@ -29,10 +30,10 @@ const ClipboardComponent: React.FC<ClipboardComponentProps> = ({
   return (
     <button
       onClick={handleClick}
-      className="flex items-center mt-2 sm:mt-0 cursor-pointer"
+      className="mt-2 flex cursor-pointer items-center sm:mt-0"
     >
-      <span className="text-sm text-gray-500 mr-2">{title}</span>
-      <div className="border-none bg-none -mt-0.5">{icon}</div>
+      <span className="mr-2 text-sm text-gray-500">{title}</span>
+      <div className="-mt-0.5 border-none bg-none">{icon}</div>
     </button>
   );
 };

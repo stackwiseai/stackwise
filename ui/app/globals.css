@@ -3,27 +3,27 @@
 @tailwind utilities;
 
 .common-styled input {
-  @apply rounded-md
-  p-3
+  @apply w-full
+  rounded-md
   border
   border-gray-300
-  focus:outline-none
-  focus:border-blue-500
+  p-3
   transition
   duration-200
-  w-full;
+  focus:border-blue-500
+  focus:outline-none;
 }
 
 .common-styled button,
 .common-styled [type='button'],
 .common-styled [type='reset'],
 .common-styled [type='submit'] {
-  @apply bg-blue-500
-  hover:bg-blue-700
-  text-white
-  font-bold
-  py-3
+  @apply rounded
+  bg-blue-500
   px-4
-  rounded
+  py-3
+  font-bold
+  text-white
+  hover:bg-blue-700
   disabled:bg-slate-500;
 }

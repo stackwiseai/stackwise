@@ -1,19 +1,19 @@
 /** @type {import('eslint').Linter.Config} */
 const config = {
   extends: [
-    "plugin:react/recommended",
-    "plugin:react-hooks/recommended",
-    "plugin:jsx-a11y/recommended",
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
+    'plugin:jsx-a11y/recommended',
   ],
   rules: {
-    "react/prop-types": "off",
+    'react/prop-types': 'off',
   },
   globals: {
-    React: "writable",
+    React: 'writable',
   },
   settings: {
     react: {
-      version: "detect",
+      version: 'detect',
     },
   },
   env: {

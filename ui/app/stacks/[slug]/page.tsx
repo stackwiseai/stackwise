@@ -1,28 +1,27 @@
-"use client";
+'use client';
 
-import { lazy, useEffect, useMemo, useState } from "react";
-import dynamic from "next/dynamic";
-import { useSearchParams } from "next/navigation";
-import { FaStar } from "react-icons/fa";
-import { FaCode } from "react-icons/fa6";
-import { IoLogoGithub } from "react-icons/io";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
-import tw from "tailwind-styled-components";
+import { lazy, useEffect, useMemo, useState } from 'react';
+import dynamic from 'next/dynamic';
+import { useSearchParams } from 'next/navigation';
+import { FaStar } from 'react-icons/fa';
+import { FaCode } from 'react-icons/fa6';
+import { IoLogoGithub } from 'react-icons/io';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import tw from 'tailwind-styled-components';
 
-import type { StackDescription } from "../stack-db";
-import { getStackDB } from "../stack-db";
+import { getStackDB, type StackDescription } from '../stack-db';
 
 // Lazy load ClipboardComponent
-const ClipboardComponent = lazy(() => import("@/app/components/clipboard"));
-const Link = lazy(() => import("next/link"));
+const ClipboardComponent = lazy(() => import('@/app/components/clipboard'));
+const Link = lazy(() => import('next/link'));
 const MdOutlineInput = lazy(() =>
-  import("react-icons/md").then((module) => ({
+  import('react-icons/md').then((module) => ({
     default: module.MdOutlineInput,
   })),
 );
 const ChatWithStack = lazy(() =>
-  import("./chat").then((module) => ({ default: module.ChatWithStack })),
+  import('./chat').then((module) => ({ default: module.ChatWithStack })),
 );
 
 type StackDescriptionWithSlug = {
@@ -32,23 +31,23 @@ type StackDescriptionWithSlug = {
 const Chat = ({ params }: { params: { slug: string } }) => {
   const searchParams = useSearchParams();
 
-  const chatWithComponent = searchParams.get("chat");
+  const chatWithComponent = searchParams.get('chat');
   const [showFrontendCode, setShowFrontendCode] = useState<boolean>(true);
-  const [backendCode, setBackendCode] = useState<string>("");
-  const [frontendCode, setFrontendCode] = useState<string>("");
-  const [dropdownSelection, setDropdownSelection] = useState<string>("Usage");
+  const [backendCode, setBackendCode] = useState<string>('');
+  const [frontendCode, setFrontendCode] = useState<string>('');
+  const [dropdownSelection, setDropdownSelection] = useState<string>('Usage');
   const [stack, setStack] = useState<StackDescriptionWithSlug | null>(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
       const initialStackDB = await getStackDB();
-      console.log("initialStackDB", initialStackDB);
+      console.log('initialStackDB', initialStackDB);
       const stackSlug = params.slug ?? null;
       if (!stackSlug) return;
 
       const initialStack = initialStackDB ? initialStackDB[stackSlug] : null;
-      console.log("initialStack", initialStack);
-      console.log("stackSlug", stackSlug);
+      console.log('initialStack', initialStack);
+      console.log('stackSlug', stackSlug);
       if (initialStack) {
         const stackWithSlug = { slug: stackSlug, ...initialStack };
         setStack(stackWithSlug);
@@ -82,7 +81,7 @@ const Chat = ({ params }: { params: { slug: string } }) => {
       return data;
     } else {
       // If the response status is not 2xx, return an empty string
-      return "";
+      return '';
     }
   };
 
@@ -97,7 +96,7 @@ const Chat = ({ params }: { params: { slug: string } }) => {
       </Link>
 
       <div className="flex">
-        <Container style={{ width: chatWithComponent ? "50%" : "100%" }}>
+        <Container style={{ width: chatWithComponent ? '50%' : '100%' }}>
           <TitleContainer>
             <Link href="https://stackwise.ai/stacks">
               <div className="mb-4 flex w-full justify-center">
@@ -110,21 +109,21 @@ const Chat = ({ params }: { params: { slug: string } }) => {
             <button
               onClick={() => {
                 setDropdownSelection(
-                  dropdownSelection === "Usage" ? "Code" : "Usage",
+                  dropdownSelection === 'Usage' ? 'Code' : 'Usage',
                 );
               }}
               className="flex items-center space-x-2 rounded-md border px-2 py-1 pr-2"
             >
-              <p>{dropdownSelection === "Usage" ? "Code" : "Usage"}</p>
-              {dropdownSelection === "Usage" ? <FaCode /> : <MdOutlineInput />}
+              <p>{dropdownSelection === 'Usage' ? 'Code' : 'Usage'}</p>
+              {dropdownSelection === 'Usage' ? <FaCode /> : <MdOutlineInput />}
             </button>
             <div className="flex space-x-6 pr-6 sm:mt-0 sm:pr-0">
               <ClipboardComponent
                 title={
                   <>
-                    Copy{" "}
+                    Copy{' '}
                     <b className="text-black">
-                      {backendCode ? "frontend" : "code"}
+                      {backendCode ? 'frontend' : 'code'}
                     </b>
                   </>
                 }
@@ -143,17 +142,17 @@ const Chat = ({ params }: { params: { slug: string } }) => {
             </div>
           </div>
           <MainWrapper>
-            {dropdownSelection === "Code" ? (
+            {dropdownSelection === 'Code' ? (
               <div className="w-3/4 rounded-md bg-[#1e1e1e] md:w-1/2">
                 <div
                   className={`flex w-full items-center text-white ${
-                    !backendCode && "hidden"
+                    !backendCode && 'hidden'
                   }`}
                 >
                   <button
                     onClick={() => setShowFrontendCode(true)}
                     className={`border-b border-r p-2 text-sm sm:text-base ${
-                      showFrontendCode && "border-b-2 border-b-red-400"
+                      showFrontendCode && 'border-b-2 border-b-red-400'
                     }`}
                   >
                     frontend code
@@ -162,7 +161,7 @@ const Chat = ({ params }: { params: { slug: string } }) => {
                     <button
                       onClick={() => setShowFrontendCode(false)}
                       className={`rounded-br-lg border-b border-r p-2 text-sm sm:text-base ${
-                        !showFrontendCode && "border-b-2 border-b-red-400"
+                        !showFrontendCode && 'border-b-2 border-b-red-400'
                       }`}
                     >
                       backend code
@@ -177,7 +176,7 @@ const Chat = ({ params }: { params: { slug: string } }) => {
                   className="min-h-4 max-h-80 w-full overflow-auto overflow-y-hidden whitespace-pre-wrap break-all p-3 text-sm text-gray-200 sm:max-h-96 md:max-h-[28rem]"
                   style={vscDarkPlus}
                   lineProps={{
-                    style: { wordBreak: "break-all", whiteSpace: "pre-wrap" },
+                    style: { wordBreak: 'break-all', whiteSpace: 'pre-wrap' },
                   }}
                   wrapLines={true}
                 >

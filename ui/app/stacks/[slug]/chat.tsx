@@ -1,6 +1,8 @@
 'use client';
+
 import React, { useState } from 'react';
 import { FaGithub } from 'react-icons/fa'; // Import the GitHub icon
+
 const LoadingComponent = () => {
   return (
     <div

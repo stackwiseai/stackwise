@@ -1,25 +1,25 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from '@supabase/supabase-js';
 
-type Status = "published" | "starred" | "expansion";
+type Status = 'published' | 'starred' | 'expansion';
 
 export async function getSupabaseClient() {
   return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "",
+    process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '',
   );
 }
 
 export async function getStackDB() {
   const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "",
+    process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '',
   );
   const { data: projectsArray, error } = await supabase
-    .from("stack") // Replace with your actual table name
-    .select("*");
+    .from('stack') // Replace with your actual table name
+    .select('*');
 
   if (error) {
-    console.error("Error fetching data:", error);
+    console.error('Error fetching data:', error);
     return null;
   }
 
@@ -43,4 +43,4 @@ export interface StackDescription {
   tags: Status[];
 }
 
-export const statusesToDisplay: Status[] = ["published"];
+export const statusesToDisplay: Status[] = ['published'];

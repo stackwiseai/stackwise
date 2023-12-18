@@ -1,7 +1,7 @@
 // File path: ui/app/components/RAGPDFWithLangchain.tsx
 
-import { useEffect, useRef, useState } from "react";
-import { IoSend } from "react-icons/io5";
+import { useEffect, useRef, useState } from 'react';
+import { IoSend } from 'react-icons/io5';
 
 const chatHistoryDelimiter = `||~||`;
 
@@ -10,7 +10,7 @@ interface ChatHistoryProps {
   handleCancel: () => void;
 }
 
-const placeholderAnswering = "A: Answering…";
+const placeholderAnswering = 'A: Answering…';
 
 const ChatHistory: React.FC<ChatHistoryProps> = ({
   chatHistory,
@@ -18,7 +18,7 @@ const ChatHistory: React.FC<ChatHistoryProps> = ({
 }) => (
   <div
     className={`mt-4 p-4 ${
-      chatHistory.length > 0 && "border-t"
+      chatHistory.length > 0 && 'border-t'
     } border-gray-200`}
   >
     {chatHistory.length > 0 && (
@@ -28,11 +28,11 @@ const ChatHistory: React.FC<ChatHistoryProps> = ({
       {chatHistory.map((entry, index) => (
         <li
           key={index}
-          className={`mt-1 ${index % 2 !== 0 ? "text-left" : "text-right"}`}
+          className={`mt-1 ${index % 2 !== 0 ? 'text-left' : 'text-right'}`}
         >
           <span
             className={`inline-block ${
-              index % 2 !== 0 ? "bg-blue-100" : "bg-green-100"
+              index % 2 !== 0 ? 'bg-blue-100' : 'bg-green-100'
             } rounded px-2 py-1`}
           >
             {entry}
@@ -55,8 +55,8 @@ const ChatHistory: React.FC<ChatHistoryProps> = ({
 const RAGPDFWithLangchain = () => {
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [question, setQuestion] = useState<string>("");
-  const [error, setError] = useState<string>("");
+  const [question, setQuestion] = useState<string>('');
+  const [error, setError] = useState<string>('');
   const [pdfUploaded, setPdfUploaded] = useState<boolean>(false);
   const [chatHistory, setChatHistory] = useState<string[]>([]);
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -89,14 +89,14 @@ const RAGPDFWithLangchain = () => {
     const file = event.target.files?.[0];
     if (file) {
       setLoading(true);
-      setError("");
+      setError('');
       setPdfFile(file);
       setPdfUploaded(true);
       setLoading(false);
       // Reset chat history and related states if chat history is not empty
       if (chatHistory.length > 0) {
         setChatHistory([]);
-        setQuestion("");
+        setQuestion('');
       }
     }
   };
@@ -108,8 +108,8 @@ const RAGPDFWithLangchain = () => {
     setLoading(false);
     setPdfFile(null);
     setPdfUploaded(false);
-    setQuestion("");
-    setError("");
+    setQuestion('');
+    setError('');
   };
 
   const handleTotalReset = () => {
@@ -118,18 +118,18 @@ const RAGPDFWithLangchain = () => {
     setChatHistory([]);
     // Clear the file input if needed
     if (questionInputRef.current) {
-      questionInputRef.current.value = "";
+      questionInputRef.current.value = '';
     }
     // Focus the file input after reset
     questionInputRef.current?.focus();
     if (pdfRef.current) {
-      pdfRef.current.value = "";
+      pdfRef.current.value = '';
     }
   };
 
   const handleClearQuestion = () => {
     // Clear the question input field
-    setQuestion("");
+    setQuestion('');
     // Focus the question input after clearing
     questionInputRef.current?.focus();
   };
@@ -141,10 +141,10 @@ const RAGPDFWithLangchain = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!pdfFile || !question) {
-      setError("Please upload a PDF and enter a question.");
+      setError('Please upload a PDF and enter a question.');
       return;
     }
-    setError("");
+    setError('');
     setLoading(true);
 
     // Create a new AbortController and store its reference
@@ -152,16 +152,16 @@ const RAGPDFWithLangchain = () => {
     const signal = abortControllerRef.current.signal;
 
     const formData = new FormData();
-    formData.append("pdf", pdfFile);
-    formData.append("question", question);
-    formData.append("chatHistory", getChatHistoryString());
+    formData.append('pdf', pdfFile);
+    formData.append('question', question);
+    formData.append('chatHistory', getChatHistoryString());
 
     // Temporarily add the question and "Answering..." message to the chat history
     setChatHistory((prev) => [...prev, `Q: ${question}`, placeholderAnswering]);
 
     try {
-      const response = await fetch("/api/rag-pdf-with-langchain", {
-        method: "POST",
+      const response = await fetch('/api/rag-pdf-with-langchain', {
+        method: 'POST',
         body: formData,
         signal: signal,
       });
@@ -177,12 +177,12 @@ const RAGPDFWithLangchain = () => {
         setChatHistory((prev) => [...prev.slice(0, -1), `A: ${data.answer}`]);
       }
     } catch (error) {
-      setError("An error occurred while fetching the data.");
+      setError('An error occurred while fetching the data.');
       // Remove the temporary question and "Answering..." message if there's an error
       setChatHistory((prev) => prev.slice(0, -2));
     } finally {
       setLoading(false);
-      setQuestion(""); // Clear the question input
+      setQuestion(''); // Clear the question input
       abortControllerRef.current = null;
     }
   };
@@ -226,7 +226,7 @@ const RAGPDFWithLangchain = () => {
           )}
         </div>
         <ChatHistory chatHistory={chatHistory} handleCancel={handleCancel} />
-        <div className={`relative mb-4 w-full ${!pdfUploaded ? "hidden" : ""}`}>
+        <div className={`relative mb-4 w-full ${!pdfUploaded ? 'hidden' : ''}`}>
           <input
             ref={questionInputRef}
             id="questionInput"
@@ -241,7 +241,7 @@ const RAGPDFWithLangchain = () => {
             type="submit"
             disabled={!pdfUploaded || !question || loading}
             className={`focus:shadow-outline absolute right-0 top-0 h-full cursor-pointer rounded-r-full px-4 font-bold text-black focus:outline-none ${
-              loading ? "cursor-not-allowed opacity-50" : ""
+              loading ? 'cursor-not-allowed opacity-50' : ''
             }`}
           >
             <IoSend />

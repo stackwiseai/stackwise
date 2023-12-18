@@ -1,21 +1,21 @@
-import { getSupabaseClient } from "@/app/stacks/stack-db";
+import { getSupabaseClient } from '@/app/stacks/stack-db';
 
-import getFileFromGithub from "./get-file-from-github";
-import pushMultipleFilesToBranch from "./push-multiple-files-to-branch";
+import getFileFromGithub from './get-file-from-github';
+import pushMultipleFilesToBranch from './push-multiple-files-to-branch';
 
 export default async function createStack(data) {
   const supabase = await getSupabaseClient();
 
-  data.tags = ["draft"];
+  data.tags = ['draft'];
   const { data: insertedData, error } = await supabase
-    .from("stack")
+    .from('stack')
     .insert([data])
     .single();
   if (error) {
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
   }
@@ -24,7 +24,7 @@ export default async function createStack(data) {
   let path = `ui/app/components/stacks/${data.id}.tsx`;
   let message = `Frontend For Stack ${data.id} created`;
   let response = await getFileFromGithub(
-    "ui/public/stacks/boilerplate-basic.tsx",
+    'ui/public/stacks/boilerplate-basic.tsx',
   );
 
   let filesArray = [
@@ -38,7 +38,7 @@ export default async function createStack(data) {
   path = `ui/app/api/${data.id}/route.ts`;
   message = `Backend For Stack ${data.id} created`;
   response = await getFileFromGithub(
-    "ui/public/stacks/boilerplate-basic/route.ts",
+    'ui/public/stacks/boilerplate-basic/route.ts',
   );
 
   filesArray.push({
@@ -50,16 +50,16 @@ export default async function createStack(data) {
   message = `Stack ${data.id} created`;
 
   response = await getFileFromGithub(
-    "ui/public/stack-pictures/boilerplate-basic.png",
+    'ui/public/stack-pictures/boilerplate-basic.png',
   );
 
   filesArray.push({
     path: path,
     sha: response.sha,
   });
-  const sourceBranch = process.env.VERCEL_GIT_COMMIT_REF ?? ""; // or 'master', depending on your repository
+  const sourceBranch = process.env.VERCEL_GIT_COMMIT_REF ?? ''; // or 'master', depending on your repository
 
   await pushMultipleFilesToBranch(filesArray, sourceBranch, message);
 
-  await supabase.rpc("commit");
+  await supabase.rpc('commit');
 }

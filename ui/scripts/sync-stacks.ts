@@ -1,5 +1,5 @@
-import * as fs from 'fs-extra';
 import path from 'path';
+import * as fs from 'fs-extra';
 
 async function removeDirectory(dirPath: string): Promise<void> {
   try {

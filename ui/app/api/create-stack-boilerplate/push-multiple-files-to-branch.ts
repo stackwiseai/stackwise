@@ -1,10 +1,10 @@
-import { Octokit } from "@octokit/rest";
+import { Octokit } from '@octokit/rest';
 
 const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
-const owner = "stackwiseai";
-const repo = "stackwise";
-const sourceBranch = process.env.VERCEL_GIT_COMMIT_REF ?? ""; // or 'master', depending on your repository
-export const fetchCache = "force-no-store"; // TODO: remove this line to enable caching but without making the app completely static
+const owner = 'stackwiseai';
+const repo = 'stackwise';
+const sourceBranch = process.env.VERCEL_GIT_COMMIT_REF ?? ''; // or 'master', depending on your repository
+export const fetchCache = 'force-no-store'; // TODO: remove this line to enable caching but without making the app completely static
 export const revalidate = 0;
 
 export default async function pushMultipleFilesToBranch(
@@ -31,8 +31,8 @@ export default async function pushMultipleFilesToBranch(
 
     let tree = filesArray.map((file) => ({
       path: file.path,
-      mode: "100644", // blob (file)
-      type: "blob",
+      mode: '100644', // blob (file)
+      type: 'blob',
       sha: file.sha,
     }));
 
@@ -52,7 +52,7 @@ export default async function pushMultipleFilesToBranch(
       parents: [parentSha],
     });
 
-    console.log("Created commit:", newCommitData.sha);
+    console.log('Created commit:', newCommitData.sha);
 
     // Update the branch reference to point to the new commit
     await octokit.git.updateRef({
@@ -62,11 +62,11 @@ export default async function pushMultipleFilesToBranch(
       sha: newCommitData.sha,
     });
 
-    console.log("Successfully pushed multiple files to branch:", branch);
+    console.log('Successfully pushed multiple files to branch:', branch);
     const gitDiffLink = `https://github.com/${owner}/${repo}/compare/${sourceBranch}...${branch}`;
-    console.log("gitDiffLink", gitDiffLink);
+    console.log('gitDiffLink', gitDiffLink);
     return gitDiffLink;
   } catch (error) {
-    console.error("Error pushing multiple files to branch:", error);
+    console.error('Error pushing multiple files to branch:', error);
   }
 }

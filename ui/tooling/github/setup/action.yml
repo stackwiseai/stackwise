@@ -1,5 +1,5 @@
-name: "Setup and install"
-description: "Common setup steps for Actions"
+name: 'Setup and install'
+description: 'Common setup steps for Actions'
 
 runs:
   using: composite
@@ -7,7 +7,7 @@ runs:
     - uses: actions/setup-node@v4
       with:
         node-version: 20
-        cache: "npm"
+        cache: 'npm'
 
     - shell: bash
       run: npm install
