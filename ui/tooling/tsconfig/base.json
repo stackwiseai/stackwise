@@ -13,7 +13,7 @@
     "jsx": "preserve",
     "incremental": true,
     "strict": false,
-    "strictNullChecks": false,
+    "strictNullChecks": true,
     "noImplicitAny": false,
     "noImplicitThis": false,
     "alwaysStrict": false,

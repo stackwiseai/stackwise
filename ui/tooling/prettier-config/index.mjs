@@ -12,13 +12,8 @@ const config = {
   trailingComma: 'all',
   arrowParens: 'always',
   semi: true,
-  plugins: [
-    '@ianvs/prettier-plugin-sort-imports',
-    'prettier-plugin-tailwindcss',
-  ],
-  tailwindConfig: fileURLToPath(
-    new URL('../../tooling/tailwind-config/index.ts', import.meta.url),
-  ),
+  plugins: ['@ianvs/prettier-plugin-sort-imports', 'prettier-plugin-tailwindcss'],
+  tailwindConfig: fileURLToPath(new URL('../../tooling/tailwind-config/index.ts', import.meta.url)),
   importOrder: [
     '^(react/(.*)$)|^(react$)|^(react-native(.*)$)',
     '^(next/(.*)$)|^(next$)',
@@ -33,7 +28,7 @@ const config = {
     '^[./]',
   ],
   importOrderParserPlugins: ['typescript', 'jsx', 'decorators-legacy'],
-  importOrderTypeScriptVersion: '5.3.2',
+  importOrderTypeScriptVersion: '4.4.0',
 };
 
 export default config;
