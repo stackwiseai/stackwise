@@ -28,6 +28,7 @@ export const BasicForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    // const token = await getToken({ template: "supabase" });
 
     if (!isKebabCase(formData.id)) {
       setFormErrors({ ...formErrors, id: 'ID must be in kebab-case.' });

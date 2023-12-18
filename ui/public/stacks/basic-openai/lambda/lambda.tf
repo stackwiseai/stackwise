@@ -30,14 +30,8 @@ resource "aws_lambda_function" "node_lambda" {
   function_name = "node_lambda_function"
   role = length(aws_iam_role.lambda_role) > 0 ? aws_iam_role.lambda_role[0].arn : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/lambda_role"
 
-  handler = "index.handler"
+  handler = "lambda.handler"
   runtime = "nodejs14.x"
-
-  environment {
-    variables = {
-      OPENAI_API_KEY = "sk-"
-    }
-  }
 
   filename         = "function.zip"
   source_code_hash = filebase64("${path.module}/function.zip")
