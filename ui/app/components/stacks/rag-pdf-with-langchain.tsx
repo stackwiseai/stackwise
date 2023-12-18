@@ -83,7 +83,9 @@ const RAGPDFWithLangchain = () => {
     prevQuestionRef.current = question;
   }, [question]); // Only re-run if question changes
 
-  const handlePDFUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePDFUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = event.target.files?.[0];
     if (file) {
       setLoading(true);
@@ -165,23 +167,14 @@ const RAGPDFWithLangchain = () => {
       });
       if (signal.aborted) return;
 
-      const reader = response.body?.getReader();
-      const decoder = new TextDecoder();
-      let done = false;
-      let fullResponse = '';
-
-      while (!done && reader) {
-        const { value, done: doneReading } = await reader.read();
-        done = doneReading;
-        const chunkValue = decoder.decode(value, { stream: !done });
-        fullResponse += chunkValue;
-
-        setChatHistory((prev) => {
-          // Update the placeholderAnswering with the full response
-          const updatedHistory = [...prev];
-          updatedHistory[updatedHistory.length - 1] = `A: ${fullResponse}`;
-          return updatedHistory;
-        });
+      const data = await response.json();
+      if (data.error) {
+        setError(data.error);
+        // Remove the temporary question and "Answering..." message if there's an error
+        setChatHistory((prev) => prev.slice(0, -2));
+      } else {
+        // Replace the "Answering..." message with the actual answer
+        setChatHistory((prev) => [...prev.slice(0, -1), `A: ${data.answer}`]);
       }
     } catch (error) {
       setError('An error occurred while fetching the data.');
