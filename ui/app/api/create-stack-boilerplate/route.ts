@@ -21,8 +21,8 @@ export async function POST(req: Request) {
       const header = req.headers.get('Authorization');
       if (header) {
         const token = header.split(' ')[1];
-        await createStack(data, token);
-        return new Response(JSON.stringify({}), {
+        const prLink = await createStack(data, token);
+        return new Response(JSON.stringify({prLink}), {
           status: 200,
           headers: {
             'Content-Type': 'application/json',

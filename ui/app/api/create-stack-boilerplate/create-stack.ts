@@ -73,5 +73,6 @@ export default async function createStack(data, token) {
   });
   // const sourceBranch = process.env.VERCEL_GIT_COMMIT_REF ?? ''; // or 'master', depending on your repository
 
-  await pushMultipleFilesToBranch(filesArray, stackInfo.id, token);
+  const prLink = await pushMultipleFilesToBranch(filesArray, stackInfo.id, token);
+  return prLink;
 }

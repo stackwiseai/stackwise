@@ -1,6 +1,7 @@
 "use client"
 import SignIn from '@/app/stacks/signIn';
 import { supabaseClient } from '@/app/stacks/stack-db';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 export const BasicForm = () => {
@@ -12,6 +13,9 @@ export const BasicForm = () => {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const [username, setUsername] = useState("");
   const [token, setToken] = useState("");
+  const [pullRequestUrl, setPullRequestUrl] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     // Check if user is signed in
     async function checkUser() {
@@ -49,12 +53,11 @@ export const BasicForm = () => {
   };
 
   const handleSubmit = async (event) => {
+    setIsLoading(true);
     setMessage('');
     event.preventDefault();
 
     try {
-      
-      // console.log(session, "session")
       const response = await fetch('/api/create-stack-boilerplate', {
         method: 'POST',
         headers: {
@@ -65,9 +68,8 @@ export const BasicForm = () => {
       });
 
       if (response.ok) {
-        setMessage('Form submitted successfully!');
         const responseData = await response.json();
-        console.log('Response:', responseData);
+        setPullRequestUrl(responseData.prLink);
       } else {
         const errorData = await response.json();
 
@@ -103,7 +105,17 @@ export const BasicForm = () => {
         >
           Create my AI App
         </button>
+        {isLoading && <div className="mt-2">Loading...</div>}
         {Message && <div className="mt-2 text-green-500">{Message}</div>}
+        
+        {pullRequestUrl && 
+        <Link href={pullRequestUrl} target="_blank">
+      
+        <div className="flex h-12 cursor-pointer items-center justify-center bg-black text-white hover:underline">
+          <p className="mx-2">You can now view your pull Request</p>
+        </div>
+      </Link>
+        }
       </form>
     </div>
   );
