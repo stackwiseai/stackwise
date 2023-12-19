@@ -5,11 +5,16 @@ import path from 'path';
 import { execSync } from 'child_process';
 import transformRoute from './transformRoute.js';
 import { loadEnvVariables } from './handleEnv.js';
+import { getLambdaFunctionArn } from './getLambdaFunctionArn.js';
 
 // Define __dirname in ES module
 const __dirname = new URL('.', import.meta.url).pathname;
 
 async function packageAndDeployLambda(routePath: string): Promise<void> {
+  const functionName = 'test_function';
+  const region = 'us-east-1';
+  const roleName = 'lambda_role';
+
   // Determine the base directory of route.ts and create 'lambda' subdirectory
   const lambdaDir = path.join(routePath, 'lambda');
   if (!fs.existsSync(lambdaDir)) {
@@ -46,19 +51,43 @@ async function packageAndDeployLambda(routePath: string): Promise<void> {
     'utils',
     'check_lambda_function.sh'
   );
-  const checkLambdaOutput = execSync(`bash ${lambdaShFilePath}`, {
-    encoding: 'utf-8',
-  });
+  const checkLambdaOutput = execSync(
+    `bash ${lambdaShFilePath} "${functionName}" "${region}"`,
+    {
+      encoding: 'utf-8',
+    }
+  );
+  console.log('checkLambdaOutput:', checkLambdaOutput);
   const lambdaExists = JSON.parse(checkLambdaOutput).function_exists === 'true';
+  console.log('Lambda function exists:', lambdaExists);
 
   // Copy the lambda.tf file to the lambda directory
   const terraformFilePath = path.join(__dirname, 'lambda.tf');
   // Modify the lambda.tf file if the lambda function already exists
   let terraformConfig = fs.readFileSync(terraformFilePath, 'utf8');
   if (lambdaExists) {
-    terraformConfig =
-      '# Lambda function exists, this file was modified\n' + terraformConfig;
+    const lambdaArn = getLambdaFunctionArn(functionName);
+    if (lambdaArn) {
+      terraformConfig =
+        `terraform import aws_lambda_function.node_lambda ${lambdaArn}\n\n` +
+        terraformConfig;
+    } else {
+      console.error('Error retrieving Lambda function ARN');
+      return;
+    }
   }
+  // Setting the correct lambda function name
+  terraformConfig = terraformConfig.replace(
+    'placeholder_lambda_function_name',
+    functionName
+  );
+  // Setting the correct role name
+  terraformConfig = terraformConfig.replace('placeholder_role_name', roleName);
+  // Setting the correct region
+  terraformConfig = terraformConfig.replace(
+    'placeholder_region_string',
+    region
+  );
   fs.writeFileSync(path.join(lambdaDir, 'lambda.tf'), terraformConfig);
 
   // Create the utils
