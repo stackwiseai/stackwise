@@ -1,8 +1,8 @@
 'use client';
 
-import { lazy, useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
+import { lazy, useEffect, useMemo, useState } from 'react';
 import { FaStar } from 'react-icons/fa';
 import { FaCode } from 'react-icons/fa6';
 import { IoLogoGithub } from 'react-icons/io';
@@ -98,7 +98,7 @@ const Chat = ({ params }: { params: { slug: string } }) => {
       <div className="flex">
         <Container style={{ width: chatWithComponent ? '50%' : '100%' }}>
           <TitleContainer>
-            <Link href="https://stackwise.ai/stacks">
+            <Link href="/stacks">
               <div className="mb-4 flex w-full justify-center">
                 <img className="w-32" src="/stackwise_logo.png" />
               </div>

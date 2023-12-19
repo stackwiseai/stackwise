@@ -1,7 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
-import { FaGithub } from 'react-icons/fa'; // Import the GitHub icon
+import { useState } from 'react';
 
 const LoadingComponent = () => {
   return (
@@ -37,6 +36,7 @@ const LoadingComponent = () => {
 
 // Chat component
 export const ChatWithStack = () => {
+  
   const [inputValue, setInputValue] = useState('');
   const [generatedFileContents, setGeneratedFileContents] = useState('');
   const [loading, setLoading] = useState(false);
@@ -71,6 +71,7 @@ export const ChatWithStack = () => {
   };
 
   const handleSubmit = async (event) => {
+
     event.preventDefault();
     console.log('Submitting:', inputValue);
     if (inputValue.trim()) {

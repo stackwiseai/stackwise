@@ -1,6 +1,5 @@
 import { Octokit } from '@octokit/rest';
 
-const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 const owner = 'stackwiseai';
 const repo = 'stackwise';
 const sourceBranch = process.env.VERCEL_GIT_COMMIT_REF ?? ''; // or 'master', depending on your repository
@@ -10,62 +9,71 @@ export const revalidate = 0;
 export default async function pushMultipleFilesToBranch(
   filesArray,
   branch,
-  message,
+  token
 ) {
+
+  const octokit = new Octokit({ auth: token });
+
   try {
-    let parentSha;
-    const { data: sourceBranchData } = await octokit.repos.getBranch({
+    const response = await octokit.rest.repos.createFork({
       owner,
       repo,
-      branch: sourceBranch,
     });
-    parentSha = sourceBranchData.commit.sha;
 
-    const { data: commitData } = await octokit.git.getCommit({
-      owner,
+    await octokit.rest.activity.starRepoForAuthenticatedUser({
+      owner: owner,
+      repo: repo
+  });
+  const { data: user } = await octokit.users.getAuthenticated();
+  const forkedRepoOwner = user.login;
+  console.log(user, 'user');
+  // wait 2 seconds
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+  const { data: refData } = await octokit.git.getRef({
+      owner: forkedRepoOwner,
+      repo: repo,
+      ref: `heads/main`
+  });
+  const sha = refData.object.sha;
+
+    // Create a new branch using the SHA
+
+    try {
+      await octokit.git.createRef({
+        owner: forkedRepoOwner,
+        repo: repo,
+        ref: `refs/heads/${branch}`,
+        sha: sha
+      });
+    } catch (error) {
+      console.log("branch already exists ");
+    }
+    
+    for (let i = 0; i < filesArray.length; i++) {
+      const file = filesArray[i];
+      const response = await octokit.rest.repos.createOrUpdateFileContents({
+        owner: forkedRepoOwner,
+        repo,
+        path: file.path,
+        branch: branch,
+        message: file.message,
+        content: file.sha,
+      });
+      //wait .5 seconds
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      console.log('response', response);
+    }
+
+    const { data } = await octokit.pulls.create({
+      owner: "stackwiseai",
       repo,
-      commit_sha: parentSha,
+      title: `Create stack ${branch}`,
+      head: `${forkedRepoOwner}:${branch}`,
+      base: "main",
+      body:"",
     });
-    const treeSha = commitData.tree.sha;
-    //iterate througjh filesArray
-
-    let tree = filesArray.map((file) => ({
-      path: file.path,
-      mode: '100644', // blob (file)
-      type: 'blob',
-      sha: file.sha,
-    }));
-
-    const { data: treeData } = await octokit.git.createTree({
-      owner,
-      repo,
-      tree,
-      base_tree: treeSha,
-    });
-
-    // Create a new commit with the new tree and the parent commit
-    const { data: newCommitData } = await octokit.git.createCommit({
-      owner,
-      repo,
-      message,
-      tree: treeData.sha,
-      parents: [parentSha],
-    });
-
-    console.log('Created commit:', newCommitData.sha);
-
-    // Update the branch reference to point to the new commit
-    await octokit.git.updateRef({
-      owner,
-      repo,
-      ref: `heads/${branch}`,
-      sha: newCommitData.sha,
-    });
-
-    console.log('Successfully pushed multiple files to branch:', branch);
-    const gitDiffLink = `https://github.com/${owner}/${repo}/compare/${sourceBranch}...${branch}`;
-    console.log('gitDiffLink', gitDiffLink);
-    return gitDiffLink;
+    
+    return "ok";
   } catch (error) {
     console.error('Error pushing multiple files to branch:', error);
   }

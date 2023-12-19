@@ -1,13 +1,35 @@
-import { useState } from 'react';
+"use client"
+import SignIn from '@/app/stacks/signIn';
+import { supabaseClient } from '@/app/stacks/stack-db';
+import { useEffect, useState } from 'react';
 
 export const BasicForm = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    id: '',
+    name:  'My New App',
   });
   const [formErrors, setFormErrors] = useState({ id: '' });
   const [Message, setMessage] = useState('');
+  const [isUserSignedIn, setIsUserSignedIn] = useState(false);
+  const [username, setUsername] = useState("");
+  const [token, setToken] = useState("");
+  useEffect(() => {
+    // Check if user is signed in
+    async function checkUser() {
+      try {
+        const session = await supabaseClient.auth.getSession()
+        const token = session?.data?.session?.provider_token
+
+        if (token) {
+          setIsUserSignedIn(true);
+          setUsername(session?.data?.session?.user.user_metadata.preferred_username)
+          setToken(token)
+        }
+      } catch {
+        console.log("Error getting user")
+      }
+    }
+    checkUser()
+  }, []);
   // const { getToken } = useAuth();
 
   const isKebabCase = (str) => /^[a-z0-9]+(-[a-z0-9]+)*$/.test(str);
@@ -27,19 +49,17 @@ export const BasicForm = () => {
   };
 
   const handleSubmit = async (event) => {
+    setMessage('');
     event.preventDefault();
-    // const token = await getToken({ template: "supabase" });
-
-    if (!isKebabCase(formData.id)) {
-      setFormErrors({ ...formErrors, id: 'ID must be in kebab-case.' });
-      return;
-    }
 
     try {
+      
+      // console.log(session, "session")
       const response = await fetch('/api/create-stack-boilerplate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(formData),
       });
@@ -49,13 +69,20 @@ export const BasicForm = () => {
         const responseData = await response.json();
         console.log('Response:', responseData);
       } else {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        const errorData = await response.json();
+
+        setMessage(errorData.message);
       }
     } catch (error) {
-      console.error('Error during fetch:', error);
-      setMessage('Error on form submission');
+      console.log(error);
+      setMessage("error on form submission");
+
     }
   };
+
+  if (!isUserSignedIn) {
+    return (<SignIn/>);
+  }
 
   return (
     <div className="w-3/4 md:w-1/2">
@@ -69,28 +96,12 @@ export const BasicForm = () => {
           className="mb-2 rounded border border-gray-400 p-2"
           required
         />
-        <textarea
-          name="description"
-          value={formData.description}
-          onChange={handleChange}
-          placeholder="Description"
-          className="mb-2 rounded border border-gray-400 p-2"
-          required
-        />
-        <input
-          type="text"
-          name="id"
-          value={formData.id}
-          onChange={handleChange}
-          placeholder="ID (kebab-case)"
-          className="mb-2 rounded border border-gray-400 p-2"
-          required
-        />
+        {/* Other form elements removed */}
         <button
           type="submit"
           className="rounded bg-blue-500 p-2 text-white hover:bg-blue-700"
         >
-          Submit
+          Create my AI App
         </button>
         {Message && <div className="mt-2 text-green-500">{Message}</div>}
       </form>
