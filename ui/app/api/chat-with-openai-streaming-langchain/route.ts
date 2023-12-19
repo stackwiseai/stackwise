@@ -1,9 +1,11 @@
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 
+export const runtime = 'edge';
 const model = new ChatOpenAI({
   modelName: 'gpt-3.5-turbo',
   temperature: 1.0,
   openAIApiKey: process.env.OPENAI_API_KEY,
+  
 });
 
 export async function POST(req: Request) {
