@@ -1,20 +1,21 @@
-import Link from 'next/link';
-import { FaStar } from 'react-icons/fa';
-import { IoLogoGithub } from 'react-icons/io';
-import tw from 'tailwind-styled-components';
+import Link from "next/link";
+import { FaStar } from "react-icons/fa";
+import { IoLogoGithub } from "react-icons/io";
+import tw from "tailwind-styled-components";
 
-import MainContent from '../components/main-content';
+import MainContent from "../components/main-content";
 import {
   getStackDB,
   statusesToDisplay,
   type StackDescription,
-} from './stack-db';
+} from "./stack-db";
 
-export const fetchCache = 'force-no-store'; // TODO: remove this line to enable caching but without making the app completely static
+export const fetchCache = "force-no-store"; // TODO: remove this line to enable caching but without making the app completely static
 export const revalidate = 0;
 
 export default async function Component() {
   // console.log('statusesToDisplay', statusesToDisplay);
+
   const stackDB = await getStackDB();
   const filteredStacks = Object.entries(stackDB || {}).filter(([id, stack]) => {
     return statusesToDisplay.some((status) =>
@@ -29,14 +30,14 @@ export default async function Component() {
     const [, stackA] = a;
     const [, stackB] = b;
 
-    const isAStarred = stackA.tags.includes('starred');
-    const isBStarred = stackB.tags.includes('starred');
+    const isAStarred = stackA.tags.includes("starred");
+    const isBStarred = stackB.tags.includes("starred");
     const isAPublishedNonExpansion =
-      stackA.tags.includes('published') && !stackA.tags.includes('expansion');
+      stackA.tags.includes("published") && !stackA.tags.includes("expansion");
     const isBPublishedNonExpansion =
-      stackB.tags.includes('published') && !stackB.tags.includes('expansion');
-    const isAExpansion = stackA.tags.includes('expansion');
-    const isBExpansion = stackB.tags.includes('expansion');
+      stackB.tags.includes("published") && !stackB.tags.includes("expansion");
+    const isAExpansion = stackA.tags.includes("expansion");
+    const isBExpansion = stackB.tags.includes("expansion");
 
     // Sorting logic
     if (isAStarred && !isBStarred) return -1;
@@ -70,7 +71,7 @@ export default async function Component() {
                 <div className="flex items-center justify-between">
                   <StackCardTitle>{stack.name}</StackCardTitle>
                   <div>
-                    {stack.tags.includes('starred') && (
+                    {stack.tags.includes("starred") && (
                       <FaStar className="h-4 w-4 text-yellow-300" />
                     )}
                   </div>
