@@ -1,0 +1,52 @@
+name: Validate Pull Request
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  check-format:
+    name: Validate Stack PR
+
+    # Only run if the PR branch starts with `stack/`
+    if: startsWith(github.head_ref, 'stack/')
+
+    runs-on: ubuntu-latest # can also change to: windows-latest || macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # OR "2" -> To retrieve the preceding commit.
+
+      - name: Get all changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v40
+
+      - name: List all changed files
+        run: |
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            echo "$file was changed"
+          done
+
+      - name: Fail if unexpected files were changed
+        run: |
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            if [[ ! "$file" =~ ^(stacks/[^/]*/index.test.ts|stacks/[^/]*/index.ts|stacks/[^/]*/index.test.txt)$ ]]; then
+              echo "😡 File '$file' was changed. This is not allowed in a stack Pull Request."
+              echo ""
+              echo "You're only allowed to change the following:"
+              echo "  - stacks/*/index.ts"
+              echo "  - stacks/*/index.test.ts"
+              echo "  - stacks/*/index.test.txt"
+              exit 1
+            fi
+          done
+
+      - name: Fail if more than one (1) stack was made
+        run: |
+          if ((${{ steps.changed-files.outputs.all_changed_files_count }} > 3)); then
+            echo "😡 Detected more than 1 stack. Please make only 1 stack per pull request."
+            exit 1
+          fi
