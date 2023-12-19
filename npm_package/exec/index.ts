@@ -4,7 +4,6 @@ import fs from 'fs';
 import path from 'path';
 import { execSync } from 'child_process';
 import transformRoute from './transformRoute.js';
-import { loadEnvVariables } from './handleEnv.js';
 import terraformLambdaTemplate from './terraformLambdaTemplate.js';
 
 // Define __dirname in ES module
@@ -68,9 +67,6 @@ async function packageAndDeployLambda(routePath: string): Promise<void> {
   // Create the zip file
   const zipFilePath = path.join(lambdaDir, 'function.zip');
   execSync(`zip -r ${zipFilePath} .`, { cwd: lambdaDir, stdio: 'inherit' });
-
-  // Find the project root directory
-  await loadEnvVariables();
 
   execSync(`terraform init`, {
     cwd: lambdaDir,
