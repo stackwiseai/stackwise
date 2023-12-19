@@ -12,7 +12,7 @@
   ],
   "types": "./lib/index.d.ts",
   "scripts": {
-    "build": "tsc --project tsconfig.src.json && tsc --project tsconfig.exec.json && cp ./exec/lambda.tf ./cmd && mkdir -p ./cmd/utils && cp ./exec/utils/check_iam_role.sh ./cmd/utils && cp ./exec/utils/check_lambda_function.sh ./cmd/utils",
+    "build": "tsc --project tsconfig.src.json && tsc --project tsconfig.exec.json && cp -r ./exec/utils ./cmd/",
     "clean": "rm -rf ./lib/ && rm -rf ./cmd/",
     "postbuild": "chmod +x ./cmd/index.js",
     "cm": "cz",

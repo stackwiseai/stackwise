@@ -1,16 +1,17 @@
-provider "aws" {
-  region = "placeholder_region_string"
+const terraformLambdaTemplate = (
+  region: string,
+  functionName: string,
+  roleName: string,
+  iAmExists: number
+) => `provider "aws" {
+  region = "${region}"
   profile = "stackwise-agent"
 }
 
-data "external" "check_iam_role" {
-  program = ["bash", "${path.module}/utils/check_iam_role.sh"]
-}
-
 resource "aws_iam_role" "lambda_role" {
-  count = data.external.check_iam_role.result["role_exists"] == "false" ? 1 : 0
+  count = ${iAmExists}
 
-  name = "placeholder_role_name"
+  name = "${roleName}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -32,8 +33,10 @@ variable "openai_api_key" {
 }
 
 resource "aws_lambda_function" "node_lambda" {
-  function_name = "placeholder_lambda_function_name"
-  role = length(aws_iam_role.lambda_role) > 0 ? aws_iam_role.lambda_role[0].arn : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/lambda_role"
+  function_name = "${functionName}"
+  role = length(aws_iam_role.lambda_role) > 0 ? aws_iam_role.lambda_role[0].arn : "arn:aws:iam::\${
+    data.aws_caller_identity.current.account_id
+  }:role/lambda_role"
 
   handler = "index.handler"
   runtime = "nodejs14.x"
@@ -46,5 +49,7 @@ resource "aws_lambda_function" "node_lambda" {
   }
 
   filename         = "function.zip"
-  source_code_hash = filebase64("${path.module}/function.zip")
-}
+  source_code_hash = filebase64("\${path.module}/function.zip")
+}`;
+
+export default terraformLambdaTemplate;
