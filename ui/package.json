@@ -13,12 +13,12 @@
     "tooling/*"
   ],
   "dependencies": {
-    "@clerk/nextjs": "^4.28.1",
     "@fal-ai/serverless-client": "^0.7.0",
     "@fal-ai/serverless-proxy": "^0.6.0",
     "@google/generative-ai": "^0.1.1",
     "@langchain/google-genai": "^0.0.2",
     "@octokit/rest": "^20.0.2",
+    "@supabase/ssr": "^0.0.10",
     "@supabase/supabase-js": "^2.39.0",
     "@vercel/analytics": "^1.1.1",
     "ai": "^2.2.28",
