@@ -5,7 +5,6 @@ import path from 'path';
 import { execSync } from 'child_process';
 import transformRoute from './transformRoute.js';
 import { loadEnvVariables } from './handleEnv.js';
-import { getLambdaFunctionArn } from './getLambdaFunctionArn.js';
 import terraformLambdaTemplate from './terraformLambdaTemplate.js';
 
 // Define __dirname in ES module
