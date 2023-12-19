@@ -1,5 +1,4 @@
 import { ChatOpenAI } from 'langchain/chat_models/openai';
-
 export const runtime = 'edge';
 const model = new ChatOpenAI({
   modelName: 'gpt-3.5-turbo',
