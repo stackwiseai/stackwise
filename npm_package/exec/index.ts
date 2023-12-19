@@ -5,6 +5,7 @@ import path from 'path';
 import { execSync } from 'child_process';
 import transformRoute from './transformRoute.js';
 import terraformLambdaTemplate from './terraformLambdaTemplate.js';
+import { loadEnvVariables } from './handleEnv.js';
 
 // Define __dirname in ES module
 const __dirname = new URL('.', import.meta.url).pathname;
@@ -20,6 +21,9 @@ async function packageAndDeployLambda(routePath: string): Promise<void> {
     fs.rmSync(lambdaDir, { recursive: true });
   }
   fs.mkdirSync(lambdaDir);
+
+  // loads the tf and openai variables
+  await loadEnvVariables();
 
   const routeDir = path.join(routePath, 'route.ts');
 

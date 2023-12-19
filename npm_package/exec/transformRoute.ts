@@ -1,10 +1,6 @@
 import OpenAI from 'openai';
-import { loadEnvVariables } from './handleEnv.js';
 
 export default async function transformRoute(originalContent: string) {
-  // loads the tf and openai variables
-  await loadEnvVariables();
-
   if (!process.env.OPENAI_API_KEY) {
     throw new Error(
       'OPENAI_API_KEY is not set. Please set the environment variable.'
