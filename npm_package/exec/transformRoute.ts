@@ -43,7 +43,9 @@ export default async function transformRoute(originalContent: string) {
   return response.choices[0].message.content;
 }
 
-const fewShotExamples = `Here is an example of a successful conversion. The original code that was passed in:
+const fewShotExamples = `Here are some examples of a successful conversions. 
+
+The original code that was passed in:
 import OpenAI from 'openai';
 
 const openai = new OpenAI({
@@ -60,8 +62,7 @@ export async function POST(req: Request) {
   return new Response(JSON.stringify({ content }));
 }
 
-
-A complete response:
+Your response:
 import OpenAI from 'openai';
 
 const openai = new OpenAI({
@@ -83,4 +84,22 @@ export const handler = async (event, context) => {
     },
   };
 };
+
+
+The original code:
+export async function POST(req: Request) {
+  const { input } = await req.json();
+  return new Response(
+    JSON.stringify({ output: \`You sent this message to the server: \${input}\` }),
+  );
+}
+
+Your response:
+export async function POST(req: Request) {
+  const { input } = await req.json();
+  return new Response(
+    JSON.stringify({ output: \`You sent this message to the server: \${input}\` }),
+  );
+}
+
 `;

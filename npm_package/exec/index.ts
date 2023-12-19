@@ -6,14 +6,19 @@ import { execSync } from 'child_process';
 import transformRoute from './transformRoute.js';
 import terraformLambdaTemplate from './terraformLambdaTemplate.js';
 import { loadEnvVariables } from './handleEnv.js';
+import getNameAndPackages from './utils/getNameAndPackages.js';
 
 // Define __dirname in ES module
 const __dirname = new URL('.', import.meta.url).pathname;
 
 async function packageAndDeployLambda(routePath: string): Promise<void> {
-  const functionName = 'test_function';
+  // this is later changed
+  let functionName = 'test_function';
   const region = 'us-east-1';
   const roleName = 'lambda_role';
+
+  // loads the tf and openai variables
+  await loadEnvVariables();
 
   // Determine the base directory of route.ts and create 'lambda' subdirectory
   const lambdaDir = path.join(routePath, 'lambda');
@@ -22,13 +27,14 @@ async function packageAndDeployLambda(routePath: string): Promise<void> {
   }
   fs.mkdirSync(lambdaDir);
 
-  // loads the tf and openai variables
-  await loadEnvVariables();
-
   const routeDir = path.join(routePath, 'route.ts');
 
   // Read and transform the original file
   const originalContent = fs.readFileSync(routeDir, 'utf8');
+  const nameAndPackage = await getNameAndPackages(originalContent);
+  functionName = nameAndPackage.name;
+  const packages = nameAndPackage.packages;
+
   const transformedContent = await transformRoute(originalContent);
 
   // Initialize npm and install packages
@@ -38,7 +44,6 @@ async function packageAndDeployLambda(routePath: string): Promise<void> {
   packageJson.type = 'module'; // Set package.json to use ES module
   fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
-  const packages = ['openai']; // Add other packages as needed
   if (packages.length > 0) {
     execSync(`npm install ${packages.join(' ')}`, {
       cwd: lambdaDir,
