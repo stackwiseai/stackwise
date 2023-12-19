@@ -62,7 +62,7 @@ export default async function Component() {
         </div>
       </Link>
 
-      <MainContent stackDB={stackDB} />
+      <MainContent stackDB={sortedStacks} />
       <StacksContainer>
         <Stacks>
           {Object.entries(sortedStacks).map(([id, stack], i) => (
