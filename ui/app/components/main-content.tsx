@@ -11,7 +11,7 @@ export default async function MainContent({ stackDB }) {
         <div className="mb-4 flex w-full justify-center">
           <img className="w-32" src="/stackwise_logo.png" />
         </div>
-        <Subtitle>The open source function collection.</Subtitle>
+        <Subtitle>The open source AI app collection.</Subtitle>
       </TitleContainer>
       <MainWrapper>
         <Content stackDB={stackDB} />

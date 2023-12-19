@@ -26,6 +26,11 @@ resource "aws_iam_role" "lambda_role" {
 
 data "aws_caller_identity" "current" {}
 
+variable "openai_api_key" {
+  description = "OpenAI API key"
+  type        = string
+}
+
 resource "aws_lambda_function" "node_lambda" {
   function_name = "node_lambda_function"
   role = length(aws_iam_role.lambda_role) > 0 ? aws_iam_role.lambda_role[0].arn : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/lambda_role"
@@ -35,7 +40,7 @@ resource "aws_lambda_function" "node_lambda" {
 
   environment {
     variables = {
-      OPENAI_API_KEY = "sk-"
+      OPENAI_API_KEY = var.openai_api_key
     }
   }
 
