@@ -1,28 +1,23 @@
-import { ChatOpenAI } from 'langchain/chat_models/openai';
-export const runtime = 'edge';
-const model = new ChatOpenAI({
-  modelName: 'gpt-3.5-turbo',
-  temperature: 1.0,
-  openAIApiKey: process.env.OPENAI_API_KEY,
-  
-});
+import { OpenAI } from 'openai'
+import { OpenAIStream, StreamingTextResponse } from 'ai'
+
+const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY!})
+export const runtime = 'edge'
 
 export async function POST(req: Request) {
-  try {
-    const { messages } = await req.json();
-    const message = await model.invoke(messages);
-    const fullmsg = message.content; // Assuming message.content is a string
-    const responseJson = JSON.stringify({ fullmsg });
+  
+  const { messages } = await req.json();
 
-    return new Response(responseJson, {
-        headers: { 'Content-Type': 'application/json' },
-      });
-  } catch (error) {
-    console.error('Error during chat request handling:', error);
-    
-    return new Response(JSON.stringify({ error: 'An error occurred' }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      });
-  }
+  const response = await openai.chat.completions.create({
+    model: 'gpt-3.5-turbo',
+    stream: true,
+    messages: messages,
+    max_tokens: 500,
+    temperature: 0.7,
+    top_p: 1,
+    frequency_penalty: 1,
+    presence_penalty: 1,
+  })
+  const stream = OpenAIStream(response)
+  return new StreamingTextResponse(stream)
 }
