@@ -73,7 +73,7 @@ export default async function pushMultipleFilesToBranch(
       body:"",
     });
     
-    return "ok";
+    return data.html_url;
   } catch (error) {
     console.error('Error pushing multiple files to branch:', error);
   }
