@@ -1,4 +1,5 @@
 import type { NextRequest } from 'next/server';
+import type { Document } from 'langchain/document';
 import type {
   Browser,
   Page,
@@ -6,6 +7,12 @@ import type {
   PuppeteerGotoOptions,
 } from 'langchain/document_loaders/web/puppeteer';
 import { PuppeteerWebBaseLoader } from 'langchain/document_loaders/web/puppeteer';
+import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
+import { ContextualCompressionRetriever } from 'langchain/retrievers/contextual_compression';
+import { DocumentCompressorPipeline } from 'langchain/retrievers/document_compressors';
+import { EmbeddingsFilter } from 'langchain/retrievers/document_compressors/embeddings_filter';
+import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
+import { MemoryVectorStore } from 'langchain/vectorstores/memory';
 
 export const runtime = 'nodejs';
 
@@ -41,4 +48,39 @@ export const run = async ({ html, url }: { html?: string; url?: string }) => {
   });
   const docs = await loaderWithOptions.loadAndSplit();
   return docs;
+};
+
+const compressedRelevantDocsRetriever = async (docs: Document[], callbacks) => {
+  const embeddingsFilter = new EmbeddingsFilter({
+    embeddings: new OpenAIEmbeddings(),
+    similarityThreshold: 0.8,
+    k: 5,
+  });
+
+  const textSplitter = new RecursiveCharacterTextSplitter({
+    chunkSize: 400,
+    chunkOverlap: 40,
+  });
+
+  const compressorPipeline = new DocumentCompressorPipeline({
+    transformers: [textSplitter, embeddingsFilter],
+  });
+
+  // const baseRetriever = new TavilySearchAPIRetriever({
+  //   includeRawContent: true,
+  // });
+  const baseRetriever = (
+    await MemoryVectorStore.fromDocuments(docs, new OpenAIEmbeddings(), {})
+  ).asRetriever({ callbacks });
+
+  const retriever = new ContextualCompressionRetriever({
+    baseCompressor: compressorPipeline,
+    baseRetriever,
+  });
+
+  // const retrievedDocs = await retriever.getRelevantDocuments(
+  //   "What did the speaker say about Justice Breyer in the 2022 State of the Union?"
+  // );
+  // console.log({ retrievedDocs });
+  return retriever;
 };

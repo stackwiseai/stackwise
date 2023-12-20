@@ -197,25 +197,25 @@ export async function POST(req: NextRequest) {
       resolveWithDocuments = resolve;
     });
 
-    // const retriever = await compressedRelevantDocsRetriever(docs, [
-    //   {
-    //     handleRetrieverEnd(documents) {
-    //       resolveWithDocuments(documents);
-    //     },
-    //   },
-    // ]);
-
-    const baseRetriever = (
-      await MemoryVectorStore.fromDocuments(docs, new OpenAIEmbeddings(), {})
-    ).asRetriever({
-      callbacks: [
-        {
-          handleRetrieverEnd(documents) {
-            resolveWithDocuments(documents);
-          },
+    const baseRetriever = await compressedRelevantDocsRetriever(docs, [
+      {
+        handleRetrieverEnd(documents) {
+          resolveWithDocuments(documents);
         },
-      ],
-    });
+      },
+    ]);
+
+    // const baseRetriever = (
+    //   await MemoryVectorStore.fromDocuments(docs, new OpenAIEmbeddings(), {})
+    // ).asRetriever({
+    //   callbacks: [
+    //     {
+    //       handleRetrieverEnd(documents) {
+    //         resolveWithDocuments(documents);
+    //       },
+    //     },
+    //   ],
+    // });
 
     const retrievalChain = baseRetriever.pipe(combineDocumentsFn);
 

@@ -1,9 +1,10 @@
 'use client';
 
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Message } from 'ai/react';
 import { useChat } from 'ai/react';
 import type { AgentStep } from 'langchain/schema';
+import { IoSend } from 'react-icons/io5';
 import { toast } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
@@ -15,10 +16,6 @@ export enum CrawlMethod {
   APIFY = 'APIFY',
 }
 
-interface ChatHistoryProps {
-  chatHistory: Message[];
-  handleCancel: () => void;
-}
 type SourcesForMessages = Record<string, string[]>;
 
 const placeholderAnswering = 'A: Answering…';
@@ -141,43 +138,6 @@ export function ChatMessageBubble(props: {
     </div>
   );
 }
-
-const ChatHistory: React.FC<ChatHistoryProps> = ({
-  chatHistory,
-  handleCancel,
-}) => (
-  <div
-    className={`mt-4 p-4 ${
-      chatHistory.length > 0 && 'border-t'
-    } border-gray-200`}
-  >
-    <ul className="mt-2">
-      {chatHistory.map((entry, index) => (
-        <li
-          key={index}
-          className={`mt-1 ${index % 2 !== 0 ? 'text-left' : 'text-right'}`}
-        >
-          <span
-            className={`inline-block ${
-              index % 2 !== 0 ? 'bg-blue-100' : 'bg-green-100'
-            } rounded px-2 py-1`}
-          >
-            {entry.content}
-            {entry.content === placeholderAnswering && (
-              <button
-                type="button"
-                onClick={handleCancel}
-                className="ml-2 rounded-md border bg-red-600 px-2 py-1 text-white hover:bg-red-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
-              >
-                Stop
-              </button>
-            )}
-          </span>
-        </li>
-      ))}
-    </ul>
-  </div>
-);
 
 const RAGURLWithLangchain = () => {
   const [sourcesForMessages, setSourcesForMessages] =
@@ -352,33 +312,39 @@ const RAGURLWithLangchain = () => {
     }
   };
 
+  useEffect(() => {
+    toast(error?.message);
+  }, [error]);
+
   return (
-    <div className="mx-auto flex h-full w-full flex-col items-center justify-between p-4">
+    <div
+      className={`flex w-full grow flex-col items-center overflow-hidden rounded p-4 md:p-8 ${
+        messages.length > 0 ? 'border' : ''
+      }`}
+    >
+      {messages.length === 0 ? <></> : ''}
+      <div
+        className="flex w-full flex-col-reverse overflow-auto transition-[flex-grow] ease-in-out"
+        ref={messageContainerRef}
+      >
+        {messages.length > 0
+          ? [...messages].reverse().map((m, i) => {
+              const sourceKey = (messages.length - 1 - i).toString();
+              return m.role === 'system' ? (
+                <IntermediateStep key={m.id} message={m}></IntermediateStep>
+              ) : (
+                <ChatMessageBubble
+                  key={m.id}
+                  message={m}
+                  aiEmoji={'🤖'}
+                  sources={sourcesForMessages[sourceKey]}
+                ></ChatMessageBubble>
+              );
+            })
+          : ''}
+      </div>
       <form onSubmit={sendMessage} className="w-full max-w-xl p-4">
-        <input
-          ref={inputUrlRef}
-          type="text"
-          value={inputUrl}
-          onChange={(e) => setInputUrl(e.target.value)}
-          placeholder="Enter URL"
-          className="w-full rounded border p-2"
-        />
-        <input
-          ref={inputRef}
-          value={input}
-          onChange={handleInputChange}
-          placeholder="Enter your message"
-          className="mt-2 w-full rounded border p-2"
-        />
-        <button
-          type="submit"
-          disabled={isLoading || !input.trim() || !hasValidUrl}
-          className="mt-2 w-full rounded bg-blue-500 py-2 text-white hover:bg-blue-700 disabled:bg-blue-300"
-        >
-          {isLoading ? 'Loading...' : 'Send'}
-        </button>
-      </form>
-      {/* <iframe
+        {/* <iframe
         src={inputUrl}
         className="h-full w-full"
         onError={(e) => {
@@ -388,38 +354,38 @@ const RAGURLWithLangchain = () => {
           console.log('loaded data', e);
         }}
       ></iframe> */}
-      <div
-        className={`flex grow flex-col items-center overflow-hidden rounded p-4 md:p-8 ${
-          messages.length > 0 ? 'border' : ''
-        }`}
-      >
-        {messages.length === 0 ? <></> : ''}
-        <div
-          className="mb-4 flex w-full flex-col-reverse overflow-auto transition-[flex-grow] ease-in-out"
-          ref={messageContainerRef}
-        >
-          {messages.length > 0
-            ? [...messages].reverse().map((m, i) => {
-                const sourceKey = (messages.length - 1 - i).toString();
-                return m.role === 'system' ? (
-                  <IntermediateStep key={m.id} message={m}></IntermediateStep>
-                ) : (
-                  <ChatMessageBubble
-                    key={m.id}
-                    message={m}
-                    aiEmoji={'🤖'}
-                    sources={sourcesForMessages[sourceKey]}
-                  ></ChatMessageBubble>
-                );
-              })
-            : ''}
+
+        {/* <input
+          ref={inputUrlRef}
+          type="text"
+          value={inputUrl}
+          onChange={(e) => setInputUrl(e.target.value)}
+          placeholder="Enter URL"
+          className="w-full rounded border p-2"
+        /> */}
+
+        <div className={`relative mb-4 w-full`}>
+          <input
+            ref={inputRef}
+            id="questionInput"
+            type="text"
+            placeholder="Include URLs in your question to get better answers."
+            value={input}
+            onChange={handleInputChange}
+            disabled={isLoading || !hasValidUrl}
+            className="focus:shadow-outline disabled:opacity:60 w-full rounded-full border border-gray-400 py-2 pl-4 pr-10 focus:outline-none"
+          />
+          <button
+            type="submit"
+            disabled={isLoading || !input.trim() || !hasValidUrl}
+            className={`focus:shadow-outline absolute right-0 top-0 h-full cursor-pointer rounded-r-full px-4 font-bold text-black focus:outline-none ${
+              isLoading ? 'cursor-not-allowed opacity-50' : ''
+            }`}
+          >
+            <IoSend />
+          </button>
         </div>
-      </div>
-      {/* <ChatHistory
-        chatHistory={chatHistory}
-        handleCancel={() => abortControllerRef.current?.abort()}
-      /> */}
-      {error && <p className="text-red-500">{error.message}</p>}
+      </form>
     </div>
   );
 };
