@@ -30,7 +30,7 @@ export default async function transformRoute(originalContent: string) {
       },
       {
         role: 'system',
-        content: `${fewShotExamples} \n Notice how nothing the code is returned.`,
+        content: `${fewShotExamples} \n Please use the 'export const handler' syntax over the 'exports.handler' syntax.`,
       },
       {
         role: 'system',
@@ -95,11 +95,14 @@ export async function POST(req: Request) {
 }
 
 Your response:
-export async function POST(req: Request) {
-  const { input } = await req.json();
-  return new Response(
-    JSON.stringify({ output: \`You sent this message to the server: \${input}\` }),
-  );
-}
+export const handler = async (event, context) => {
+  const { input } = JSON.parse(event.body);
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ output: \`You sent this message to the server: \${input}\` }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
 
 `;
