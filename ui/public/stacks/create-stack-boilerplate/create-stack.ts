@@ -1,78 +1,65 @@
-
 import { getSupabaseClient } from '@/app/stacks/stack-db';
+
 import getFileFromGithub from './get-file-from-github';
 import pushMultipleFilesToBranch from './push-multiple-files-to-branch';
 
-export default async function createStack(data, token) {
-  const stackId = data.name
-    .replace(/([a-z])([A-Z])/g, '$1-$2')
-    .replace(/\s+/g, '-')
-    .toLowerCase();
-  
+export default async function createStack(data) {
   const supabase = await getSupabaseClient();
-  const stackInfo = {
-    name: data.name,
-    id: stackId,
-    description: data.description,
-    tags: ['draft'],
-  }
-    const { data: insertedData, error } = await supabase
+
+  data.tags = ['draft'];
+  const { data: insertedData, error } = await supabase
     .from('stack')
-    .insert([
-      stackInfo
-    ])
+    .insert([data])
     .single();
-    if (error) {
-      if (error.message.includes('duplicate key ')) {
-        throw new Error('This app already exists.');
-      }
-      throw error;
-    }
-  
-  // creating api key
-  let path = `ui/app/components/stacks/${stackInfo.id}.tsx`;
-  let message = `Frontend For ${stackInfo.id} created`;
+  if (error) {
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  }
+  // let filesArray = [];
+
+  let path = `ui/app/components/stacks/${data.id}.tsx`;
+  let message = `Frontend For Stack ${data.id} created`;
   let response = await getFileFromGithub(
-    'ui/public/stacks/boilerplate-basic.tsx', token
+    'ui/public/stacks/boilerplate-basic.tsx',
   );
-  await new Promise((resolve) => setTimeout(resolve, 500));
 
   let filesArray = [
     {
       path: path,
-      sha: response.content,
-      message: message,
+      sha: response.sha,
     },
   ];
 
-  path = `ui/app/api/${stackInfo.id}/route.ts`;
-  message = `Backend For ${stackInfo.id} created`;
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  path = `ui/app/api/${data.id}/route.ts`;
+  message = `Backend For Stack ${data.id} created`;
   response = await getFileFromGithub(
-    'ui/public/stacks/boilerplate-basic/route.ts', token
+    'ui/public/stacks/boilerplate-basic/route.ts',
   );
-  await new Promise((resolve) => setTimeout(resolve, 500));
 
   filesArray.push({
     path: path,
-    sha: response.content,
-    message: message,
+    sha: response.sha,
   });
 
-  path = `ui/public/stack-pictures/${stackInfo.id}.png`;
-  message = `Preview For ${stackInfo.id} created`;
+  path = `ui/public/stack-pictures/${data.id}.png`;
+  message = `Stack ${data.id} created`;
 
   response = await getFileFromGithub(
-    'ui/public/stack-pictures/boilerplate-basic.png', token
+    'ui/public/stack-pictures/boilerplate-basic.png',
   );
-  await new Promise((resolve) => setTimeout(resolve, 500));
 
   filesArray.push({
     path: path,
-    sha: response.content,
-    message: message,
+    sha: response.sha,
   });
-  // const sourceBranch = process.env.VERCEL_GIT_COMMIT_REF ?? ''; // or 'master', depending on your repository
+  const sourceBranch = process.env.VERCEL_GIT_COMMIT_REF ?? ''; // or 'master', depending on your repository
 
-  const prLink = await pushMultipleFilesToBranch(filesArray, stackInfo.id, token);
-  return prLink;
+  await pushMultipleFilesToBranch(filesArray, sourceBranch, message);
+
+  await supabase.rpc('commit');
 }
