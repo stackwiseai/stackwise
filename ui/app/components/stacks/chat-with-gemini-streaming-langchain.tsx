@@ -5,7 +5,7 @@ import { useChat } from 'ai/react';
 export const ChatWithOpenAIStreaming = () => {
   const [inputValue, setInputValue] = useState('');
   const { messages, input, handleInputChange, handleSubmit } = useChat({
-    api: '/api/kushagra-stack'
+    api: '/api/chat-with-gemini-streaming-langchain'
   });
 
   const [loading, setLoading] = useState(false);
