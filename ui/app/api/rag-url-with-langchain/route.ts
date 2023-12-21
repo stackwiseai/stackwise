@@ -1,29 +1,22 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import type { Message as VercelChatMessage } from 'ai';
-import { StreamingTextResponse } from 'ai';
-import type { BaseCallbackConfig } from 'langchain/callbacks';
+import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
+import type { Message, Message as VercelChatMessage } from 'ai';
+import { LangChainStream, StreamingTextResponse } from 'ai';
+import { initializeAgentExecutorWithOptions } from 'langchain/agents';
 import {
-  collapseDocs,
-  splitListOfDocs,
-} from 'langchain/chains/combine_documents/reduce';
+  createRetrieverTool,
+  OpenAIAgentTokenBufferMemory,
+} from 'langchain/agents/toolkits';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { Document } from 'langchain/document';
 import { CheerioWebBaseLoader } from 'langchain/document_loaders/web/cheerio';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
-import { PromptTemplate } from 'langchain/prompts';
+import { BufferMemory, ChatMessageHistory } from 'langchain/memory';
 import { ContextualCompressionRetriever } from 'langchain/retrievers/contextual_compression';
 import { DocumentCompressorPipeline } from 'langchain/retrievers/document_compressors';
 import { EmbeddingsFilter } from 'langchain/retrievers/document_compressors/embeddings_filter';
-import {
-  BytesOutputParser,
-  StringOutputParser,
-} from 'langchain/schema/output_parser';
-import { formatDocument } from 'langchain/schema/prompt_template';
-import {
-  RunnablePassthrough,
-  RunnableSequence,
-} from 'langchain/schema/runnable';
+import { AIMessage, ChatMessage, HumanMessage } from 'langchain/schema';
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
 import { MemoryVectorStore } from 'langchain/vectorstores/memory';
 
@@ -33,59 +26,48 @@ enum CrawlMethod {
   FETCH = 'FETCH',
   EDGE_BROWSER = 'EDGE_BROWSER',
   PUPPETEER = 'PUPPETEER',
-  APIFY = 'APIFY',
+  // APIFY = 'APIFY',
 }
 
-const combineDocumentsFn = (docs: Document[]) => {
-  const serializedDocs = docs.map((doc) => doc.pageContent);
-  return serializedDocs.join('\n\n');
+const TEMPLATE = `If you don't know how to answer a question, use the available tools to look up relevant information. You should particularly do this for questions about URLs.`;
+
+const convertVercelMessageToLangChainMessage = (message: VercelChatMessage) => {
+  if (message.role === 'user') {
+    return new HumanMessage(message.content);
+  } else if (message.role === 'assistant') {
+    return new AIMessage(message.content);
+  } else {
+    return new ChatMessage(message.content, message.role);
+  }
 };
 
-const formatVercelMessages = (chatHistory: VercelChatMessage[]) => {
-  const formattedDialogueTurns = chatHistory.map((message) => {
-    if (message.role === 'user') {
-      return `Human: ${message.content}`;
-    } else if (message.role === 'assistant') {
-      return `Assistant: ${message.content}`;
-    } else {
-      return `${message.role}: ${message.content}`;
-    }
-  });
-  return formattedDialogueTurns.join('\n');
+const modelForName = (modelName: string) => {
+  switch (modelName) {
+    case 'gemini-pro':
+      return new ChatGoogleGenerativeAI({
+        modelName,
+        temperature: 0,
+      });
+    case 'gpt-3.5-turbo':
+    case 'gpt-3.5-turbo-16k':
+    case 'gpt-4':
+    case 'gpt-4-1106-preview':
+    default:
+      return new ChatOpenAI({
+        modelName,
+        temperature: 0,
+        streaming: true,
+      });
+  }
 };
-
-const CONDENSE_QUESTION_TEMPLATE = `Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question, in its original language.
-
-<chat_history>
-  {chat_history}
-</chat_history>
-
-Follow Up Input: {question}
-Standalone question:`;
-const condenseQuestionPrompt = PromptTemplate.fromTemplate(
-  CONDENSE_QUESTION_TEMPLATE,
-);
-
-const ANSWER_TEMPLATE = `Answer the question based only on the following context and chat history:
-<context>
-  {context}
-</context>
-
-<chat_history>
-  {chat_history}
-</chat_history>
-
-Question: {question}
-`;
-const answerPrompt = PromptTemplate.fromTemplate(ANSWER_TEMPLATE);
 
 const docsForCrawl = async ({
   origin,
-  url,
+  urls,
   crawlMethod,
 }: {
   origin: string | null;
-  url: string;
+  urls: string[];
   crawlMethod: CrawlMethod | undefined;
 }): Promise<Document[]> => {
   const headers = new Headers({
@@ -96,55 +78,76 @@ const docsForCrawl = async ({
   }
   switch (crawlMethod) {
     case CrawlMethod.EDGE_BROWSER:
-      return await (async () => {
-        // const browser = new WebBrowser({
-        //   model,
-        //   embeddings,
-        //   headers,
-        // });
-        // const webBrowsePrompt = currentMessageContent;
-        // const response = await browser.call(`"${url}","${webBrowsePrompt}"`);
+      return (
+        await (async () => {
+          const loaders = urls
+            .map(
+              (url) =>
+                new CheerioWebBaseLoader(url, {
+                  selector: 'body',
+                }),
+            )
+            .map((loader) => loader.load());
 
-        const loader = new CheerioWebBaseLoader(url, {
-          selector: 'body',
-        });
-        const docs = await loader.load();
-        return docs;
-      })();
+          return await Promise.all(loaders);
+        })()
+      ).flat();
     case CrawlMethod.FETCH:
-      return await (async () => {
-        const fetched = await fetch(url, {
-          headers,
-        });
-        const body = await fetched.text();
-        const contentType = fetched.headers.get('Content-Type');
-        // TODO: handle content types differently
-        switch (
-          contentType
-          // case 'text/html':
-          //   docs = await run({ html: body, url });
-          //   break;
-          // case 'application/json':
-        ) {
-        }
-        return [new Document({ pageContent: body })];
-      })();
+      return (
+        await Promise.all(
+          urls.map(async (url: string) => {
+            const fetched = await fetch(url, {
+              headers,
+            });
+            const body = await fetched.text();
+            const _contentType = fetched.headers.get('Content-Type');
+            // TODO: handle content types differently
+            return [new Document({ pageContent: body })];
+          }),
+        )
+      ).flat();
 
     case CrawlMethod.PUPPETEER:
-    case CrawlMethod.APIFY:
-      return await (async () => {
-        const fetched = await fetch(
-          `${origin}/api/rag-url-with-langchain/${crawlMethod.toLowerCase()}`,
-          {
-            method: 'POST',
-            body: JSON.stringify({ url, html: undefined }),
-          },
-        );
-        const body = await fetched.json();
-        return body as Document[];
-      })();
+      return (
+        await Promise.all(
+          urls.map(async (url: string) => {
+            const fetched = await fetch(
+              `${origin}/api/rag-url-with-langchain/${crawlMethod.toLowerCase()}`,
+              {
+                method: 'POST',
+                body: JSON.stringify({ url, html: undefined }),
+              },
+            );
+            return (await fetched.json()) as Document[];
+          }),
+        )
+      ).flat();
   }
 };
+
+function normalizeUrl(urlString: string): string {
+  // Regex pattern to match URL-like strings (with optional protocol and path/query)
+  const urlPattern = /(?:https?:\/\/)?[\w-]+(\.[\w-]+)+\.?(\/\S*)?/gi;
+
+  // Check if the string matches the URL pattern
+  if (urlPattern.test(urlString)) {
+    // Check if the protocol is already present
+    if (!/^https?:\/\//i.test(urlString)) {
+      // Prepend "https://" if the protocol is missing
+      urlString = `https://${urlString}`;
+    }
+  }
+  return urlString;
+}
+
+interface CrawlRequest {
+  messages: Message[];
+  returnIntermediateSteps: boolean;
+  crawlMethod: CrawlMethod;
+  urls: string[];
+  modelName: string;
+}
+
 /**
  * This handler initializes and calls a retrieval chain. It composes the chain using
  * LangChain Expression Language. See the docs for more information:
@@ -153,100 +156,91 @@ const docsForCrawl = async ({
  */
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
+    const body = (await req.json()) as Partial<CrawlRequest>;
     const messages = body.messages ?? [];
-    const url = body.url;
+    const urls: string[] = (body.urls ?? []).map(normalizeUrl);
     const crawlMethod: CrawlMethod | undefined = body.crawlMethod;
-    console.debug('POST rag-url-with-langchain', { messages, url });
+    const modelName = body.modelName ?? 'gpt-3.5-turbo';
+    const returnIntermediateSteps: boolean =
+      body.returnIntermediateSteps ?? true;
+
     const previousMessages = messages.slice(0, -1);
     const currentMessageContent = messages[messages.length - 1].content;
 
-    const html: string | undefined = undefined;
-    // const html = await (await fetch(url)).text();
-
-    // console.debug('POST rag-url-with-langchain html', { html });
-
-    const model = new ChatOpenAI({
-      modelName: 'gpt-3.5-turbo-16k',
-      temperature: 0,
-      verbose: true,
-    });
-    // const embeddings = new OpenAIEmbeddings();
+    const model = modelForName(modelName);
 
     const origin = req.headers.get('origin');
     const docs = await docsForCrawl({
       origin,
-      url,
+      urls,
       crawlMethod,
     });
 
-    /**
-     * We use LangChain Expression Language to compose two chains.
-     * To learn more, see the guide here:
-     *
-     * https://js.langchain.com/docs/guides/expression_language/cookbook
-     */
-    const standaloneQuestionChain = RunnableSequence.from([
-      condenseQuestionPrompt,
-      model,
-      new StringOutputParser(),
-    ]);
+    const baseRetriever = await compressedRelevantDocsRetriever(docs);
+
+    const chat_history = (previousMessages ?? []).map(
+      convertVercelMessageToLangChainMessage,
+    );
+    const chatHistory = new ChatMessageHistory(chat_history);
+    const memory =
+      model instanceof ChatOpenAI
+        ? new OpenAIAgentTokenBufferMemory({
+            llm: model,
+            memoryKey: 'chat_history',
+            outputKey: 'output',
+            chatHistory,
+          })
+        : new BufferMemory({
+            chatHistory,
+            memoryKey: 'chat_history',
+            outputKey: 'output',
+          });
+
+    const { stream, handlers } = LangChainStream();
 
     let resolveWithDocuments: (value: Document[]) => void;
-    const documentPromise = new Promise<Document[]>((resolve) => {
+    const sourcesPromise = new Promise<Document[]>((resolve) => {
       resolveWithDocuments = resolve;
     });
-
-    const baseRetriever = await compressedRelevantDocsRetriever(docs, [
-      {
-        handleRetrieverEnd(documents) {
-          resolveWithDocuments(documents);
-        },
-      },
-    ]);
-
-    // const baseRetriever = (
-    //   await MemoryVectorStore.fromDocuments(docs, new OpenAIEmbeddings(), {})
-    // ).asRetriever({
-    //   callbacks: [
-    //     {
-    //       handleRetrieverEnd(documents) {
-    //         resolveWithDocuments(documents);
-    //       },
-    //     },
-    //   ],
-    // });
-
-    const retrievalChain = baseRetriever.pipe(combineDocumentsFn);
-
-    const answerChain = RunnableSequence.from([
-      {
-        context: RunnableSequence.from([
-          (input) => input.question,
-          retrievalChain,
-        ]),
-        chat_history: (input) => input.chat_history,
-        question: (input) => input.question,
-      },
-      answerPrompt,
-      model,
-    ]);
-
-    const conversationalRetrievalQAChain = RunnableSequence.from([
-      {
-        question: standaloneQuestionChain,
-        chat_history: (input) => input.chat_history,
-      },
-      answerChain,
-      new BytesOutputParser(),
-    ]);
-
-    const stream = await conversationalRetrievalQAChain.stream({
-      question: currentMessageContent,
-      chat_history: formatVercelMessages(previousMessages),
+    /**
+     * Wrap the retriever in a tool to present it to the agent in a
+     * usable form.
+     */
+    const tool = createRetrieverTool(baseRetriever, {
+      name: 'search_latest_knowledge',
+      description: 'Searches and returns up-to-date general information.',
     });
 
-    const documents = await documentPromise;
+    const executor = await initializeAgentExecutorWithOptions([tool], model, {
+      agentType:
+        model instanceof ChatOpenAI
+          ? 'openai-functions'
+          : 'structured-chat-zero-shot-react-description',
+      memory,
+      returnIntermediateSteps,
+      agentArgs: {
+        prefix: TEMPLATE,
+      },
+    });
+
+    void executor.call(
+      {
+        input: currentMessageContent,
+      },
+      [
+        handlers,
+        {
+          handleRetrieverEnd: (docs) => {
+            resolveWithDocuments(docs);
+          },
+          handleChainEnd: () => {
+            resolveWithDocuments([]);
+          },
+        },
+      ],
+    );
+
+    const documents = await sourcesPromise;
     const serializedSources = Buffer.from(
       JSON.stringify(
         documents.map((doc) => {
@@ -264,144 +258,36 @@ export async function POST(req: NextRequest) {
         'x-sources': serializedSources,
       },
     });
-  } catch (e: any) {
+  } catch (e) {
     return NextResponse.json({ error: e.message }, { status: 500 });
   }
 }
 
-const compressedRelevantDocsRetriever = async (docs: Document[], callbacks) => {
+const compressedRelevantDocsRetriever = async (docs: Document[]) => {
+  const embeddings = new OpenAIEmbeddings();
   const embeddingsFilter = new EmbeddingsFilter({
-    embeddings: new OpenAIEmbeddings(),
-    similarityThreshold: 0.8,
-    k: 20,
+    embeddings,
+    similarityThreshold: 0.66,
+    k: 10,
   });
 
   const textSplitter = new RecursiveCharacterTextSplitter({
-    chunkSize: 400,
-    chunkOverlap: 40,
+    chunkSize: 200,
+    chunkOverlap: 20,
   });
 
   const compressorPipeline = new DocumentCompressorPipeline({
     transformers: [textSplitter, embeddingsFilter],
   });
 
-  // const baseRetriever = new TavilySearchAPIRetriever({
-  //   includeRawContent: true,
-  // });
   const baseRetriever = (
-    await MemoryVectorStore.fromDocuments(docs, new OpenAIEmbeddings(), {})
-  ).asRetriever({ callbacks });
+    await MemoryVectorStore.fromDocuments(docs, embeddings, {})
+  ).asRetriever();
 
   const retriever = new ContextualCompressionRetriever({
     baseCompressor: compressorPipeline,
     baseRetriever,
   });
 
-  // const retrievedDocs = await retriever.getRelevantDocuments(
-  //   "What did the speaker say about Justice Breyer in the 2022 State of the Union?"
-  // );
-  // console.log({ retrievedDocs });
   return retriever;
 };
-
-const mapReduceDocumentsChain = (() => {
-  // Initialize the OpenAI model
-  const model = new ChatOpenAI({
-    modelName: 'gpt-3.5-turbo',
-    temperature: 0,
-    verbose: true,
-  });
-
-  // Define prompt templates for document formatting, summarizing, collapsing, and combining
-  const documentPrompt = PromptTemplate.fromTemplate('{pageContent}');
-  const summarizePrompt = PromptTemplate.fromTemplate(
-    'Summarize this content:\n\n{context}',
-  );
-  const collapsePrompt = PromptTemplate.fromTemplate(
-    'Collapse this content:\n\n{context}',
-  );
-  const combinePrompt = PromptTemplate.fromTemplate(
-    'Combine these summaries:\n\n{context}',
-  );
-
-  // Wrap the `formatDocument` util so it can format a list of documents
-  const formatDocs = async (documents: Document[]): Promise<string> => {
-    const formattedDocs = await Promise.all(
-      documents.map((doc) => formatDocument(doc, documentPrompt)),
-    );
-    return formattedDocs.join('\n\n');
-  };
-
-  // Define a function to get the number of tokens in a list of documents
-  const getNumTokens = async (documents: Document[]): Promise<number> =>
-    model.getNumTokens(await formatDocs(documents));
-
-  // Initialize the output parser
-  const outputParser = new StringOutputParser();
-
-  // Define the map chain to format, summarize, and parse the document
-  const mapChain = RunnableSequence.from([
-    { context: async (i: Document) => formatDocument(i, documentPrompt) },
-    summarizePrompt,
-    model,
-    outputParser,
-  ]);
-
-  // Define the collapse chain to format, collapse, and parse a list of documents
-  const collapseChain = RunnableSequence.from([
-    { context: async (documents: Document[]) => formatDocs(documents) },
-    collapsePrompt,
-    model,
-    outputParser,
-  ]);
-
-  // Define a function to collapse a list of documents until the total number of tokens is within the limit
-  const collapse = async (
-    documents: Document[],
-    options?: {
-      config?: BaseCallbackConfig;
-    },
-    tokenMax = 4000,
-  ) => {
-    const editableConfig = options?.config;
-    let docs = documents;
-    let collapseCount = 1;
-    while ((await getNumTokens(docs)) > tokenMax) {
-      if (editableConfig) {
-        editableConfig.runName = `Collapse ${collapseCount}`;
-      }
-      const splitDocs = splitListOfDocs(docs, getNumTokens, tokenMax);
-      docs = await Promise.all(
-        splitDocs.map((doc) => collapseDocs(doc, collapseChain.invoke)),
-      );
-      collapseCount += 1;
-    }
-    return docs;
-  };
-
-  // Define the reduce chain to format, combine, and parse a list of documents
-  const reduceChain = RunnableSequence.from([
-    { context: formatDocs },
-    combinePrompt,
-    model,
-    outputParser,
-  ]).withConfig({ runName: 'Reduce' });
-
-  // Define the final map-reduce chain
-  const mapReduceChain = RunnableSequence.from([
-    RunnableSequence.from([
-      { doc: new RunnablePassthrough(), content: mapChain },
-      (input) =>
-        new Document({
-          pageContent: input.content,
-          metadata: input.doc.metadata,
-        }),
-    ])
-      .withConfig({ runName: 'Summarize (return doc)' })
-      .map(),
-    collapse,
-    reduceChain,
-  ]).withConfig({ runName: 'Map reduce' });
-
-  return mapReduceChain;
-})();

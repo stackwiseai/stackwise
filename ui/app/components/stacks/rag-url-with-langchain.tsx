@@ -1,96 +1,178 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Message } from 'ai/react';
 import { useChat } from 'ai/react';
-import type { AgentStep } from 'langchain/schema';
+import DOMPurify from 'dompurify';
 import { IoSend } from 'react-icons/io5';
 import { toast } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
 
+import React from 'react';
+
 export enum CrawlMethod {
   FETCH = 'FETCH',
   EDGE_BROWSER = 'EDGE_BROWSER',
   PUPPETEER = 'PUPPETEER',
-  APIFY = 'APIFY',
+  // APIFY = 'APIFY',
+}
+
+export enum ModelType {
+  GPT3Turbo = 'gpt-3.5-turbo',
+  GPT3Turbo16k = 'gpt-3.5-turbo-16k',
+  GPT4 = 'gpt-4',
+  GPT4Turbo = 'gpt-4-1106-preview',
+  GeminiPro = 'gemini-pro',
 }
 
 type SourcesForMessages = Record<string, string[]>;
 
-const placeholderAnswering = 'A: Answering…';
+interface URLDetecting {
+  inputText: string;
+  setInputText: (inputText: string) => void;
+  sendMessage: () => void;
+}
 
-const ensureHttpProtocol = (urlString: string) => {
-  if (!/^(?:f|ht)tps?\:\/\//.test(urlString)) {
-    return `https://${urlString}`;
-  }
-  return urlString;
-};
+const dummyEvent: React.FormEvent<HTMLFormElement> = {
+  ...(new Event('submit') as any), // Cast to 'any' to allow assignment to FormEvent
+  currentTarget: {
+    ...document.createElement('form'),
+    checkValidity: () => true, // Assuming the form is valid
+  },
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  preventDefault: () => {}, // No-op function
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  stopPropagation: () => {}, // No-op function
+  target: document.createElement('form'),
+} as React.FormEvent<HTMLFormElement>;
 
-const isValidUrl = (urlString: string) => {
-  const urlPattern =
-    /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/;
-  const prefixedUrlString = ensureHttpProtocol(urlString);
-  return urlPattern.test(prefixedUrlString);
-};
+interface URLDetectingInputProps extends URLDetecting {
+  placeholder?: string;
+}
 
-export function IntermediateStep(props: { message: Message }) {
-  const parsedInput: AgentStep = JSON.parse(props.message.content);
-  const action = parsedInput.action;
-  const observation = parsedInput.observation;
-  const [expanded, setExpanded] = useState(false);
+// Regular expression to match URL-like patterns including path and query
+const urlPattern = /(?:https?:\/\/)?[\w-]+(\.[\w-]+)+\.?(\/\S*)?/gi;
+
+function useURLDetector(urlDetectingContext: URLDetecting): string[] {
+  const { inputText } = urlDetectingContext;
+
+  const detectedURLs = useMemo(() => {
+    return (inputText.match(urlPattern) ?? []) as string[];
+  }, [inputText]);
+
+  return detectedURLs;
+}
+
+const URLDetectingInput = ({
+  placeholder,
+  ...useDetector
+}: URLDetectingInputProps) => {
+  const { inputText, setInputText, sendMessage } = useDetector;
+  const contentEditableRef = useRef<HTMLDivElement | null>(null);
+  const isComposing = useRef(false);
+  const [isFocused, setIsFocused] = useState(false);
+
+  const handleInput = useCallback(
+    (event) => {
+      if (!isComposing.current) {
+        const text = event.currentTarget?.textContent ?? '';
+        setInputText(text);
+      }
+    },
+    [setInputText],
+  );
+
+  const handleComposition = useCallback(
+    (event) => {
+      if (event.type === 'compositionend') {
+        isComposing.current = false;
+        setInputText(event.currentTarget.textContent ?? '');
+      } else {
+        isComposing.current = true;
+      }
+    },
+    [setInputText],
+  );
+
+  const handleFocus = useCallback(() => setIsFocused(true), []);
+  const handleBlur = useCallback(() => setIsFocused(false), []);
+
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (event.key === 'Enter') {
+        event.preventDefault(); // Prevent the default Enter key behavior
+        // Call the sendMessage function here
+        // You need to pass this function down from the parent component
+        sendMessage();
+      }
+    },
+    [sendMessage],
+  );
+
+  useEffect(() => {
+    if (!contentEditableRef.current) return;
+    contentEditableRef.current.style.whiteSpace = 'pre-wrap';
+
+    // Sanitize the inputText before setting it as innerHTML
+    const sanitizedInputText = DOMPurify.sanitize(
+      inputText.replace(
+        urlPattern,
+        (match) => `<strong><u>${match}</u></strong>`,
+      ),
+    );
+
+    contentEditableRef.current.innerHTML = sanitizedInputText;
+  }, [inputText]);
+
+  useEffect(() => {
+    const moveCursorToEnd = () => {
+      const range = document.createRange();
+      const selection = window.getSelection();
+
+      if (!contentEditableRef.current) return;
+      if (!selection) return;
+
+      range.setStart(
+        contentEditableRef.current,
+        contentEditableRef.current.childNodes.length,
+      );
+
+      range.collapse(true);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    };
+    moveCursorToEnd();
+  }, [contentEditableRef.current?.textContent, inputText]);
+
   return (
-    <div
-      className={`mb-8 ml-auto flex max-w-[80%] cursor-pointer flex-col whitespace-pre-wrap rounded bg-green-600 px-4 py-2`}
-    >
+    <div className="relative">
+      {/* for production applications, more care should be taken to support native affordances like undo, a11y, and also care should be taken to prevent XSS*/}
       <div
-        className={`text-right ${expanded ? 'w-full' : ''}`}
-        onClick={(e) => setExpanded(!expanded)}
-      >
-        <code className="mr-2 rounded bg-slate-600 px-2 py-1 hover:text-blue-600">
-          🛠️ <b>{action.tool}</b>
-        </code>
-        <span className={expanded ? 'hidden' : ''}>🔽</span>
-        <span className={expanded ? '' : 'hidden'}>🔼</span>
-      </div>
-      <div
-        className={`max-h-[0px] overflow-hidden transition-[max-height] ease-in-out ${
-          expanded ? 'max-h-[360px]' : ''
+        ref={contentEditableRef}
+        contentEditable
+        onInput={handleInput}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        onCompositionStart={handleComposition}
+        onCompositionEnd={handleComposition}
+        onKeyDown={handleKeyDown}
+        className={`content-editable rounded border border-gray-400 p-2 ${
+          !inputText && !isFocused ? 'placeholder' : ''
         }`}
-      >
-        <div
-          className={`mt-1 max-w-0 rounded bg-slate-600 p-4 ${
-            expanded ? 'max-w-full' : 'transition-[max-width] delay-100'
-          }`}
-        >
-          <code
-            className={`max-h-[100px] overflow-auto opacity-0 transition delay-150 ease-in-out ${
-              expanded ? 'opacity-100' : ''
-            }`}
-          >
-            Tool Input:
-            <br></br>
-            <br></br>
-            {JSON.stringify(action.toolInput)}
-          </code>
+        suppressContentEditableWarning={true}
+        role="textbox"
+        tabIndex={0}
+      ></div>
+      {/* Render the placeholder text when inputText is empty and the div is not focused */}
+      {!inputText && !isFocused && (
+        <div className="pointer-events-none absolute left-0 top-0 p-2.5 text-gray-400">
+          {placeholder}
         </div>
-        <div
-          className={`mt-1 max-w-0 rounded bg-slate-600 p-4 ${
-            expanded ? 'max-w-full' : 'transition-[max-width] delay-100'
-          }`}
-        >
-          <code
-            className={`max-h-[260px] overflow-auto opacity-0 transition delay-150 ease-in-out ${
-              expanded ? 'opacity-100' : ''
-            }`}
-          >
-            {observation}
-          </code>
-        </div>
-      </div>
+      )}
     </div>
   );
-}
+};
 
 export function ChatMessageBubble(props: {
   message: Message;
@@ -142,30 +224,13 @@ export function ChatMessageBubble(props: {
 const RAGURLWithLangchain = () => {
   const [sourcesForMessages, setSourcesForMessages] =
     useState<SourcesForMessages>({});
-  const [inputUrl, setInputUrl] = useState<string>(
-    'https://www.waggledance.ai',
-  );
-  const [showIntermediateSteps, setShowIntermediateSteps] = useState(false);
-  const [intermediateStepsLoading, setIntermediateStepsLoading] =
-    useState(false);
-
-  const abortControllerRef = useRef<AbortController | null>(null);
-  const inputRef = useRef<HTMLInputElement | null>(null);
-  const inputUrlRef = useRef<HTMLInputElement | null>(null);
   const messageContainerRef = useRef<HTMLDivElement | null>(null);
-
-  const hasValidUrl = useMemo(() => isValidUrl(inputUrl), [inputUrl]);
-
-  const chatHistory = useMemo(() => {
-    return Object.entries(sourcesForMessages).map(
-      ([index, sources]) =>
-        ({
-          id: index,
-          content: sources.join(' '),
-          role: Number.parseInt(index) % 2 === 0 ? 'user' : 'assistant',
-        }) as Message,
-    );
-  }, [sourcesForMessages]);
+  const [selectedCrawlMethod, setSelectedCrawlMethod] = useState<CrawlMethod>(
+    CrawlMethod.PUPPETEER,
+  );
+  const [selectedModelType, setSelectedModelType] = useState<ModelType>(
+    ModelType.GPT3Turbo,
+  );
 
   const {
     messages,
@@ -175,14 +240,10 @@ const RAGURLWithLangchain = () => {
     handleInputChange,
     handleSubmit,
     isLoading,
-    setMessages,
   } = useChat({
     api: '/api/rag-url-with-langchain',
-    experimental_onFunctionCall(messages, functionCall) {
-      console.log(messages);
-      return Promise.resolve();
-    },
     onResponse(response) {
+      console.log('onResponse', response);
       const sourcesHeader = response.headers.get('x-sources');
       const sources = sourcesHeader ? JSON.parse(atob(sourcesHeader)) : [];
       const messageIndexHeader = response.headers.get('x-message-index');
@@ -197,24 +258,28 @@ const RAGURLWithLangchain = () => {
       console.log('onFinish', message);
     },
     onError: (e) => {
-      toast(e.message, {
-        theme: 'dark',
-      });
+      toast(e.message);
     },
+    sendExtraMessageFields: true,
   });
 
-  // useEffect(() => {
-  //   if (abortControllerRef?.current) {
-  //     abortControllerRef?.current.abort();
-  //   }
-  // }, []);
+  const handleInputChangeWithUrlDetection = useCallback(
+    (event) => {
+      handleInputChange(event);
+      setInput(event.target.value);
+    },
+    [handleInputChange, setInput],
+  );
 
-  const sendMessage = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!hasValidUrl) {
-      toast('Please enter a valid URL.');
-      return;
-    }
+  const detectedURLs = useURLDetector({
+    inputText:
+      messages.filter((m) => m.role !== 'assistant').join('\n') + input,
+    setInputText: handleInputChangeWithUrlDetection,
+    sendMessage: () => void sendMessage(),
+  });
+
+  const sendMessage = async (event?: React.FormEvent<HTMLFormElement>) => {
+    event?.preventDefault();
     if (messageContainerRef.current) {
       messageContainerRef.current.classList.add('grow');
     }
@@ -222,94 +287,20 @@ const RAGURLWithLangchain = () => {
       await new Promise((resolve) => setTimeout(resolve, 300));
     }
 
-    if (isLoading ?? intermediateStepsLoading) {
+    if (isLoading) {
       return;
     }
 
     const body = {
-      url: inputUrl,
+      urls: detectedURLs,
       chat: input,
-      crawlMethod: CrawlMethod.PUPPETEER.toString(),
+      crawlMethod: selectedCrawlMethod,
+      modelName: selectedModelType,
+      returnIntermediateSteps: true, // currently does nothing on the backend
     };
-    if (!showIntermediateSteps) {
-      handleSubmit(event, {
-        options: { body },
-      });
-    } else {
-      setIntermediateStepsLoading(true);
-      setInput('');
-      abortControllerRef.current = new AbortController();
-      const messagesWithUserReply = messages.concat({
-        id: messages.length.toString(),
-        content: input,
-        role: 'user',
-      });
-      setMessages(messagesWithUserReply);
-
-      try {
-        console.log('inputUrl', inputUrl);
-
-        const response = await fetch('/api/rag-url-with-langchain', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            messages: messagesWithUserReply,
-            url: body.url,
-            crawlMethod: body.crawlMethod,
-          }),
-          signal: abortControllerRef.current.signal,
-        });
-
-        const json = await response.json();
-        setIntermediateStepsLoading(false);
-        if (response.status === 200) {
-          // Represent intermediate steps as system messages for display purposes
-          const intermediateStepMessages = (json.intermediate_steps ?? []).map(
-            (intermediateStep: AgentStep, i: number) => {
-              return {
-                id: (messagesWithUserReply.length + i).toString(),
-                content: JSON.stringify(intermediateStep),
-                role: 'system',
-              };
-            },
-          );
-          const newMessages = messagesWithUserReply;
-          for (const message of intermediateStepMessages) {
-            newMessages.push(message);
-            setMessages([...newMessages]);
-            await new Promise((resolve) =>
-              setTimeout(resolve, 1000 + Math.random() * 1000),
-            );
-          }
-          setMessages([
-            ...newMessages,
-            {
-              id: (
-                newMessages.length + intermediateStepMessages.length
-              ).toString(),
-              content: json.output,
-              role: 'assistant',
-            },
-          ]);
-        } else {
-          if (json.error) {
-            toast(json.error, {
-              theme: 'dark',
-            });
-            throw new Error(json.error);
-          }
-        }
-      } catch (error) {
-        if (error.name !== 'AbortError') {
-          toast('An error occurred while sending the message.');
-        }
-      } finally {
-        setIntermediateStepsLoading(false);
-        abortControllerRef.current = null;
-      }
-    }
+    handleSubmit(event ?? dummyEvent, {
+      options: { body },
+    });
   };
 
   useEffect(() => {
@@ -330,9 +321,7 @@ const RAGURLWithLangchain = () => {
         {messages.length > 0
           ? [...messages].reverse().map((m, i) => {
               const sourceKey = (messages.length - 1 - i).toString();
-              return m.role === 'system' ? (
-                <IntermediateStep key={m.id} message={m}></IntermediateStep>
-              ) : (
+              return (
                 <ChatMessageBubble
                   key={m.id}
                   message={m}
@@ -344,46 +333,64 @@ const RAGURLWithLangchain = () => {
           : ''}
       </div>
       <form onSubmit={sendMessage} className="w-full max-w-xl p-4">
-        {/* <iframe
-        src={inputUrl}
-        className="h-full w-full"
-        onError={(e) => {
-          console.log('error', e);
-        }}
-        onLoadedData={(e) => {
-          console.log('loaded data', e);
-        }}
-      ></iframe> */}
-
-        {/* <input
-          ref={inputUrlRef}
-          type="text"
-          value={inputUrl}
-          onChange={(e) => setInputUrl(e.target.value)}
-          placeholder="Enter URL"
-          className="w-full rounded border p-2"
-        /> */}
-
         <div className={`relative mb-4 w-full`}>
-          <input
-            ref={inputRef}
-            id="questionInput"
-            type="text"
-            placeholder="Include URLs in your question to get better answers."
-            value={input}
-            onChange={handleInputChange}
-            disabled={isLoading || !hasValidUrl}
-            className="focus:shadow-outline disabled:opacity:60 w-full rounded-full border border-gray-400 py-2 pl-4 pr-10 focus:outline-none"
+          <URLDetectingInput
+            placeholder="Include URLs as context along with your prompt"
+            inputText={input}
+            setInputText={setInput}
+            sendMessage={sendMessage}
           />
           <button
             type="submit"
-            disabled={isLoading || !input.trim() || !hasValidUrl}
-            className={`focus:shadow-outline absolute right-0 top-0 h-full cursor-pointer rounded-r-full px-4 font-bold text-black focus:outline-none ${
+            disabled={isLoading || !input.trim()}
+            className={`focus:shadow-outline absolute right-0 top-0 h-full cursor-pointer rounded-r-full px-4 font-bold text-black focus:outline-none  ${
               isLoading ? 'cursor-not-allowed opacity-50' : ''
             }`}
           >
             <IoSend />
           </button>
+        </div>
+        <div className="mb-4 flex w-full max-w-xl justify-between">
+          <label
+            htmlFor="crawlMethodSelector"
+            className="block text-sm font-medium text-gray-700"
+          >
+            URL Crawl Method
+            <select
+              id="crawlMethodSelector"
+              value={selectedCrawlMethod}
+              onChange={(e) =>
+                setSelectedCrawlMethod(e.target.value as CrawlMethod)
+              }
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            >
+              {Object.values(CrawlMethod).map((method) => (
+                <option key={method} value={method}>
+                  {method}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label
+            htmlFor="modelTypeSelector"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Model Type
+            <select
+              id="modelTypeSelector"
+              value={selectedModelType}
+              onChange={(e) =>
+                setSelectedModelType(e.target.value as ModelType)
+              }
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            >
+              {Object.values(ModelType).map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
       </form>
     </div>
