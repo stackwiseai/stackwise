@@ -51,6 +51,16 @@ const nextConfig = {
       },
     ];
   },
+  webpack: (config, { isServer }) => {
+    // Add a rule to ignore .js.map files
+    config.module.rules.push({
+      test: /\.js\.map$/,
+      use: 'ignore-loader',
+    });
+
+    // Return the modified config
+    return config;
+  },
 };
 
 module.exports = nextConfig;

@@ -1,4 +1,5 @@
 import type { NextRequest } from 'next/server';
+import chrome from 'chrome-aws-lambda';
 import type {
   Browser,
   Page,
@@ -34,6 +35,7 @@ const run = async ({ html, url }: { html?: string; url?: string }) => {
     launchOptions: {
       headless: 'new',
       timeout: 10_000,
+      executablePath: await chrome.executablePath,
     },
     gotoOptions,
     /**  Pass custom evaluate , in this case you get page and browser instances */
