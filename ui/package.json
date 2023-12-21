@@ -23,6 +23,7 @@
     "@vercel/analytics": "^1.1.1",
     "ai": "^2.2.28",
     "cheerio": "^1.0.0-rc.12",
+    "chrome-aws-lambda": "^10.1.0",
     "dompurify": "^3.0.6",
     "elevenlabs-node": "^2.0.1",
     "fuse.js": "^7.0.0",
