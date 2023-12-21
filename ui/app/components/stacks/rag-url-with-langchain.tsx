@@ -71,7 +71,6 @@ const URLDetectingInput = ({
   const { inputText, setInputText, sendMessage } = useDetector;
   const contentEditableRef = useRef<HTMLDivElement | null>(null);
   const isComposing = useRef(false);
-  const [isFocused, setIsFocused] = useState(false);
 
   const handleInput = useCallback(
     (event) => {
@@ -94,9 +93,6 @@ const URLDetectingInput = ({
     },
     [setInputText],
   );
-
-  const handleFocus = useCallback(() => setIsFocused(true), []);
-  const handleBlur = useCallback(() => setIsFocused(false), []);
 
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -152,20 +148,18 @@ const URLDetectingInput = ({
         ref={contentEditableRef}
         contentEditable
         onInput={handleInput}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
         onCompositionStart={handleComposition}
         onCompositionEnd={handleComposition}
         onKeyDown={handleKeyDown}
         className={`content-editable rounded border border-gray-400 p-2 ${
-          !inputText && !isFocused ? 'placeholder' : ''
+          !inputText ? 'placeholder' : ''
         }`}
         suppressContentEditableWarning={true}
         role="textbox"
         tabIndex={0}
       ></div>
       {/* Render the placeholder text when inputText is empty and the div is not focused */}
-      {!inputText && !isFocused && (
+      {!inputText && (
         <div className="pointer-events-none absolute left-0 top-0 p-2.5 text-gray-400">
           {placeholder}
         </div>
