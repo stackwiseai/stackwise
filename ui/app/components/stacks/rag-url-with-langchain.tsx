@@ -303,7 +303,7 @@ const RAGURLWithLangchain = () => {
 
   return (
     <div
-      className={`flex w-full grow flex-col items-center overflow-hidden rounded p-4 md:p-8 ${
+      className={`flex w-full grow flex-col items-center overflow-hidden rounded ${
         messages.length > 0 ? 'border' : ''
       }`}
     >
