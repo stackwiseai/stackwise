@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
   });
 }
 
-export const run = async ({ html, url }: { html?: string; url?: string }) => {
+const run = async ({ html, url }: { html?: string; url?: string }) => {
   /**  Loader use evaluate function ` await page.evaluate(() => document.body.innerHTML);` as default evaluate */
   const gotoOptions: PuppeteerGotoOptions | undefined = url
     ? { waitUntil: 'domcontentloaded', timeout: 10_000 }
