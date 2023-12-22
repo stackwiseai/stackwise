@@ -11,7 +11,7 @@ npm install
 
 npm run dev
 
-got to localhost:3000/stacks
+got to localhost:3000
 
 ```
 
