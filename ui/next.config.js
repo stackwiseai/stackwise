@@ -4,7 +4,7 @@ const nextConfig = {
     return [
       {
         source: '/',
-        destination: '/stacks',
+        destination: 'https://github.com/stackwiseai/stackwise',
         permanent: true,
       },
       // these are the old uuid-slugged links which were published
