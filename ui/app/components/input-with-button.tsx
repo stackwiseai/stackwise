@@ -8,7 +8,6 @@ import tw from 'tailwind-styled-components';
 
 // import SearchStacks from './search-stacks';
 import { StackDescription } from '../stacks/stack-db';
-import MailchimpSubscribe from './MailchimpSubscribe';
 
 export const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -66,7 +65,6 @@ const InputWithButton: React.FC<InputWithButtonProps> = ({
           <SubmitButton />
         </div>
       </Form> */}
-      {/* <MailchimpSubscribe /> */}
       {/* <SearchStacks /> */}
       <LuckyButton onClick={handleLuckyClick}>
         Take me to a random stack -{'>'}
