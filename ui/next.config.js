@@ -2,6 +2,11 @@
 const nextConfig = {
   async redirects() {
     return [
+      {
+        source: '/',
+        destination: 'https://github.com/stackwiseai/stackwise',
+        permanent: true,
+      },
       // these are the old uuid-slugged links which were published
       // these redirects keep the old links working and we can still use the new slugs
       {
