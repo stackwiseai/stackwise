@@ -10,13 +10,13 @@ const Home: React.FC = () => {
       <ContactButton />
       <MiddleSection>
         <MainText>Deploy your code with natural language</MainText>
-        <div>
+        <ExampleWrapper>
           <pre>/ create an s3 bucket where I can upload images</pre>
           <pre>
-            / deploy this NextJS route as a lambda function and set up an api
-            gateway for it
+            / deploy this NextJS route as a lambda function and make it public
+            with the API Gateway
           </pre>
-        </div>
+        </ExampleWrapper>
         <MailchimpSubscribe />
       </MiddleSection>
     </MainContainer>
@@ -37,7 +37,7 @@ const Logo = tw.img`
     absolute
     top-4
     left-4
-    w-40
+    w-36
 `;
 
 const MiddleSection = tw.div`
@@ -46,9 +46,22 @@ const MiddleSection = tw.div`
     justify-center
     items-center
     w-full
+    md:w-[45%]
+    space-y-6
+`;
+
+const ExampleWrapper = tw.div`
+    bg-black
+    text-green-400
+    font-mono
+    text-base
+    p-4
+    rounded
+    overflow-x-auto
+    shadow-lg
 `;
 
 const MainText = tw.h1`
-    font-medium
+    font-bold
     text-4xl
 `;
