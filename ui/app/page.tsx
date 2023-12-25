@@ -1,14 +1,22 @@
 import tw from 'tailwind-styled-components';
 
+import ContactButton from './components/ContactButton';
 import MailchimpSubscribe from './components/MailchimpSubscribe';
 
 const Home: React.FC = () => {
   return (
     <MainContainer>
       <Logo src="/stackwise_logo.png" />
-      <ContactButton>Contact Us</ContactButton>
+      <ContactButton />
       <MiddleSection>
-        <p>Deploy your code with natural language</p>
+        <MainText>Deploy your code with natural language</MainText>
+        <div>
+          <pre>/ create an s3 bucket where I can upload images</pre>
+          <pre>
+            / deploy this NextJS route as a lambda function and set up an api
+            gateway for it
+          </pre>
+        </div>
         <MailchimpSubscribe />
       </MiddleSection>
     </MainContainer>
@@ -37,21 +45,10 @@ const MiddleSection = tw.div`
     flex-col
     justify-center
     items-center
+    w-full
 `;
 
-const ContactButton = tw.button`
-  bg-black
-  hover:bg-gray-800
-  text-white
-  font-bold
-  py-2
-  px-4
-  rounded-full
-  absolute
-  top-4
-  right-4
-  transition duration-300 ease-in-out
-  shadow-lg
-  hover:shadow-xl
-  hover:shadow-gradient
+const MainText = tw.h1`
+    font-medium
+    text-4xl
 `;
