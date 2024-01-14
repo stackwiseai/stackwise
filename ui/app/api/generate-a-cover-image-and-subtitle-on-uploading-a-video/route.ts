@@ -1,8 +1,17 @@
 import ffmpeg from "fluent-ffmpeg";
 import { Readable } from "stream";
+import Replicate from "replicate";
+
+import fs from 'fs';
+
 
 const ffmpegPath =  './node_modules/ffmpeg-static/ffmpeg'
 ffmpeg.setFfmpegPath(ffmpegPath)
+
+
+const replicate = new Replicate({
+  auth: process.env.REPLICATE_API_TOKEN as string,
+});
 
 // types
 enum createAudioFileStatus{
@@ -67,6 +76,36 @@ export async function POST(req: Request) {
 
       //extract the audio and create an audiofile from the video buffer
       const res = await createAudioFile(videoStream);
+
+      if(res.status == createAudioFileStatus.FAILED){
+
+        if(fs.existsSync(`./${res.audioName}.mp3`)){
+          fs.unlinkSync(`./${res.audioName}.mp3`);
+        }
+        
+        return Response.json({message:res});
+      }
+
+      const audioName = res.audioName;
+      const audioBase64 = fs.readFileSync(`./${audioName}.mp3`,'base64');
+      const audioUri = `data:audio/mp3;base64,${audioBase64}`;
+
+      // send the audio to replicate and getback the subtitles and long descrp
+      const output = await replicate.run(
+        "m1guelpf/whisper-subtitles:7f686e243a96c7f6f0f481bcef24d688a1369ed3983cea348d1f43b879615766",
+        {
+          input: {
+            format: "vtt",
+            audio_path: audioUri,
+            model_name: "base"
+          }
+        }
+      );
+      console.log("Subtitle has beeen generate Successfully !!")
+      
+
+
+      return Response.json({message:"The Audio has been extracted and stored in the server !!!!"});
     
   } catch (error) {
     console.error(error);
