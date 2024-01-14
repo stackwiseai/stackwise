@@ -1,13 +1,16 @@
 import ffmpeg from "fluent-ffmpeg";
 import { Readable } from "stream";
 import Replicate from "replicate";
-
 import fs from 'fs';
+import OpenAI from "openai";
 
 
 const ffmpegPath =  './node_modules/ffmpeg-static/ffmpeg'
 ffmpeg.setFfmpegPath(ffmpegPath)
 
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN as string,
@@ -101,9 +104,31 @@ export async function POST(req: Request) {
           }
         }
       );
-      console.log("Subtitle has beeen generate Successfully !!")
-      
 
+      if(!output || !('text' in output) || !('subtitles' in output)){
+        return Response.json({message:"Some Error occured in fetching subtitles !!"})
+      }
+    
+      console.log("Subtitle has beeen generate Successfully !!")
+
+      // send the long prompt to openAI and get back a short summary
+
+      const prompt = output.text as string;
+      const subtitle = output.subtitles as string;
+
+      const completion = await openai.chat.completions.create({
+        model: 'gpt-3.5-turbo',
+        messages: [{role:'system',content:`You are a Short and Crisp Text Summarizer. You will be given a large paragraph You should summarize the context a short summary of 10-15 words and not more than that. Give the summary directly, don't use words like "Okay,Sure" or "The paragraph , author or anyother words about the author or speaker ". Here is the paragraph ${prompt}.`}]
+      });
+
+      const summarizedText = completion.choices[0]?.message?.content;
+
+      if(!summarizedText){
+        return Response.json({message:"Summarizer is missing !!!"});
+      }
+
+
+      console.log("Generated Short Description !");
 
       return Response.json({message:"The Audio has been extracted and stored in the server !!!!"});
     
