@@ -4,6 +4,7 @@ import Replicate from "replicate";
 import fs from 'fs';
 import OpenAI from "openai";
 
+// initial config
 
 const ffmpegPath =  './node_modules/ffmpeg-static/ffmpeg'
 ffmpeg.setFfmpegPath(ffmpegPath)
@@ -26,7 +27,6 @@ type createAudioFileOutput = {
   status : createAudioFileStatus,
   audioName : string,
 }
-
 
 // Generate random audio name
 const createAudioName = () : string => {
@@ -127,10 +127,34 @@ export async function POST(req: Request) {
         return Response.json({message:"Summarizer is missing !!!"});
       }
 
-
       console.log("Generated Short Description !");
 
-      return Response.json({message:"The Audio has been extracted and stored in the server !!!!"});
+      // send the short summary to replicate and generate back an image
+      const imgArr = await replicate.run(
+        "stability-ai/stable-diffusion:ac732df83cea7fff18b8472768c88ad041fa750ff7682a21affe81863cbe77e4",
+        {
+          input: {
+            prompt: `Generate Youtube thumbnail for the following content. Also the Image should not have any text embedded on it. Understand the following prompt and generate a high quality image . ${summarizedText}`,
+            width:1024,
+            height:576,
+            scheduler:"K_EULER" 
+          }
+        }
+      );
+
+      if(!imgArr || !imgArr[0]){
+        return Response.json({message:"Some Error occured in Image Generation !!"})
+      }
+
+      console.log("The Image generated Successfully !!!")
+      const imgUrl = imgArr[0] as string;
+
+      //remove the created audio file
+      if(fs.existsSync(`./${res.audioName}.mp3`)){
+        fs.unlinkSync(`./${res.audioName}.mp3`);
+      }
+
+      return Response.json({message:"The Audio has been extracted and stored in the server !",subtitle,imgUrl});
     
   } catch (error) {
     console.error(error);
