@@ -9,6 +9,73 @@ export const GenerateImageAndSubtitle = () => {
   const [subtitle,setSubtitle] = useState("");
   const [imgUrl,setImgUrl] = useState("");
 
+  const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (subtitle) {
+        setSubtitle('');
+    }
+    if(imgUrl){
+      setImgUrl('');
+    }
+    if (e.target.files && e.target.files[0]) {
+        setVideo(e.target.files[0]);
+    }
+  }
+
+  const getSubtitle = async () => {
+
+      try {
+        
+        if(loading || !video){
+          return;
+        }
+
+        if(subtitle || imgUrl){
+          setSubtitle("");
+          setImgUrl("");
+          return;
+        }
+
+        setLoading(true);
+        const formData = new FormData();
+        if(!video) return; 
+        formData.append('video',video);
+
+        const response = await fetch('/api/generate-a-cover-image-and-subtitle-on-uploading-a-video',{
+          method:'POST',
+          body:formData
+        });
+
+        const data = await response.json();
+        setSubtitle(data.subtitle);
+        setImgUrl(data.imgUrl)
+        setLoading(false);
+
+      } catch (error) {
+        console.error(error);
+      }
+      
+  }
+
+
+  const downloadSubtitle = () =>{
+    if(!subtitle){
+      console.error("Subtitle not Present !!");
+      return;
+    }
+
+    const blob = new Blob([subtitle],{type:'text/vtt'});
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "subtitle.vtt";
+
+    document.body.appendChild(link);
+    link.click();
+
+    // Clean up the link
+    document.body.removeChild(link);
+
+  }
+
   return (
 
     <div className="stretch mx-auto flex w-5/6 flex-col items-center justify-center space-y-4 pb-10 md:w-3/4 lg:w-2/3">
