@@ -1,13 +1,12 @@
+import { spawn } from 'child_process';
 import fs from 'fs';
 import { Readable } from 'stream';
-import ffmpeg from 'fluent-ffmpeg';
 import OpenAI from 'openai';
 import Replicate from 'replicate';
+import { v4 as uuidv4 } from 'uuid';
 
 // initial config
-
 const ffmpegPath = './node_modules/ffmpeg-static/ffmpeg';
-ffmpeg.setFfmpegPath(ffmpegPath);
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -28,37 +27,67 @@ type createAudioFileOutput = {
   audioName: string;
 };
 
-// Generate random audio name
+// Generate random audio name using UUID for uniqueness
 const createAudioName = (): string => {
-  const charset = 'abcdefghijklmnopqrstuvwxyz';
-  let randomName = '';
-
-  for (let i = 0; i < 10; i++) {
-    const randomIndex = Math.floor(Math.random() * charset.length);
-    randomName += charset.charAt(randomIndex);
-  }
-
-  return randomName;
+  return uuidv4();
 };
 
 const createAudioFile = (
   videoStream: Readable,
 ): Promise<createAudioFileOutput> => {
-  const audioName = createAudioName();
+  // Generate the base name without extension
+  const baseAudioName = createAudioName();
+  const audioName = `${baseAudioName}.mp3`; // Correctly append .mp3 extension
 
-  return new Promise((res, rej) => {
-    ffmpeg(videoStream)
-      .output(`./${audioName}.mp3`)
-      .outputFormat('mp3')
-      .on('end', () => {
+  return new Promise((resolve, reject) => {
+    const ffmpegProcess = spawn(ffmpegPath, [
+      '-i',
+      'pipe:0', // Read input from stdin
+      '-vn', // No video
+      '-acodec',
+      'mp3', // Convert to mp3
+      '-f',
+      'mp3', // Output format as mp3
+      'pipe:1', // Write output to stdout
+    ]);
+
+    // Pipe video stream to ffmpeg's stdin
+    videoStream.pipe(ffmpegProcess.stdin);
+
+    // Handle output stream
+    let audioBuffer = Buffer.alloc(0);
+    ffmpegProcess.stdout.on('data', (chunk) => {
+      audioBuffer = Buffer.concat([audioBuffer, chunk]);
+    });
+
+    ffmpegProcess.on('close', (code) => {
+      if (code !== 0) {
+        reject({
+          status: createAudioFileStatus.FAILED,
+          audioName: baseAudioName,
+        });
+      } else {
+        // Write the audio buffer to file with the correct file name
+        fs.writeFileSync(audioName, audioBuffer);
         console.log('Audio extraction finished');
-        res({ status: createAudioFileStatus.SUCCESS, audioName });
-      })
-      .on('error', (err) => {
-        console.error('Error:', err);
-        rej({ status: createAudioFileStatus.FAILED, audioName });
-      })
-      .run();
+        resolve({
+          status: createAudioFileStatus.SUCCESS,
+          audioName: baseAudioName,
+        });
+      }
+    });
+
+    ffmpegProcess.stderr.on('data', (data) => {
+      console.error(`ffmpeg stderr: ${data}`);
+    });
+
+    ffmpegProcess.on('error', (err) => {
+      console.error('Failed to start ffmpeg process:', err);
+      reject({
+        status: createAudioFileStatus.FAILED,
+        audioName: baseAudioName,
+      });
+    });
   });
 };
 
@@ -138,7 +167,7 @@ export async function POST(req: Request) {
       'stability-ai/stable-diffusion:ac732df83cea7fff18b8472768c88ad041fa750ff7682a21affe81863cbe77e4',
       {
         input: {
-          prompt: `Generate Youtube thumbnail for the following content. Also the Image should not have any text embedded on it. Understand the following prompt and generate a high quality image . ${summarizedText}`,
+          prompt: `Generate Youtube thumbnail for the following content. It should be scenic with no text on it, make sure it ABSOLUTELY does not have any text embedded on it. Understand the following prompt and generate a high quality image without any text, just a good thumbnail: ${summarizedText}`,
           width: 1024,
           height: 576,
           scheduler: 'K_EULER',
@@ -164,6 +193,7 @@ export async function POST(req: Request) {
       message: 'The Audio has been extracted and stored in the server !',
       subtitle,
       imgUrl,
+      summarizedText,
     });
   } catch (error) {
     console.error(error);

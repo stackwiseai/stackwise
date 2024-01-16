@@ -24,7 +24,6 @@
     "ai": "^2.2.28",
     "elevenlabs-node": "^2.0.1",
     "ffmpeg-static": "^5.2.0",
-    "fluent-ffmpeg": "^2.1.2",
     "fuse.js": "^7.0.0",
     "html-react-parser": "^5.0.7",
     "langchain": "^0.0.207",
