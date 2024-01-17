@@ -6,6 +6,15 @@ import OpenAI from 'openai';
 import Replicate from 'replicate';
 import { v4 as uuidv4 } from 'uuid';
 
+let ffmpegPath;
+if (process.env.NODE_ENV === 'production') {
+  // Set the path as per your production environment
+  ffmpegPath = require('ffmpeg-static');
+} else {
+  // Local or development environment
+  ffmpegPath = './node_modules/ffmpeg-static/ffmpeg';
+}
+
 AWS.config.update({
   region: process.env.AWS_REGION,
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -13,9 +22,6 @@ AWS.config.update({
 });
 
 export const maxDuration = 300;
-
-// initial config
-const ffmpegPath = './node_modules/ffmpeg-static/ffmpeg';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
