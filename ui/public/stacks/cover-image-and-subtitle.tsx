@@ -9,6 +9,7 @@ export const GenerateImageAndSubtitle = () => {
   const [subtitle, setSubtitle] = useState('');
   const [imgUrl, setImgUrl] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [videoUploading, setVideoUploading] = useState(false);
 
   const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (subtitle) {
@@ -18,6 +19,7 @@ export const GenerateImageAndSubtitle = () => {
       setImgUrl('');
     }
     if (e.target.files && e.target.files[0]) {
+      setVideoUploading(true);
       const file = e.target.files[0];
       try {
         // Fetch the presigned URL
@@ -44,7 +46,7 @@ export const GenerateImageAndSubtitle = () => {
 
         if (uploadResponse.ok) {
           setVideo(file);
-          alert('Successfully Uploaded!');
+          setVideoUploading(false);
         } else {
           console.error('Upload failed.');
         }
@@ -126,6 +128,7 @@ export const GenerateImageAndSubtitle = () => {
           )}
         </label>
       </div>
+      {videoUploading && <>Video Uploading...</>}
       <div className="flex w-full flex-col items-center justify-center sm:flex-row sm:space-x-4">
         {video && (
           <video
