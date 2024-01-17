@@ -77,7 +77,7 @@ export const GenerateImageAndSubtitle = () => {
       <div className="mt-2 flex items-center justify-center">
         <label
           htmlFor="customFileUpload"
-          className="mr-4 flex w-full cursor-pointer items-center rounded-lg border-2 border-dashed py-1 pl-2 "
+          className="flex w-full cursor-pointer items-center rounded-lg border-2 border-dashed py-1 pl-2 "
         >
           <span id="pdfLabel" className="mr-2 whitespace-nowrap">
             Upload Video
@@ -96,11 +96,11 @@ export const GenerateImageAndSubtitle = () => {
           )}
         </label>
       </div>
-      <div className="flex w-full flex-col items-center justify-center space-x-4 sm:flex-row">
+      <div className="flex w-full flex-col items-center justify-center sm:flex-row sm:space-x-4">
         {video && (
           <video
             src={URL.createObjectURL(video)}
-            className={`mx-auto w-1/2 ${loading && 'blur-sm'}`}
+            className={`mx-auto w-full sm:w-1/2 ${loading && 'blur-sm'}`}
             controls
           />
         )}
