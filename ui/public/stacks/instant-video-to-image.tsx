@@ -66,7 +66,7 @@ const InstantVideoToImage: React.FC = () => {
         // Apply a blur effect to the video
         videoRef.current.style.filter = 'blur(6px)';
       }
-    }, 100000);
+    }, 15000);
 
     return () => {
       clearInterval(intervalRef.current);
