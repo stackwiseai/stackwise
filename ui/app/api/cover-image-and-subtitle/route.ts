@@ -5,6 +5,13 @@ import OpenAI from 'openai';
 import Replicate from 'replicate';
 import { v4 as uuidv4 } from 'uuid';
 
+export const config = {
+  api: {
+    responseLimit: false,
+    bodyParser: false,
+  },
+};
+
 // initial config
 const ffmpegPath = './node_modules/ffmpeg-static/ffmpeg';
 
