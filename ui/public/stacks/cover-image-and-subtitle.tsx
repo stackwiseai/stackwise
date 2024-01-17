@@ -10,7 +10,7 @@ export const GenerateImageAndSubtitle = () => {
   const [imgUrl, setImgUrl] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (subtitle) {
       setSubtitle('');
     }
@@ -18,7 +18,39 @@ export const GenerateImageAndSubtitle = () => {
       setImgUrl('');
     }
     if (e.target.files && e.target.files[0]) {
-      setVideo(e.target.files[0]);
+      const file = e.target.files[0];
+      try {
+        // Fetch the presigned URL
+        const response = await fetch('/api/getAWSPresignedUrl', {
+          method: 'POST',
+          body: JSON.stringify({
+            fileName: file.name,
+            fileType: file.type,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        const { url } = await response.json();
+
+        // Upload the file using the presigned URL
+        const uploadResponse = await fetch(url, {
+          method: 'PUT',
+          body: file,
+          headers: {
+            'Content-Type': file.type,
+          },
+        });
+
+        if (uploadResponse.ok) {
+          setVideo(file);
+          alert('Successfully Uploaded!');
+        } else {
+          console.error('Upload failed.');
+        }
+      } catch (error) {
+        console.error('Error during upload:', error);
+      }
     }
   };
 
@@ -35,13 +67,11 @@ export const GenerateImageAndSubtitle = () => {
       }
 
       setLoading(true);
-      const formData = new FormData();
       if (!video) return;
-      formData.append('video', video);
 
       const response = await fetch('/api/cover-image-and-subtitle', {
         method: 'POST',
-        body: formData,
+        body: JSON.stringify({ fileName: video.name }),
       });
 
       const data = await response.json();

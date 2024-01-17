@@ -1,9 +1,16 @@
 import { spawn } from 'child_process';
 import fs from 'fs';
 import { Readable } from 'stream';
+import AWS from 'aws-sdk';
 import OpenAI from 'openai';
 import Replicate from 'replicate';
 import { v4 as uuidv4 } from 'uuid';
+
+AWS.config.update({
+  region: process.env.AWS_REGION,
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+});
 
 export const maxDuration = 300;
 
@@ -93,18 +100,58 @@ const createAudioFile = (
   });
 };
 
+async function streamToBuffer(stream) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    stream.on('data', (chunk: never) => chunks.push(chunk));
+    stream.on('end', () => resolve(Buffer.concat(chunks)));
+    stream.on('error', reject);
+  });
+}
+
 export async function POST(req: Request) {
   try {
-    const form = await req.formData();
-    const videoFile = form.get('video') as Blob;
+    const body = await req.json();
 
-    //convert this blob into buffer
-    const videoBuffer = Buffer.from(await videoFile.arrayBuffer());
+    const params = {
+      Bucket: 'cover-image-and-subtitle-stack',
+      Key: body.fileName,
+    };
 
-    //create a VideoStream
-    const videoStream = new Readable();
-    videoStream.push(videoBuffer);
-    videoStream.push(null);
+    const s3 = new AWS.S3();
+
+    const data = await s3.getObject(params).promise();
+
+    let videoStream;
+
+    if (data.Body) {
+      let videoBuffer;
+
+      if (data.Body instanceof Buffer) {
+        // If Body is already a Buffer
+        videoBuffer = data.Body;
+      } else if (data.Body instanceof Readable) {
+        // If Body is a Readable stream
+        videoBuffer = await streamToBuffer(data.Body);
+      } else {
+        return Response.json({
+          message: 'Unhandled type of S3 Body !!',
+        });
+      }
+
+      // Create a Readable stream from the buffer
+      videoStream = new Readable({
+        read() {},
+      });
+      videoStream.push(videoBuffer);
+      videoStream.push(null); // End of the stream
+
+      // Now you can use videoStream as needed
+    } else {
+      return Response.json({
+        message: 'Some Error occurred in fetching video !!',
+      });
+    }
 
     //extract the audio and create an audiofile from the video buffer
     const res = await createAudioFile(videoStream);
@@ -169,7 +216,7 @@ export async function POST(req: Request) {
       'stability-ai/stable-diffusion:ac732df83cea7fff18b8472768c88ad041fa750ff7682a21affe81863cbe77e4',
       {
         input: {
-          prompt: `Generate Youtube thumbnail for the following content. It should be scenic with no text on it, make sure it ABSOLUTELY does not have any text embedded on it. Understand the following prompt and generate a high quality image without any text, just a good thumbnail: ${summarizedText}`,
+          prompt: `Generate a thumbnail for the following content. It should be scenic with no text on it, make sure it ABSOLUTELY does not have any text embedded on it. Understand the following prompt and generate a high quality image without any text: ${summarizedText}`,
           width: 1024,
           height: 576,
           scheduler: 'K_EULER',
