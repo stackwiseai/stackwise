@@ -1,19 +1,23 @@
 import { spawn } from 'child_process';
 import fs from 'fs';
+import path from 'path';
 import { Readable } from 'stream';
 import AWS from 'aws-sdk';
 import OpenAI from 'openai';
 import Replicate from 'replicate';
 import { v4 as uuidv4 } from 'uuid';
 
-let ffmpegPath;
-if (process.env.NODE_ENV === 'production') {
-  // Set the path as per your production environment
-  ffmpegPath = require('ffmpeg-static');
-} else {
-  // Local or development environment
-  ffmpegPath = './node_modules/ffmpeg-static/ffmpeg';
-}
+const nodeModulesPath = path.join(process.cwd(), 'node_modules');
+const ffmpegPath = path.join(nodeModulesPath, 'ffmpeg-static', 'ffmpeg');
+
+// let ffmpegPath;
+// if (process.env.NODE_ENV === 'production') {
+//   // Set the path as per your production environment
+//   ffmpegPath = require('ffmpeg-static');
+// } else {
+//   // Local or development environment
+//   ffmpegPath = './node_modules/ffmpeg-static/ffmpeg';
+// }
 
 AWS.config.update({
   region: process.env.AWS_REGION,
