@@ -32,7 +32,11 @@ const checkTranscodeJobStatus = async (jobId) => {
 };
 
 // Function to wait for the job to complete
-const waitForJobCompletion = async (jobId, interval = 50, timeout = 30000) => {
+const waitForJobCompletion = async (
+  jobId,
+  interval = 1000,
+  timeout = 30000,
+) => {
   let timePassed = 0;
 
   while (timePassed < timeout) {
