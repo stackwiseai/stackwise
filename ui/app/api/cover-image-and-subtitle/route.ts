@@ -1,29 +1,19 @@
 import { spawn } from 'child_process';
 import fs from 'fs';
-import path from 'path';
 import { Readable } from 'stream';
 import AWS from 'aws-sdk';
 import OpenAI from 'openai';
 import Replicate from 'replicate';
 import { v4 as uuidv4 } from 'uuid';
 
-const nodeModulesPath = path.join(process.cwd(), 'node_modules');
-const ffmpegPath = path.join(nodeModulesPath, 'ffmpeg-static', 'ffmpeg');
-
-// let ffmpegPath;
-// if (process.env.NODE_ENV === 'production') {
-//   // Set the path as per your production environment
-//   ffmpegPath = require('ffmpeg-static');
-// } else {
-//   // Local or development environment
-//   ffmpegPath = './node_modules/ffmpeg-static/ffmpeg';
-// }
-
 AWS.config.update({
   region: process.env.AWS_REGION,
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 });
+
+const s3 = new AWS.S3();
+const transcoder = new AWS.ElasticTranscoder();
 
 export const maxDuration = 300;
 
@@ -35,148 +25,118 @@ const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN as string,
 });
 
-// types
-enum createAudioFileStatus {
-  SUCCESS = 'Audio has been extracted Successfully !!!',
-  FAILED = 'Some error has occurred in extracting the audio !!!',
-}
-
-type createAudioFileOutput = {
-  status: createAudioFileStatus;
-  audioName: string;
+// Function to check the status of a transcoding job
+const checkTranscodeJobStatus = async (jobId) => {
+  const params = { Id: jobId };
+  return transcoder.readJob(params).promise();
 };
 
-// Generate random audio name using UUID for uniqueness
-const createAudioName = (): string => {
-  return uuidv4();
-};
+// Function to wait for the job to complete
+const waitForJobCompletion = async (jobId, interval = 50, timeout = 30000) => {
+  let timePassed = 0;
 
-const createAudioFile = (
-  videoStream: Readable,
-): Promise<createAudioFileOutput> => {
-  // Generate the base name without extension
-  const baseAudioName = createAudioName();
-  const audioName = `${baseAudioName}.mp3`; // Correctly append .mp3 extension
-
-  return new Promise((resolve, reject) => {
-    const ffmpegProcess = spawn(ffmpegPath, [
-      '-i',
-      'pipe:0', // Read input from stdin
-      '-vn', // No video
-      '-acodec',
-      'mp3', // Convert to mp3
-      '-f',
-      'mp3', // Output format as mp3
-      'pipe:1', // Write output to stdout
-    ]);
-
-    // Pipe video stream to ffmpeg's stdin
-    videoStream.pipe(ffmpegProcess.stdin);
-
-    // Handle output stream
-    let audioBuffer = Buffer.alloc(0);
-    ffmpegProcess.stdout.on('data', (chunk) => {
-      audioBuffer = Buffer.concat([audioBuffer, chunk]);
-    });
-
-    ffmpegProcess.on('close', (code) => {
-      if (code !== 0) {
-        reject({
-          status: createAudioFileStatus.FAILED,
-          audioName: baseAudioName,
-        });
-      } else {
-        // Write the audio buffer to file with the correct file name
-        fs.writeFileSync(audioName, audioBuffer);
-        console.log('Audio extraction finished');
-        resolve({
-          status: createAudioFileStatus.SUCCESS,
-          audioName: baseAudioName,
-        });
+  while (timePassed < timeout) {
+    const { Job } = await checkTranscodeJobStatus(jobId);
+    if (Job) {
+      console.log('Job status:', Job.Status);
+      if (Job.Status === 'Complete') {
+        return true;
+      } else if (Job.Status === 'Error') {
+        // Log or return the specific error message from the job
+        throw new Error(`Transcoding job failed from an Error`);
       }
-    });
 
-    ffmpegProcess.stderr.on('data', (data) => {
-      console.error(`ffmpeg stderr: ${data}`);
-    });
+      // Wait for the specified interval before checking again
+      await new Promise((resolve) => setTimeout(resolve, interval));
+      timePassed += interval;
+    } else {
+      throw new Error('Transcoding job failed: Job status not available');
+    }
+  }
 
-    ffmpegProcess.on('error', (err) => {
-      console.error('Failed to start ffmpeg process:', err);
-      reject({
-        status: createAudioFileStatus.FAILED,
-        audioName: baseAudioName,
-      });
-    });
-  });
+  throw new Error('Transcoding job timed out');
 };
 
-async function streamToBuffer(stream) {
-  return new Promise((resolve, reject) => {
-    const chunks = [];
-    stream.on('data', (chunk: never) => chunks.push(chunk));
-    stream.on('end', () => resolve(Buffer.concat(chunks)));
-    stream.on('error', reject);
-  });
-}
+const startTranscodeJob = async (inputKey, outputKey, pipelineId, presetId) => {
+  const params = {
+    PipelineId: pipelineId,
+    Input: { Key: inputKey },
+    Outputs: [{ Key: outputKey, PresetId: presetId }],
+  };
+  return transcoder.createJob(params).promise();
+};
+
+// Function to get the base64 string of the audio file
+const getAudioBase64 = async (bucketName, audioKey) => {
+  const params = {
+    Bucket: bucketName,
+    Key: audioKey,
+  };
+  try {
+    const data = await s3.getObject(params).promise();
+    if (data.Body) {
+      return data.Body.toString('base64');
+    } else {
+      throw new Error('No data body in response');
+    }
+  } catch (error) {
+    console.error('Error getting audio base64:', error);
+    throw error; // Re-throw the error for handling it in the calling function
+  }
+};
+
+const createAudioFile = async (fileName: string): Promise<string> => {
+  const pipelineId = '1705538698802-kk2tc9'; // Replace with your pipeline ID
+  const presetId = '1705539076861-v8ozl7'; // MP3 preset ID
+  const inputBucket = 'cover-image-and-subtitle-stack'; // Your input bucket name
+  const outputBucket = 'cover-image-and-subtitle-stack'; // Your output bucket name
+  const inputKey = fileName;
+  // Replace only the last occurrence of .mp4 with .mp3
+  let outputKey = fileName.replace(/\.mp4$/, '.mp3');
+
+  try {
+    // Check if the output file already exists
+    try {
+      await s3.headObject({ Bucket: outputBucket, Key: outputKey }).promise();
+      // File exists, create a new unique name
+      outputKey = `${fileName.split('.')[0]}-${Date.now()}.mp3`;
+    } catch (error) {
+      if (error.statusCode !== 404) {
+        throw error; // An error other than 'Not Found'
+      }
+      // If error is 404 (Not Found), it means file does not exist and we can proceed
+    }
+    // Start the transcoding job
+    const transcodeResponse = await startTranscodeJob(
+      inputKey,
+      outputKey,
+      pipelineId,
+      presetId,
+    );
+
+    if (transcodeResponse.Job) {
+      // Wait for the job to complete
+      await waitForJobCompletion(transcodeResponse.Job.Id);
+
+      // Get the base64 encoded audio string
+      const audioBase64 = await getAudioBase64(outputBucket, outputKey);
+
+      return `data:audio/mp3;base64,${audioBase64}`;
+    } else {
+      throw new Error('No job ID in response');
+    }
+  } catch (error) {
+    console.error('Error in createAudioFile:', error);
+    return '';
+  }
+};
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    const params = {
-      Bucket: 'cover-image-and-subtitle-stack',
-      Key: body.fileName,
-    };
-
-    const s3 = new AWS.S3();
-
-    const data = await s3.getObject(params).promise();
-
-    let videoStream;
-
-    if (data.Body) {
-      let videoBuffer;
-
-      if (data.Body instanceof Buffer) {
-        // If Body is already a Buffer
-        videoBuffer = data.Body;
-      } else if (data.Body instanceof Readable) {
-        // If Body is a Readable stream
-        videoBuffer = await streamToBuffer(data.Body);
-      } else {
-        return Response.json({
-          message: 'Unhandled type of S3 Body !!',
-        });
-      }
-
-      // Create a Readable stream from the buffer
-      videoStream = new Readable({
-        read() {},
-      });
-      videoStream.push(videoBuffer);
-      videoStream.push(null); // End of the stream
-
-      // Now you can use videoStream as needed
-    } else {
-      return Response.json({
-        message: 'Some Error occurred in fetching video !!',
-      });
-    }
-
     //extract the audio and create an audiofile from the video buffer
-    const res = await createAudioFile(videoStream);
-
-    if (res.status == createAudioFileStatus.FAILED) {
-      if (fs.existsSync(`./${res.audioName}.mp3`)) {
-        fs.unlinkSync(`./${res.audioName}.mp3`);
-      }
-
-      return Response.json({ message: res });
-    }
-
-    const audioName = res.audioName;
-    const audioBase64 = fs.readFileSync(`./${audioName}.mp3`, 'base64');
-    const audioUri = `data:audio/mp3;base64,${audioBase64}`;
+    const audioUri = await createAudioFile(body.fileName);
 
     // send the audio to replicate and getback the subtitles and long descrp
     const output = await replicate.run(
@@ -208,7 +168,7 @@ export async function POST(req: Request) {
       messages: [
         {
           role: 'system',
-          content: `You are a Short and Crisp Text Summarizer. You will be given a large paragraph You should summarize the context a short summary of 10-15 words and not more than that. Give the summary directly, don't use words like "Okay,Sure" or "The paragraph , author or anyother words about the author or speaker ". Here is the paragraph ${prompt}.`,
+          content: `You are a subtitle summarizer. You will be given a large paragraph of subtitles from a video. Your goal is to summarize the video based on what was said within. Keep the summary to only a few sentences and not more than that. Give the summary directly, don't use words like "Okay,Sure" or "The paragraph" or "author" or any other words about the author or speaker. Here are the original subtitles ${prompt}.`,
         },
       ],
     });
@@ -242,11 +202,6 @@ export async function POST(req: Request) {
 
     console.log('The Image generated Successfully !!!');
     const imgUrl = imgArr[0] as string;
-
-    //remove the created audio file
-    if (fs.existsSync(`./${res.audioName}.mp3`)) {
-      fs.unlinkSync(`./${res.audioName}.mp3`);
-    }
 
     return Response.json({
       message: 'The Audio has been extracted and stored in the server !',
