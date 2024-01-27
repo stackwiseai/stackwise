@@ -1,46 +1,79 @@
+'use client'
 import { useState } from 'react';
 import { IoSend } from 'react-icons/io5';
-import ReactMarkdown from 'react-markdown';
 
-export const ChatWithOpenAIStreaming = () => {
-  const [inputValue, setInputValue] = useState('');
-  const [output, setOutput] = useState('');
+export const RapBattle = () => {
+  const [topic, setTopic] = useState<any>('');
+  const [conversation, setConversation] = useState<any>([]);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleInitialSubmit = async (event : any) => {
     event.preventDefault();
-    console.log('Submitting:', inputValue);
-    if (inputValue.trim()) {
-      setOutput('');
-      setLoading(true);
+    setLoading(true);
 
-      const response = await fetch('/api/boilerplate-basic', {
+    try {
+      setLoading(true)
+      const res = await fetch('/api/take-1', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ input: inputValue }),
+        body: JSON.stringify({
+          prompt: topic,
+          modelType: 'mixtral', // First line is always by llama2
+        }),
       });
-      const data = await response.json();
-      console.log('data', data);
-      setOutput(data.output);
-      setLoading(false);
+      const data = await res.json();
+      console.log(data.output)
+      setConversation([data.output]);
+      setLoading(false)
+    } catch (error) {
+      console.error(error, 'Failed to send request:', error);
     }
+
+    setLoading(false);
   };
+
+  const getNextLine = async () => {
+    setLoading(true);
+    const lastLine = conversation[conversation.length - 1] || '';
+    const modelType = conversation.length % 2 === 0 ? 'llama2' : 'mixtral'; // Alternate between models
+
+    try {
+      const res = await fetch('/api/take-1', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt: lastLine,
+          modelType: modelType,
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setConversation([...conversation, data.output]);
+      } else {
+        console.error('Error from API');
+      }
+    } catch (error) {
+      console.error('Failed to send request:', error);
+    }
+
+    setLoading(false);
+  };
+
   return (
     <div className="w-3/4 md:w-1/2">
-      <form onSubmit={handleSubmit} className="flex flex-col">
+      <form className="flex flex-col" onSubmit={handleInitialSubmit}>
         <div className="relative w-full">
           <input
             type="text"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            placeholder="Ask anything..."
+            value={topic}
+            onChange={(e) => setTopic(e.target.value)}
+            placeholder="Enter a topic for the rap battle"
             className="focus:shadow-outline w-full rounded-full border border-gray-400 py-2 pl-4 pr-10 focus:outline-none"
-            onKeyDown={(e) => {
-              if (e.key === 'Enter')
-                handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
-            }}
           />
           <button
             type="submit"
@@ -53,17 +86,30 @@ export const ChatWithOpenAIStreaming = () => {
           </button>
         </div>
       </form>
-      <div className="min-h-4 mt-4 max-h-96 w-full overflow-auto rounded-md bg-[#faf0e6] p-4 md:max-h-[28rem]">
-        {loading ? (
-          <span className="text-sm text-gray-400">Generating... </span>
-        ) : output ? (
-          <ReactMarkdown>{output}</ReactMarkdown>
-        ) : (
-          <p className="text-sm text-gray-400">Output here...</p>
+      {loading && <h1>Loading, please wait.... </h1>}
+      <div className="flex flex-col mt-4">
+        <div className="overflow-auto h-96">
+          {conversation.map((line: any, index: any) => (
+            <p key={index} className={`my-2 ${index % 2 === 0 ? 'text-left' : 'text-right'}`}>
+              {line}
+            </p>
+          ))}
+        </div>
+        {conversation.length > 0 && (
+          <button
+            onClick={getNextLine}
+            className={`mt-4 w-full rounded-full py-2 font-bold text-black focus:outline-none ${
+              loading ? 'cursor-not-allowed opacity-50' : ''
+            }`}
+            disabled={loading}
+          >
+            {loading ? 'Loading...' : 'Next Rap Line'}
+            <IoSend className="inline ml-2" />
+          </button>
         )}
       </div>
     </div>
   );
 };
 
-export default ChatWithOpenAIStreaming;
+export default RapBattle;
