@@ -1,8 +1,8 @@
 'use client';
 
+import { lazy, useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
-import { lazy, useEffect, useMemo, useState } from 'react';
 import { FaStar } from 'react-icons/fa';
 import { FaCode } from 'react-icons/fa6';
 import { IoLogoGithub } from 'react-icons/io';
@@ -10,18 +10,20 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import tw from 'tailwind-styled-components';
 
-import { getStackDB, type StackDescription } from '../stack-db';
+import {
+  getStackDB,
+  type StackDescription,
+} from '../../components/stacks/utils/stack-db';
 
 // Lazy load ClipboardComponent
-const ClipboardComponent = lazy(() => import('@/app/components/clipboard'));
+const ClipboardComponent = lazy(
+  () => import('@/app/components/shared/clipboard'),
+);
 const Link = lazy(() => import('next/link'));
 const MdOutlineInput = lazy(() =>
   import('react-icons/md').then((module) => ({
     default: module.MdOutlineInput,
   })),
-);
-const ChatWithStack = lazy(() =>
-  import('./chat').then((module) => ({ default: module.ChatWithStack })),
 );
 
 type StackDescriptionWithSlug = {
@@ -29,9 +31,6 @@ type StackDescriptionWithSlug = {
 } & StackDescription;
 
 const Chat = ({ params }: { params: { slug: string } }) => {
-  const searchParams = useSearchParams();
-
-  const chatWithComponent = searchParams.get('chat');
   const [showFrontendCode, setShowFrontendCode] = useState<boolean>(true);
   const [backendCode, setBackendCode] = useState<string>('');
   const [frontendCode, setFrontendCode] = useState<string>('');
@@ -51,8 +50,8 @@ const Chat = ({ params }: { params: { slug: string } }) => {
       if (initialStack) {
         const stackWithSlug = { slug: stackSlug, ...initialStack };
         setStack(stackWithSlug);
-        const frontendPath = `/stacks/${stackSlug}.tsx`;
-        const backendPath = `/stacks/${stackSlug}/route.ts`;
+        const frontendPath = `/stacks/v1/${stackSlug}.tsx`;
+        const backendPath = `/stacks/stacks/v1/${stackSlug}/route.ts`;
         getPathText(frontendPath).then((data) => setFrontendCode(data));
         getPathText(backendPath).then((data) => setBackendCode(data));
       }
@@ -96,7 +95,7 @@ const Chat = ({ params }: { params: { slug: string } }) => {
       </Link>
 
       <div className="flex">
-        <Container style={{ width: chatWithComponent ? '50%' : '100%' }}>
+        <Container>
           <TitleContainer>
             <Link href="/stacks">
               <div className="mb-4 flex w-full justify-center">
@@ -173,7 +172,7 @@ const Chat = ({ params }: { params: { slug: string } }) => {
             </pre> */}
                 <SyntaxHighlighter
                   language="javascript"
-                  className="min-h-4 max-h-80 w-full overflow-auto overflow-y-hidden whitespace-pre-wrap break-all p-3 text-sm text-gray-200 sm:max-h-96 md:max-h-[28rem]"
+                  className="max-h-80 min-h-4 w-full overflow-auto overflow-y-hidden whitespace-pre-wrap break-all p-3 text-sm text-gray-200 sm:max-h-96 md:max-h-[28rem]"
                   style={vscDarkPlus}
                   lineProps={{
                     style: { wordBreak: 'break-all', whiteSpace: 'pre-wrap' },
@@ -190,7 +189,6 @@ const Chat = ({ params }: { params: { slug: string } }) => {
             )}
           </MainWrapper>
         </Container>
-        {chatWithComponent && <ChatWithStack />}
       </div>
     </>
   );
