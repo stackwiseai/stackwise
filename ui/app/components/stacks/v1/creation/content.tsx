@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useFormState } from 'react-dom';
 import tw from 'tailwind-styled-components';
 
-import { callStack, parseFormData } from '../../../../api/stacks/v1/actions';
+import { callStack, parseFormData } from '../../utils/actions';
 import InputWithButton from './input-with-button';
 import Inputs from './Inputs';
 import Outputs from './outputs';
