@@ -12,7 +12,6 @@
       "description": "Log the Github commits from {github_name} from the last month",
       "variables": ["github_name"]
     },
-    // here should be a loop to check the repos commited to
     {
       "type": "llm",
       "description": "These are the commits from {github_name} in the last month. Please summarize the activity of the user."

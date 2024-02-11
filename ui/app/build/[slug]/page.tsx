@@ -1,18 +1,24 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 
 import type { Stack } from './types';
 
-interface WorkflowProps {
-  slug: string;
-}
-
-const Workflow: React.FC<WorkflowProps> = ({ slug }) => {
+const Workflow: React.FC = ({ params }: { params: { slug: string } }) => {
   const [stackInfo, setStackInfo] = useState<Stack | null>(null);
-  const stackSlug = slug ?? null;
+  const stackSlug = params.slug ?? null;
+  console.log('stackSlug', stackSlug);
 
   useEffect(() => {
-    // this should import the jsonl file from ../../stacks/v2/${slug}.jsonl
-  }, [slug]);
+    // import(`../../stacks/v2/${stackSlug}.json`)
+    //   .then((module) => {
+    //     setStackInfo(module.default);
+    //   })
+    //   .catch((err) => {
+    //     console.error('Failed to load the stack info', err);
+    //   });
+    // console.log('stackInfo', stackInfo);
+  }, [stackSlug]);
 
   return (
     <div>
@@ -20,3 +26,5 @@ const Workflow: React.FC<WorkflowProps> = ({ slug }) => {
     </div>
   );
 };
+
+export default Workflow;
