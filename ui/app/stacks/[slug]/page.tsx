@@ -62,10 +62,10 @@ const Chat = ({ params }: { params: { slug: string } }) => {
 
   const DynamicComponent = useMemo(() => {
     if (!stack) return null; // FIXME: redirect or show an error, change DynamicComponent usage below as well
-    return dynamic(() => import(`@/app/components/stacks/${stack.slug}`), {
+    return dynamic(() => import(`@/app/components/stacks/v1/${stack.slug}`), {
       ssr: false,
       loading: () => {
-        return <div></div>;
+        return <div>No such stack</div>;
       },
     });
   }, [stack?.slug]);
@@ -202,6 +202,7 @@ const Container = tw.div`
   justify-center
   items-center
   h-screen
+  w-full
   space-y-6
   pb-32
 `;

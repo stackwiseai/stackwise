@@ -1,6 +1,8 @@
 {
   "created": 1484938100,
   "updated": 1484938100,
+  "name": "Github Commits",
+  "description": "This recipe summarizes the commits from a Github user in the last month",
   "trigger": {
     "type": "click"
   },
