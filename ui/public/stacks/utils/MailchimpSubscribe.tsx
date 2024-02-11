@@ -4,8 +4,8 @@ import { useFormState, useFormStatus } from 'react-dom';
 import { IoSend } from 'react-icons/io5';
 import tw from 'tailwind-styled-components';
 
-import { subscribeEmail } from '../../../api/stacks/v1/actions';
 import { Form } from '../v1/creation/input-with-button';
+import { subscribeEmail } from './actions';
 
 const glowingShadowStyle = {
   boxShadow: `0 0 10px rgba(0, 0, 0, 0.1), 
