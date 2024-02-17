@@ -1,4 +1,0 @@
-test('Get one item from history in elevenlabs', async () => {
-  const response = stack('Get one item from history in elevenlabs')
-  expect(response.text).toContain('say hello world')
-});

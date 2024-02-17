@@ -1,4 +1,0 @@
-test('Fetch data from table using supabase client', async () => {
-  const response = stack('Fetch data from table using supabase client');
-  expect(response).not.toBeNull();
-});

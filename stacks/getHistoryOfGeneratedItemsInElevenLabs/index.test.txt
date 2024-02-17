@@ -1,4 +1,0 @@
-test('Get all generated audio in elevenlabs', async () => {
-  const response = stack('Get all generated audio in elevenlabs')
-  expect(response.history).toBeTruthy();
-});

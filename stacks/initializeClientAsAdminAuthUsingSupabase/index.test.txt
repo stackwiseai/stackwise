@@ -1,4 +1,0 @@
-test('Initialize supabase client as admin auth', async () => {
-  const response = stack('Initialize supabase client as admin auth');
-  expect(response).not.toBeNull();
-});

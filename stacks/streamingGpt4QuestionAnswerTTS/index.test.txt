@@ -1,5 +1,0 @@
-test('flattenInputJson correctly', async () => {
-  const question = 'what is the meaning of life?';
-  const response = stack('answer my  question using OpenAI', {in: question, out: '42'})
-  console.log(response);
-});

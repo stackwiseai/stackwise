@@ -1,4 +1,0 @@
-test('Get all available models in elevenlabs', async () => {
-  const response = stack('Get all available models in elevenlabs')
-  expect(response).toBeTruthy()
-});

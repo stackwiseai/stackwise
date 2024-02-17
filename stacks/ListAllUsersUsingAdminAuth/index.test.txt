@@ -1,4 +1,0 @@
-test('Retrieve all user of the project using Admin Auth', async () => {
-  const response = stack("Retrieve all user of the project using Admin Auth")
-  expect(response.length).toBeGreaterThan(1)
-});

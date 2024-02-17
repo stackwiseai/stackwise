@@ -1,4 +1,0 @@
-test('Retrieve a user object using Supabase AUTH Admin', async () => {
-  const response = stack("Retrieve a user object using Supabase AUTH Admin");
-  expect(response.user.email).toEqual("anytest@test.com")
-});

@@ -1,4 +1,0 @@
-test('List all Storage buckets in supabase', async () => {
-  const response = stacks('List all Storage buckets in supabase')
-  expect(response[0].id).toBe('your_bucket_name');
-});

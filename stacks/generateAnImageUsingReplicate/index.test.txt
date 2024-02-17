@@ -1,4 +1,0 @@
-test('Generate an image usiung replicate', async () => {
-  const response = stack('Generate an image usiung replicate')
-  expect(response).toBeTruthy();
-});

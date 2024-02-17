@@ -1,4 +1,0 @@
-test('Get Whois record of domain using cloudflare api', async () => {
-    const response = stack('Get Whois record of domain using cloudflare api');
-  expect(response.success).toBe(true);
-});

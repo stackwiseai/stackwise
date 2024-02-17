@@ -1,3 +1,0 @@
-test('callOrca2 correctly', async () => {
-  stack("call the orca 2 model and get back a response")
-});

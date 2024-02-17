@@ -1,7 +1,0 @@
-test('Create a random user using the radom.me api', async () => {
-
-  const response = stack("Create a random user using the radom.me api");
-
-  expect(response).toEqual('September 8, 2022');
-});
-

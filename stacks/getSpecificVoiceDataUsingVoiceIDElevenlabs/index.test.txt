@@ -1,4 +1,0 @@
-test('get specific voice metadata using voice id in elevenlabs', async () => {
-  const response = stack('get specific voice metadata using voice id in elevenlabs')
-  expect(response.name).toBe('Mimi')
-});

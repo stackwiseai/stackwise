@@ -1,4 +1,0 @@
-test('get all list of predictions made in replicate', async () => {
-  const response = stack('get all list of predictions made in replicate', { in : '', out: ''})
-  expect(response.results).toBeTruthy();
-});

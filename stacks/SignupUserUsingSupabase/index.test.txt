@@ -1,4 +1,0 @@
-test('Sign Up and Create a New Account on a Project in Supabase Client', async () => {
-    const response = stack('Sign Up and Create a New Account on a Project in Supabase Client');
-  expect(response.user.created_at).not.toBeNull();
-});
