@@ -7,7 +7,7 @@
 
 ### [Visit the Stackwise collection](https://stackwise.ai/stacks)
 
-![Stackwise stacks collections](stacks_homepage.png)
+![Stackwise stacks collections](public/stacks_homepage.png)
 
 ### Join The Community
 
