@@ -2,6 +2,7 @@ export interface StackItem {
   type: string;
   description: string;
   variables?: string[];
+  instructions?: string;
 }
 
 export interface Stack {
@@ -9,6 +10,7 @@ export interface Stack {
   updated: number;
   name: string;
   description: string;
+  example_input: any;
   trigger: {
     type: string;
   };
