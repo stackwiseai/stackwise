@@ -13,7 +13,7 @@ import tw from 'tailwind-styled-components';
 import {
   getStackDB,
   type StackDescription,
-} from '../../components/stacks/utils/stack-db';
+} from '../../components/stacks/v1/utils/stack-db';
 
 // Lazy load ClipboardComponent
 const ClipboardComponent = lazy(

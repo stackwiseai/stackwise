@@ -1,6 +1,6 @@
 import tw from 'tailwind-styled-components';
 
-import type { StackItem } from '../../../build/[slug]/types';
+import type { StackItem } from '../types';
 
 interface ActionProps {
   actionInfo: StackItem;

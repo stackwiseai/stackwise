@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import SignIn from '@/app/components/stacks/utils/signIn';
-import { supabaseClient } from '@/app/components/stacks/utils/stack-db';
+import SignIn from '@/app/components/stacks/v1/utils/signIn';
+import { supabaseClient } from '@/app/components/stacks/v1/utils/stack-db';
 
 export const BasicForm = () => {
   const [formData, setFormData] = useState({

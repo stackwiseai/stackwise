@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import tw from 'tailwind-styled-components';
 
 import Action from '../../components/build/stack/Action';
-import type { Stack } from './types';
+import type { Stack } from '../../components/build/types';
 
 const Workflow: React.FC = ({ params }: { params: { slug: string } }) => {
   const [stackInfo, setStackInfo] = useState<Stack | null>(null);

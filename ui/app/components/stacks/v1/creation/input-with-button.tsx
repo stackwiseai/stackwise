@@ -7,7 +7,7 @@ import { IoSend } from 'react-icons/io5';
 import tw from 'tailwind-styled-components';
 
 // import SearchStacks from './search-stacks';
-import { StackDescription } from '../../utils/stack-db';
+import { StackDescription } from '../utils/stack-db';
 
 export const SubmitButton = () => {
   const { pending } = useFormStatus();

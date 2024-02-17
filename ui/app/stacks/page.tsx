@@ -3,12 +3,12 @@ import { FaStar } from 'react-icons/fa';
 import { IoLogoGithub } from 'react-icons/io';
 import tw from 'tailwind-styled-components';
 
+import MainContent from '../components/stacks/v1/creation/main-content';
 import {
   getStackDB,
   statusesToDisplay,
   type StackDescription,
-} from '../components/stacks/utils/stack-db';
-import MainContent from '../components/stacks/v1/creation/main-content';
+} from '../components/stacks/v1/utils/stack-db';
 
 export const fetchCache = 'force-no-store'; // TODO: remove this line to enable caching but without making the app completely static
 export const revalidate = 0;

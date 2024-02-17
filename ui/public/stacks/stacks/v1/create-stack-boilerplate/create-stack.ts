@@ -1,4 +1,4 @@
-import { getSupabaseClient } from '@/app/components/stacks/utils/stack-db';
+import { getSupabaseClient } from '@/app/components/stacks/v1/utils/stack-db';
 
 import getFileFromGithub from './get-file-from-github';
 import pushMultipleFilesToBranch from './push-multiple-files-to-branch';
