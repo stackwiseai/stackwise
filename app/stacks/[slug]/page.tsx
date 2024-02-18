@@ -13,7 +13,7 @@ import tw from 'tailwind-styled-components';
 import {
   getStackDB,
   type StackDescription,
-} from '../../components/stacks/v1/utils/stack-db';
+} from '../../components/stacks/utils/stack-db';
 
 // Lazy load ClipboardComponent
 const ClipboardComponent = lazy(
@@ -50,8 +50,8 @@ const Chat = ({ params }: { params: { slug: string } }) => {
       if (initialStack) {
         const stackWithSlug = { slug: stackSlug, ...initialStack };
         setStack(stackWithSlug);
-        const frontendPath = `/stacks/v1/${stackSlug}.tsx`;
-        const backendPath = `/stacks/stacks/v1/${stackSlug}/route.ts`;
+        const frontendPath = `/stacks/${stackSlug}.tsx`;
+        const backendPath = `/stacks/stacks/${stackSlug}/route.ts`;
         getPathText(frontendPath).then((data) => setFrontendCode(data));
         getPathText(backendPath).then((data) => setBackendCode(data));
       }
@@ -62,7 +62,7 @@ const Chat = ({ params }: { params: { slug: string } }) => {
 
   const DynamicComponent = useMemo(() => {
     if (!stack) return null; // FIXME: redirect or show an error, change DynamicComponent usage below as well
-    return dynamic(() => import(`@/app/components/stacks/v1/${stack.slug}`), {
+    return dynamic(() => import(`@/app/components/stacks/${stack.slug}`), {
       ssr: false,
       loading: () => {
         return <div>No such stack</div>;
