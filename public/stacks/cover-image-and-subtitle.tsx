@@ -23,7 +23,7 @@ export const GenerateImageAndSubtitle = () => {
       const file = e.target.files[0];
       try {
         // Fetch the presigned URL
-        const response = await fetch('/api/stacks/getAWSPresignedUrl', {
+        const response = await fetch('/api/utils/getAWSPresignedUrl', {
           method: 'POST',
           body: JSON.stringify({
             fileName: file.name,
